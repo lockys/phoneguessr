@@ -1,0 +1,61 @@
+import { eq } from 'drizzle-orm';
+import { db } from '../phoneguessr/src/db';
+import { phones, dailyPuzzles, guesses } from '../phoneguessr/src/db/schema';
+import { COOKIE_NAME, verifySessionToken } from '../phoneguessr/src/lib/auth';
+import { parseCookies } from '../phoneguessr/src/lib/cookies';
+
+export async function POST(request: Request) {
+  const body: { puzzleId: number; phoneId: number; guessNumber: number } =
+    await request.json();
+
+  const [puzzle] = await db
+    .select()
+    .from(dailyPuzzles)
+    .where(eq(dailyPuzzles.id, body.puzzleId))
+    .limit(1);
+
+  if (!puzzle) {
+    return Response.json({ error: 'Puzzle not found' }, { status: 404 });
+  }
+
+  const [guessedPhone] = await db
+    .select()
+    .from(phones)
+    .where(eq(phones.id, body.phoneId))
+    .limit(1);
+
+  if (!guessedPhone) {
+    return Response.json({ error: 'Phone not found' }, { status: 404 });
+  }
+
+  const [answerPhone] = await db
+    .select()
+    .from(phones)
+    .where(eq(phones.id, puzzle.phoneId))
+    .limit(1);
+
+  let feedback: string;
+  if (guessedPhone.id === answerPhone.id) {
+    feedback = 'correct';
+  } else if (guessedPhone.brand === answerPhone.brand) {
+    feedback = 'right_brand';
+  } else {
+    feedback = 'wrong_brand';
+  }
+
+  const token = parseCookies(request.headers.get('cookie'))[COOKIE_NAME];
+  if (token) {
+    const session = await verifySessionToken(token);
+    if (session) {
+      await db.insert(guesses).values({
+        userId: session.userId,
+        puzzleId: body.puzzleId,
+        phoneId: body.phoneId,
+        guessNumber: body.guessNumber,
+        feedback,
+      });
+    }
+  }
+
+  return Response.json({ feedback });
+}

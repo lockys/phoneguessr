@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "rootDir": "..",
+    "baseUrl": "..",
+    "paths": {
+      "@/*": ["phoneguessr/src/*"],
+      "drizzle-orm": ["phoneguessr/node_modules/drizzle-orm"],
+      "drizzle-orm/*": ["phoneguessr/node_modules/drizzle-orm/*"],
+      "jose": ["phoneguessr/node_modules/jose"],
+      "jose/*": ["phoneguessr/node_modules/jose/*"],
+      "drizzle-orm/node-postgres": ["phoneguessr/node_modules/drizzle-orm/node-postgres"],
+      "drizzle-orm/pg-core": ["phoneguessr/node_modules/drizzle-orm/pg-core"]
+    },
+    "typeRoots": ["../phoneguessr/node_modules/@types"]
+  },
+  "include": [
+    "./**/*.ts",
+    "../phoneguessr/src/db/**/*.ts",
+    "../phoneguessr/src/lib/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

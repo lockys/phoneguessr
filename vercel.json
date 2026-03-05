@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd phoneguessr && pnpm install && pnpm run build",
+  "outputDirectory": "phoneguessr/dist",
+  "functions": {
+    "api/puzzle/image.ts": {
+      "includeFiles": "phoneguessr/config/public/phones/**"
+    }
+  }
+}
