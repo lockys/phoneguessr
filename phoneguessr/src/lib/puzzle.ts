@@ -1,6 +1,6 @@
-import { eq, count, notInArray } from 'drizzle-orm';
+import { avg, count, eq, notInArray, sql } from 'drizzle-orm';
 import { db } from '../db';
-import { phones, dailyPuzzles } from '../db/schema';
+import { dailyPuzzles, phones, results } from '../db/schema';
 
 /**
  * Get today's UTC date string (YYYY-MM-DD).
@@ -115,4 +115,70 @@ async function getUsedPhoneIdsInCurrentCycle(
     .limit(poolSize);
 
   return recent.map(r => r.phoneId);
+}
+
+/**
+ * Get yesterday's UTC date string (YYYY-MM-DD).
+ */
+function yesterdayUTC(): string {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Get yesterday's puzzle with phone details and aggregate stats.
+ * Returns null if no puzzle exists for yesterday.
+ */
+export async function getYesterdayPuzzle() {
+  const yesterday = yesterdayUTC();
+
+  const [puzzle] = await db
+    .select()
+    .from(dailyPuzzles)
+    .where(eq(dailyPuzzles.puzzleDate, yesterday))
+    .limit(1);
+
+  if (!puzzle) return null;
+
+  const [phone] = await db
+    .select()
+    .from(phones)
+    .where(eq(phones.id, puzzle.phoneId))
+    .limit(1);
+
+  if (!phone) return null;
+
+  const [stats] = await db
+    .select({
+      totalPlayers: count(),
+      avgGuesses: avg(results.guessCount),
+      winCount: sql<number>`count(*) filter (where ${results.isWin} = true)`,
+    })
+    .from(results)
+    .where(eq(results.puzzleId, puzzle.id));
+
+  const totalPlayers = stats?.totalPlayers ?? 0;
+  const avgGuesses = stats?.avgGuesses
+    ? Number.parseFloat(String(stats.avgGuesses))
+    : 0;
+  const winRate =
+    totalPlayers > 0
+      ? Math.round(((stats?.winCount ?? 0) / totalPlayers) * 100)
+      : 0;
+
+  return {
+    phone: {
+      brand: phone.brand,
+      model: phone.model,
+      imagePath: phone.imagePath,
+      releaseYear: null as number | null,
+    },
+    facts: [] as string[],
+    stats: {
+      totalPlayers,
+      avgGuesses: Math.round(avgGuesses * 10) / 10,
+      winRate,
+    },
+  };
 }
