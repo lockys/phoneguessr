@@ -1,5 +1,5 @@
-import { IS_MOCK } from '../../../src/mock';
-import { getMockPuzzle } from '../../../src/mock/state';
+import { IS_MOCK } from '../../../src/mock/index.ts';
+import { getMockPuzzle } from '../../../src/mock/state.ts';
 
 export const get = async () => {
   if (IS_MOCK) {

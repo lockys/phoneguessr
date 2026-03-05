@@ -1,4 +1,4 @@
-import { MOCK_PHONES } from './data';
+import { MOCK_PHONES } from './data.ts';
 
 /**
  * Get today's mock puzzle. Uses date-based index into the phone array.

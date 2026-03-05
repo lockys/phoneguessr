@@ -1,5 +1,5 @@
 import { useHonoContext } from '@modern-js/server-core';
-import { IS_MOCK } from '../../../src/mock';
+import { IS_MOCK } from '../../../src/mock/index.ts';
 
 interface GoogleTokenResponse {
   access_token: string;

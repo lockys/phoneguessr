@@ -1,6 +1,6 @@
 import { useHonoContext } from '@modern-js/server-core';
-import { IS_MOCK } from '../../src/mock';
-import { getMockFeedback } from '../../src/mock/state';
+import { IS_MOCK } from '../../src/mock/index.ts';
+import { getMockFeedback } from '../../src/mock/state.ts';
 
 export const post = async () => {
   const c = useHonoContext();

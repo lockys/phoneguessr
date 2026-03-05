@@ -1,5 +1,5 @@
-import { IS_MOCK } from '../../src/mock';
-import { MOCK_PHONES } from '../../src/mock/data';
+import { IS_MOCK } from '../../src/mock/index.ts';
+import { MOCK_PHONES } from '../../src/mock/data.ts';
 
 export const get = async () => {
   if (IS_MOCK) {
