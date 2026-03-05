@@ -6,10 +6,7 @@
   ],
   "functions": {
     "api/**/*.ts": {
-      "includeFiles": "phoneguessr/src/**"
-    },
-    "api/puzzle/image.ts": {
-      "includeFiles": "phoneguessr/config/public/phones/**,phoneguessr/src/**"
+      "includeFiles": ["phoneguessr/src/**", "phoneguessr/config/public/phones/**"]
     }
   }
 }
