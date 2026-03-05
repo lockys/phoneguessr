@@ -29,3 +29,6 @@ Thumbs.db
 
 # Coverage
 coverage/
+.ralphy-worktrees/
+.ralphy/deferred.json
+.superset/

@@ -1,5 +1,6 @@
 # Ralphy Progress Log
 
+<<<<<<< HEAD
 ## PO: Define addictive game mechanics spec — DONE
 
 Created OpenSpec change `addictive-game-mechanics` with complete proposal, design, specs, and tasks.
@@ -21,4 +22,33 @@ Created OpenSpec change `addictive-game-mechanics` with complete proposal, desig
 ### Test infrastructure:
 - Added vitest as test runner (48 tests, all passing)
 - Tests cover: scoring formula, streak logic, proximity computation, share text generation
+=======
+## PO: Define phone data expansion requirements
+
+**Status:** Complete
+**Branch:** ralphy/agent-2-1772724620550-vndn3h-po-define-phone-data-expansion-requirements
+
+### What was done:
+- Created OpenSpec change `phone-data-expansion` with full proposal, design, specs, and tasks
+- Defined requirements for expanding from 20 phones/5 brands to 120+ phones/15+ brands
+- Specified 4 new metadata fields: releaseYear, priceTier, formFactor, difficulty
+- Defined image standards (800x1200px min, JPG, clean background, naming convention)
+- Defined manual curation pipeline with validation checklist
+- Designed catalog distribution targets and difficulty balance requirements
+- Updated phone-data and mock-api specs with new metadata requirements
+- Created validation scripts for phone data and spec completeness (47 spec tests pass)
+
+### Artifacts created:
+- `openspec/changes/phone-data-expansion/proposal.md`
+- `openspec/changes/phone-data-expansion/design.md`
+- `openspec/changes/phone-data-expansion/tasks.md`
+- `openspec/changes/phone-data-expansion/specs/phone-metadata/spec.md`
+- `openspec/changes/phone-data-expansion/specs/phone-catalog-targets/spec.md`
+- `openspec/changes/phone-data-expansion/specs/phone-image-standards/spec.md`
+- `openspec/changes/phone-data-expansion/specs/phone-curation-pipeline/spec.md`
+- `openspec/changes/phone-data-expansion/specs/phone-data/spec.md`
+- `openspec/changes/phone-data-expansion/specs/mock-api/spec.md`
+- `phoneguessr/scripts/validate-phone-data.ts`
+- `phoneguessr/scripts/validate-phone-expansion-specs.ts`
+>>>>>>> 381c586 (Define phone data expansion requirements via OpenSpec proposal)
 
