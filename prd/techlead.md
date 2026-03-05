@@ -29,6 +29,14 @@
 - TypeScript strict mode - no `any` escape hatches
 - Biome for linting/formatting, not ESLint/Prettier
 
+## Git & Deployment Discipline
+- **Commit per feature or fix** — consolidate related changes into one focused commit. Don't leave uncommitted work across tasks.
+- **Push after each commit** — every commit goes to GitHub immediately so Vercel deploys and validates it. No batching multiple features into one push.
+- **Commit message format** — short imperative subject line, body explains the "why". Include `Co-Authored-By` when AI-assisted.
+- **No big commits** — if a feature touches 10+ files, consider splitting into logical sub-commits (e.g., schema change, API endpoint, frontend UI).
+- **Verify before pushing** — run `npx tsc --noEmit` and `npx biome check` before every push. Don't push broken builds.
+- **Never amend published commits** — create new commits to fix issues.
+
 ## When to Escalate
 - Adding a new external dependency
 - Changing the database schema
