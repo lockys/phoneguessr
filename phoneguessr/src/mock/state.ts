@@ -1,5 +1,5 @@
-import path from 'node:path';
 import fs from 'node:fs';
+import path from 'node:path';
 import { MOCK_PHONES } from './data.ts';
 
 /**
@@ -32,7 +32,10 @@ export function getMockPuzzle() {
 
 export function getMockImageData(): string | null {
   const puzzle = getMockPuzzle();
-  const imagePath = path.resolve('config/public', puzzle.imagePath.replace(/^\/public\//, ''));
+  const imagePath = path.resolve(
+    'config/public',
+    puzzle.imagePath.replace(/^\/public\//, ''),
+  );
   if (!fs.existsSync(imagePath)) return null;
   const buffer = fs.readFileSync(imagePath);
   const ext = path.extname(imagePath).slice(1).toLowerCase();
@@ -47,6 +50,34 @@ export function getMockProfileStats() {
     winRate: 70,
     currentStreak: 3,
     bestStreak: 5,
+  };
+}
+
+/**
+ * Get yesterday's mock puzzle for the reveal endpoint.
+ */
+export function getMockYesterdayPuzzle() {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const dateStr = yesterday.toISOString().slice(0, 10);
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const seed = y * 10000 + m * 100 + d;
+  const index = seed % MOCK_PHONES.length;
+  const phone = MOCK_PHONES[index];
+
+  return {
+    phone: {
+      brand: phone.brand,
+      model: phone.model,
+      imagePath: phone.imagePath,
+      releaseYear: null,
+    },
+    facts: [],
+    stats: {
+      totalPlayers: 42,
+      avgGuesses: 3.2,
+      winRate: 68,
+    },
   };
 }
 
