@@ -1,3 +1,5 @@
+import path from 'node:path';
+import fs from 'node:fs';
 import { MOCK_PHONES } from './data.ts';
 
 /**
@@ -30,18 +32,12 @@ export function getMockPuzzle() {
 
 export function getMockImageData(): string | null {
   const puzzle = getMockPuzzle();
-  try {
-    const path = require('node:path');
-    const fs = require('node:fs');
-    const imagePath = path.resolve('config/public', puzzle.imagePath.replace(/^\/public\//, ''));
-    if (!fs.existsSync(imagePath)) return null;
-    const buffer = fs.readFileSync(imagePath);
-    const ext = path.extname(imagePath).slice(1).toLowerCase();
-    const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
-    return `data:${mime};base64,${buffer.toString('base64')}`;
-  } catch {
-    return null;
-  }
+  const imagePath = path.resolve('config/public', puzzle.imagePath.replace(/^\/public\//, ''));
+  if (!fs.existsSync(imagePath)) return null;
+  const buffer = fs.readFileSync(imagePath);
+  const ext = path.extname(imagePath).slice(1).toLowerCase();
+  const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+  return `data:${mime};base64,${buffer.toString('base64')}`;
 }
 
 export function getMockProfileStats() {

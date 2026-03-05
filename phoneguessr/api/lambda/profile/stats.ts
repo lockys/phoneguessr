@@ -3,11 +3,11 @@ import { IS_MOCK } from '../../../src/mock/index.ts';
 import { getMockProfileStats } from '../../../src/mock/state.ts';
 
 export const get = async () => {
-  const c = useHonoContext();
-
   if (IS_MOCK) {
-    return c.json(getMockProfileStats());
+    return Response.json(getMockProfileStats());
   }
+
+  const c = useHonoContext();
 
   const { getDb } = await import('../../../src/db');
   const { results } = await import('../../../src/db/schema');

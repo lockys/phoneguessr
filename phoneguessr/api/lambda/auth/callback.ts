@@ -13,11 +13,11 @@ interface GoogleUserInfo {
 }
 
 export const get = async () => {
-  const c = useHonoContext();
-
   if (IS_MOCK) {
-    return c.redirect('/');
+    return new Response(null, { status: 302, headers: { Location: '/' } });
   }
+
+  const c = useHonoContext();
 
   const code = c.req.query('code');
 

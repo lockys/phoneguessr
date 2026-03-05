@@ -2,11 +2,11 @@ import { useHonoContext } from '@modern-js/server-core';
 import { IS_MOCK } from '../../../src/mock/index.ts';
 
 export const get = async () => {
-  const c = useHonoContext();
-
   if (IS_MOCK) {
-    return c.redirect('/');
+    return new Response(null, { status: 302, headers: { Location: '/' } });
   }
+
+  const c = useHonoContext();
 
   const { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI } = await import('../../../src/lib/auth');
 

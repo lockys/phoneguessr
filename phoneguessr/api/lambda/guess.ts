@@ -12,7 +12,7 @@ export const post = async () => {
 
   if (IS_MOCK) {
     const feedback = getMockFeedback(body.phoneId);
-    return c.json({ feedback });
+    return Response.json({ feedback });
   }
 
   const { eq } = await import('drizzle-orm');

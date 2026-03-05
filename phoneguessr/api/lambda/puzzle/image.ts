@@ -3,15 +3,15 @@ import { IS_MOCK } from '../../../src/mock/index.ts';
 import { getMockImageData } from '../../../src/mock/state.ts';
 
 export const get = async () => {
-  const c = useHonoContext();
-
   if (IS_MOCK) {
     const imageData = getMockImageData();
     if (!imageData) {
-      return c.json({ error: 'Image not found' }, 404);
+      return Response.json({ error: 'Image not found' }, { status: 404 });
     }
-    return c.json({ imageData });
+    return Response.json({ imageData });
   }
+
+  const c = useHonoContext();
 
   const { getTodayPuzzle } = await import('../../../src/lib/puzzle');
   const { phone } = await getTodayPuzzle();

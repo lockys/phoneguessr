@@ -3,11 +3,11 @@ import { IS_MOCK } from '../../../src/mock/index.ts';
 import { MOCK_USER } from '../../../src/mock/data.ts';
 
 export const get = async () => {
-  const c = useHonoContext();
-
   if (IS_MOCK) {
-    return c.json({ user: MOCK_USER });
+    return Response.json({ user: MOCK_USER });
   }
+
+  const c = useHonoContext();
 
   const { getCookie } = await import('hono/cookie');
   const { COOKIE_NAME, verifySessionToken } = await import('../../../src/lib/auth');
