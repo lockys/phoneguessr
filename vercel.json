@@ -1,6 +1,9 @@
 {
-  "buildCommand": "cd phoneguessr && pnpm install && pnpm run build",
+  "buildCommand": "cd phoneguessr && pnpm install && pnpm run build && cp dist/html/index/index.html dist/index.html && cp -r dist/public/* dist/",
   "outputDirectory": "phoneguessr/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "functions": {
     "api/puzzle/image.ts": {
       "includeFiles": "phoneguessr/config/public/phones/**"
