@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd phoneguessr && pnpm install && pnpm run build && cp dist/html/index/index.html dist/index.html && cp -r dist/public/* dist/",
+  "buildCommand": "cd phoneguessr && npm install && npm run build && cp dist/html/index/index.html dist/index.html && cp -r dist/public/* dist/",
   "outputDirectory": "phoneguessr/dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
