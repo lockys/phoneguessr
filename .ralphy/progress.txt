@@ -1,54 +1,23 @@
 # Ralphy Progress Log
 
-<<<<<<< HEAD
-## PO: Define addictive game mechanics spec — DONE
+## PO: Define UI polish and visual identity spec
 
-Created OpenSpec change `addictive-game-mechanics` with complete proposal, design, specs, and tasks.
+Created OpenSpec change `2026-03-05-ui-polish-visual-identity` with full proposal, design doc, task breakdown, and 7 individual capability specs.
 
-### Artifacts created:
-- **proposal.md** — Motivation and capability mapping for 6 retention mechanics
-- **design.md** — 8 key design decisions (hint penalty model, streak rules, difficulty as property, proximity as additive feedback, etc.)
-- **9 spec files** with user stories and acceptance criteria:
-  - New: hint-system, streak-tracking, difficulty-tiers, proximity-feedback, yesterday-reveal
-  - Modified: share-card, scoring, game-play, phone-data
-- **tasks.md** — 37 implementation tasks across 8 groups
+### Deliverables
+- `openspec/changes/2026-03-05-ui-polish-visual-identity/proposal.md` — Why, what changes, capabilities, impact, priority order
+- `openspec/changes/2026-03-05-ui-polish-visual-identity/design.md` — Context, goals/non-goals, 7 design decisions with rationale, risks/trade-offs
+- `openspec/changes/2026-03-05-ui-polish-visual-identity/tasks.md` — 50+ implementation tasks across 8 sections
+- 7 individual specs with scenario-based requirements:
+  1. `guess-feedback-animation` — Slide-in, color reveal, shake/pulse, haptics
+  2. `image-reveal-celebration` — Radial glow behind phone image on win
+  3. `stats-visualization` — Wordle-style guess distribution histogram
+  4. `onboarding-tutorial` — 3-step spotlight tutorial for new players
+  5. `theme-system` — Light/dark theme with CSS custom property overrides
+  6. `sound-effects` — Lazy-loaded SFX with mute toggle
+  7. `pwa-manifest` — Web app manifest, icons, offline fallback, service worker
 
-### Business logic implemented and tested:
-- `src/lib/scoring.ts` — Updated score formula: elapsed + (guesses × 10) + (hints × 15)
-- `src/lib/streak.ts` — Streak calculation with milestone tracking
-- `src/lib/proximity.ts` — Proximity feedback computation with graceful null handling
-- `src/lib/share.ts` — Enhanced share text with emoji grid, difficulty, streak, hints
-
-### Test infrastructure:
-- Added vitest as test runner (48 tests, all passing)
-- Tests cover: scoring formula, streak logic, proximity computation, share text generation
-=======
-## PO: Define phone data expansion requirements
-
-**Status:** Complete
-**Branch:** ralphy/agent-2-1772724620550-vndn3h-po-define-phone-data-expansion-requirements
-
-### What was done:
-- Created OpenSpec change `phone-data-expansion` with full proposal, design, specs, and tasks
-- Defined requirements for expanding from 20 phones/5 brands to 120+ phones/15+ brands
-- Specified 4 new metadata fields: releaseYear, priceTier, formFactor, difficulty
-- Defined image standards (800x1200px min, JPG, clean background, naming convention)
-- Defined manual curation pipeline with validation checklist
-- Designed catalog distribution targets and difficulty balance requirements
-- Updated phone-data and mock-api specs with new metadata requirements
-- Created validation scripts for phone data and spec completeness (47 spec tests pass)
-
-### Artifacts created:
-- `openspec/changes/phone-data-expansion/proposal.md`
-- `openspec/changes/phone-data-expansion/design.md`
-- `openspec/changes/phone-data-expansion/tasks.md`
-- `openspec/changes/phone-data-expansion/specs/phone-metadata/spec.md`
-- `openspec/changes/phone-data-expansion/specs/phone-catalog-targets/spec.md`
-- `openspec/changes/phone-data-expansion/specs/phone-image-standards/spec.md`
-- `openspec/changes/phone-data-expansion/specs/phone-curation-pipeline/spec.md`
-- `openspec/changes/phone-data-expansion/specs/phone-data/spec.md`
-- `openspec/changes/phone-data-expansion/specs/mock-api/spec.md`
-- `phoneguessr/scripts/validate-phone-data.ts`
-- `phoneguessr/scripts/validate-phone-expansion-specs.ts`
->>>>>>> 381c586 (Define phone data expansion requirements via OpenSpec proposal)
-
+### Priority Order
+- P1: Guess feedback animation, Image reveal celebration (core gameplay feel)
+- P2: Stats visualization, Onboarding tutorial (engagement & retention)
+- P3: PWA manifest, Sound effects, Dark/light theme (platform polish)
