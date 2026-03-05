@@ -9,6 +9,8 @@ export const get = async () => {
       puzzleNumber: p.puzzleNumber,
       puzzleDate: p.puzzleDate,
       imageUrl: '/api/puzzle/image',
+      _mockAnswerId: p._answerId,
+      _mockAnswerBrand: p._answerBrand,
     };
   }
 

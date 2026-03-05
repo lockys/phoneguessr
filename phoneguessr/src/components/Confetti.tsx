@@ -12,7 +12,7 @@ export function Confetti({ show }: ConfettiProps) {
     if (!show || firedRef.current) return;
     firedRef.current = true;
 
-    const duration = 1200;
+    const duration = 600;
     const end = Date.now() + duration;
 
     const frame = () => {

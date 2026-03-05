@@ -33,6 +33,11 @@
   "profile.streak": "連勝",
   "profile.best": "最佳",
   "profile.loading": "載入統計中...",
+  "profile.editName": "輸入顯示名稱",
+  "profile.displayName": "顯示名稱",
+  "profile.language": "語言",
+  "profile.save": "儲存",
+  "profile.saved": "已儲存！",
   "profile.signInPrompt": "登入以跨裝置同步你的統計資料",
 
   "leaderboard.title": "排行榜",

@@ -33,6 +33,11 @@
   "profile.streak": "連勝",
   "profile.best": "最高",
   "profile.loading": "統計を読み込み中...",
+  "profile.editName": "表示名を入力",
+  "profile.displayName": "表示名",
+  "profile.language": "言語",
+  "profile.save": "保存",
+  "profile.saved": "保存しました！",
   "profile.signInPrompt": "ログインしてデバイス間で統計を同期",
 
   "leaderboard.title": "リーダーボード",

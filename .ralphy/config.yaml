@@ -1,35 +1,29 @@
 # Ralphy Configuration
 # https://github.com/michaelshimeles/ralphy
 
-# Project info (auto-detected, edit if needed)
 project:
-  name: "guess-game"
-  language: "Unknown"
-  framework: ""
-  description: ""  # Add a brief description
+  name: "phoneguessr"
+  language: "TypeScript"
+  framework: "Modern.js"
+  description: "Daily phone guessing game - identify phones from cropped photos"
 
-# Commands (auto-detected from package.json/pyproject.toml)
 commands:
-  test: ""
-  lint: ""
-  build: ""
+  dev: "cd phoneguessr && npm run dev:mock"
+  build: "cd phoneguessr && npm run build"
+  lint: "cd phoneguessr && npx biome check"
+  typecheck: "cd phoneguessr && npx tsc --noEmit"
 
-# Rules - instructions the AI MUST follow
-# These are injected into every prompt
 rules:
-  # Examples:
-  # - "Always use TypeScript strict mode"
-  # - "Follow the error handling pattern in src/utils/errors.ts"
-  # - "All API endpoints must have input validation with Zod"
-  # - "Use server actions instead of API routes in Next.js"
-  #
-  # Skills/playbooks (optional):
-  # - "Before coding, read and follow any relevant skill/playbook docs under .opencode/skills, .claude/skills, or .github/skills."
+  - "Use React 19 with functional components and hooks"
+  - "Use i18next for all user-facing strings - support en, zh-TW, zh-CN, ja, ko"
+  - "API endpoints live in phoneguessr/api/lambda/ and use Hono context"
+  - "Check IS_MOCK before calling useHonoContext() in API endpoints"
+  - "Use CSS classes in phoneguessr/src/routes/index.css - no CSS modules or styled-components"
+  - "Use Biome for linting, not ESLint"
 
-# Boundaries - files/folders the AI should not modify
 boundaries:
   never_touch:
-    # Examples:
-    # - "src/legacy/**"
-    # - "migrations/**"
-    # - "*.lock"
+    - "*.lock"
+    - "phoneguessr/dist/**"
+    - "phoneguessr/node_modules/**"
+    - "phoneguessr/src/db/migrations/**"

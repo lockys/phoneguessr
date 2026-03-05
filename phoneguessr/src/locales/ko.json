@@ -33,6 +33,11 @@
   "profile.streak": "연승",
   "profile.best": "최고",
   "profile.loading": "통계 불러오는 중...",
+  "profile.editName": "표시 이름 입력",
+  "profile.displayName": "표시 이름",
+  "profile.language": "언어",
+  "profile.save": "저장",
+  "profile.saved": "저장됨!",
   "profile.signInPrompt": "로그인하여 기기 간 통계를 동기화하세요",
 
   "leaderboard.title": "리더보드",

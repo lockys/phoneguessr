@@ -27,6 +27,8 @@ interface PuzzleData {
   puzzleNumber: number;
   puzzleDate: string;
   imageUrl: string;
+  _mockAnswerId?: number;
+  _mockAnswerBrand?: string;
 }
 
 type GameState = 'loading' | 'ready' | 'playing' | 'won' | 'lost';
@@ -86,17 +88,29 @@ export function Game() {
   const handleGuess = async (phone: Phone) => {
     if (!puzzle || gameState !== 'playing') return;
 
-    const res = await fetch('/api/guess', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        puzzleId: puzzle.puzzleId,
-        phoneId: phone.id,
-        guessNumber: guesses.length + 1,
-      }),
-    });
+    let feedback: Guess['feedback'];
 
-    const { feedback } = await res.json();
+    if (puzzle._mockAnswerId != null) {
+      // Mock mode: compare client-side
+      if (phone.id === puzzle._mockAnswerId) {
+        feedback = 'correct';
+      } else if (phone.brand === puzzle._mockAnswerBrand) {
+        feedback = 'right_brand';
+      } else {
+        feedback = 'wrong_brand';
+      }
+    } else {
+      const res = await fetch('/api/guess', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          puzzleId: puzzle.puzzleId,
+          phoneId: phone.id,
+          guessNumber: guesses.length + 1,
+        }),
+      });
+      ({ feedback } = await res.json());
+    }
     const newGuess: Guess = {
       phoneName: `${phone.brand} ${phone.model}`,
       feedback,
@@ -129,7 +143,7 @@ export function Game() {
       JSON.stringify({ guesses: finalGuesses, elapsed, won }),
     );
 
-    if (user) {
+    if (user && !puzzle._mockAnswerId) {
       await fetch('/api/result', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

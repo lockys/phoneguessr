@@ -14,18 +14,17 @@ export function GuessHistory({ guesses, maxGuesses }: GuessHistoryProps) {
   const { t } = useTranslation();
 
   const FEEDBACK_CONFIG = {
-    wrong_brand: { icon: '\u274C', label: t('guess.wrongBrand'), className: 'guess-wrong' },
-    right_brand: { icon: '\uD83D\uDFE1', label: t('guess.rightBrand'), className: 'guess-close' },
-    correct: { icon: '\u2705', label: t('guess.correct'), className: 'guess-correct' },
+    wrong_brand: { label: t('guess.wrongBrand'), className: 'guess-wrong' },
+    right_brand: { label: t('guess.rightBrand'), className: 'guess-close' },
+    correct: { label: t('guess.correct'), className: 'guess-correct' },
   };
 
   return (
     <div className="guess-history">
       {guesses.map((guess, i) => {
-        const config = FEEDBACK_CONFIG[guess.feedback];
+        const config = FEEDBACK_CONFIG[guess.feedback] ?? FEEDBACK_CONFIG.wrong_brand;
         return (
           <div key={i} className={`guess-row ${config.className}`}>
-            <span className="guess-icon">{config.icon}</span>
             <span className="guess-name">{guess.phoneName}</span>
             <span className="guess-label">{config.label}</span>
           </div>

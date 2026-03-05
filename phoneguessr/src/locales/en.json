@@ -33,6 +33,11 @@
   "profile.streak": "Streak",
   "profile.best": "Best",
   "profile.loading": "Loading stats...",
+  "profile.editName": "Enter display name",
+  "profile.displayName": "Display Name",
+  "profile.language": "Language",
+  "profile.save": "Save",
+  "profile.saved": "Saved!",
   "profile.signInPrompt": "Sign in to sync your stats across devices",
 
   "leaderboard.title": "Leaderboard",

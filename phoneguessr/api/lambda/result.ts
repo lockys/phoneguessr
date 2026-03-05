@@ -2,20 +2,17 @@ import { useHonoContext } from '@modern-js/server-core';
 import { IS_MOCK } from '../../src/mock/index.ts';
 
 export const post = async () => {
-  const c = useHonoContext();
+  if (IS_MOCK) {
+    return Response.json({ success: true, score: null });
+  }
 
+  const c = useHonoContext();
   const body = await c.req.json<{
     puzzleId: number;
     guessCount: number;
     isWin: boolean;
     elapsedSeconds: number;
   }>();
-
-  if (IS_MOCK) {
-    const wrongGuesses = body.isWin ? body.guessCount - 1 : body.guessCount;
-    const score = body.isWin ? body.elapsedSeconds + wrongGuesses * 10 : null;
-    return c.json({ success: true, score });
-  }
 
   const { getCookie } = await import('hono/cookie');
   const { and, eq } = await import('drizzle-orm');

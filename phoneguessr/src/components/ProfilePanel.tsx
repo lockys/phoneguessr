@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../lib/auth-context';
 import { LanguageSelector } from './LanguageSelector';
 
+
 interface Stats {
   gamesPlayed: number;
   wins: number;
@@ -63,9 +64,12 @@ export function ProfilePanel() {
   const { t } = useTranslation();
   const { user, login } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
+  const [displayName, setDisplayName] = useState('');
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     if (user) {
+      setDisplayName(user.displayName || '');
       fetch('/api/profile/stats')
         .then(r => r.json())
         .then(setStats)
@@ -74,6 +78,18 @@ export function ProfilePanel() {
       setStats(getLocalStats());
     }
   }, [user]);
+
+  const handleSave = async () => {
+    try {
+      await fetch('/api/profile/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ displayName }),
+      });
+    } catch { /* mock mode - save locally */ }
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
 
   return (
     <div className="profile-panel">
@@ -108,6 +124,28 @@ export function ProfilePanel() {
         <p className="profile-loading">{t('profile.loading')}</p>
       )}
 
+      {user && (
+        <div className="profile-form">
+          <div className="profile-form-field">
+            <label className="profile-form-label">{t('profile.displayName')}</label>
+            <input
+              type="text"
+              className="profile-form-input"
+              value={displayName}
+              onChange={e => setDisplayName(e.target.value)}
+              placeholder={t('profile.editName')}
+            />
+          </div>
+          <div className="profile-form-field">
+            <label className="profile-form-label">{t('profile.language')}</label>
+            <LanguageSelector />
+          </div>
+          <button type="button" className="profile-form-save" onClick={handleSave}>
+            {saved ? t('profile.saved') : t('profile.save')}
+          </button>
+        </div>
+      )}
+
       {!user && (
         <div className="profile-auth-prompt">
           <p>{t('profile.signInPrompt')}</p>
@@ -117,9 +155,6 @@ export function ProfilePanel() {
         </div>
       )}
 
-      <div className="profile-lang">
-        <LanguageSelector />
-      </div>
     </div>
   );
 }

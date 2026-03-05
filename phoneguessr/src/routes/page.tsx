@@ -5,6 +5,7 @@ import { Leaderboard } from '../components/Leaderboard';
 import { ProfilePanel } from '../components/ProfilePanel';
 import { AboutPanel } from '../components/AboutPanel';
 import { AuthButton } from '../components/AuthButton';
+
 import { SwipeContainer } from '../components/SwipeContainer';
 import './index.css';
 

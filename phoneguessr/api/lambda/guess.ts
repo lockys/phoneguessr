@@ -3,17 +3,16 @@ import { IS_MOCK } from '../../src/mock/index.ts';
 import { getMockFeedback } from '../../src/mock/state.ts';
 
 export const post = async () => {
+  if (IS_MOCK) {
+    return Response.json({ feedback: 'wrong_brand' });
+  }
+
   const c = useHonoContext();
   const body = await c.req.json<{
     puzzleId: number;
     phoneId: number;
     guessNumber: number;
   }>();
-
-  if (IS_MOCK) {
-    const feedback = getMockFeedback(body.phoneId);
-    return Response.json({ feedback });
-  }
 
   const { eq } = await import('drizzle-orm');
   const { db } = await import('../../src/db');
