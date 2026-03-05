@@ -1,11 +1,11 @@
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Language selector UI
-The system SHALL provide a language selector control in the app header for manual language switching.
+The system SHALL provide a language selector control in the Profile panel for manual language switching.
 
-#### Scenario: Selector visibility
+#### Scenario: Selector location
 - **WHEN** the app renders
-- **THEN** a language selector SHALL be visible in the app header area
+- **THEN** the language selector SHALL be located in the Profile panel, not in the app header
 
 #### Scenario: Switching language
 - **WHEN** a user selects a different language from the selector
