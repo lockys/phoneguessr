@@ -19,7 +19,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100dvh;
@@ -114,10 +114,18 @@ body {
 }
 
 @keyframes hint-fade {
-  0% { opacity: 0; }
-  10% { opacity: 0.7; }
-  70% { opacity: 0.7; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Result Modal */
@@ -162,13 +170,23 @@ body {
 }
 
 @keyframes modal-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modal-slide-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Language Selector */
@@ -348,13 +366,23 @@ body {
 }
 
 @keyframes block-pop-out {
-  0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.3); }
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
 }
 
 @keyframes block-fade-out {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Timer */
@@ -395,8 +423,13 @@ body {
 }
 
 @keyframes blink-cursor {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .autocomplete-input {
@@ -506,6 +539,70 @@ body {
 .guess-label {
   color: var(--text-muted);
   font-size: 12px;
+}
+
+/* Guess row animations */
+@keyframes guess-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes guess-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes guess-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.guess-row-enter {
+  animation: guess-slide-in 0.3s ease-out;
+  transition: border-color 0.2s ease;
+}
+
+.guess-row.guess-row-neutral {
+  border-color: var(--border);
+}
+
+.guess-row-shake {
+  animation: guess-shake 0.3s ease;
+}
+
+.guess-row-pulse {
+  animation: guess-pulse 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guess-row-enter,
+  .guess-row-shake,
+  .guess-row-pulse {
+    animation: none;
+  }
+
+  .guess-row-enter {
+    transition: none;
+  }
 }
 
 /* Game Over */
@@ -817,4 +914,3 @@ body {
   font-size: 12px !important;
   margin-top: 4px;
 }
-
