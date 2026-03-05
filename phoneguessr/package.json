@@ -28,7 +28,8 @@
     "pg": "^8.20.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.0",
-    "react-i18next": "^16.5.4"
+    "react-i18next": "^16.5.4",
+    "web-haptics": "^0.0.6"
   },
   "pnpm": {
     "overrides": {

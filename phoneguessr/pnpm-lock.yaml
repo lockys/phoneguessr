@@ -13,10 +13,10 @@ importers:
     dependencies:
       '@modern-js/plugin-bff':
         specifier: ^3.0.4
-        version: 3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(core-js@3.48.0)(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.19))(@types/node@20.19.35)(typescript@5.7.3))(tsconfig-paths@4.2.0)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))
+        version: 3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(core-js@3.48.0)(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.19))(@types/node@20.19.35)(typescript@5.7.3))(tsconfig-paths@4.2.0)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))
       '@modern-js/runtime':
         specifier: 3.0.4
-        version: 3.0.4(core-js@3.48.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 3.0.4(core-js@3.48.0)(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       '@modern-js/server-core':
         specifier: ^3.0.4
         version: 3.0.4(core-js@3.48.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -47,13 +47,16 @@ importers:
       react-i18next:
         specifier: ^16.5.4
         version: 16.5.4(i18next@25.8.14(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
+      web-haptics:
+        specifier: ^0.0.6
+        version: 0.0.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
       '@modern-js/app-tools':
         specifier: 3.0.4
-        version: 3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(core-js@3.48.0)(encoding@0.1.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.19))(@types/node@20.19.35)(typescript@5.7.3))(tsconfig-paths@4.2.0)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))
+        version: 3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(core-js@3.48.0)(encoding@0.1.13)(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.19))(@types/node@20.19.35)(typescript@5.7.3))(tsconfig-paths@4.2.0)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))
       '@modern-js/tsconfig':
         specifier: 3.0.4
         version: 3.0.4
@@ -3274,6 +3277,14 @@ packages:
       react-dom:
         optional: true
 
+  react-server-dom-rspack@0.0.1-beta.1:
+    resolution: {integrity: sha512-jC8Lvn6mRcfFOrlSa0Df9nH7diNooLVWOtO31VtxHFyQ9qoddx+k3RcqC1wdtAlCRxJMF+xii8VzerYpjABktQ==}
+    engines: {node: '>=0.10.0'}
+    peerDependencies:
+      '@rspack/core': 2.0.0-beta.5
+      react: ^19.1.0
+      react-dom: ^19.1.0
+
   react-side-effect@2.1.2:
     resolution: {integrity: sha512-PVjOcvVOyIILrYoyGEpDN3vmYNLdy1CajSFNt4TDsVQC5KpTijDvWVoR+/7Rz2xT978D8/ZtFceXxzsPwZEDvw==}
     peerDependencies:
@@ -3772,6 +3783,23 @@ packages:
 
   web-encoding@1.1.5:
     resolution: {integrity: sha512-HYLeVCdJ0+lBYV2FvNZmv3HJ2Nt0QYXqZojk3d9FJOLkwnuhzM9tmamh8d7HPM8QqjKH8DeHkFTx+CFlWpZZDA==}
+
+  web-haptics@0.0.6:
+    resolution: {integrity: sha512-eCzcf1LDi20+Fr0x9V3OkX92k0gxEQXaHajmhXHitsnk6SxPeshv8TBtBRqxyst8HI1uf2FyFVE7QS3jo1gkrw==}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+      svelte: '>=4'
+      vue: '>=3'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
 
   web-streams-polyfill@3.3.3:
     resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
@@ -4469,12 +4497,12 @@ snapshots:
       - encoding
       - supports-color
 
-  '@modern-js/app-tools@3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(core-js@3.48.0)(encoding@0.1.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.19))(@types/node@20.19.35)(typescript@5.7.3))(tsconfig-paths@4.2.0)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))':
+  '@modern-js/app-tools@3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(core-js@3.48.0)(encoding@0.1.13)(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.19))(@types/node@20.19.35)(typescript@5.7.3))(tsconfig-paths@4.2.0)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))':
     dependencies:
       '@babel/parser': 7.29.0
       '@babel/traverse': 7.29.0
       '@babel/types': 7.29.0
-      '@modern-js/builder': 3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))
+      '@modern-js/builder': 3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))
       '@modern-js/i18n-utils': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@modern-js/plugin': 3.0.4(core-js@3.48.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@modern-js/plugin-data-loader': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -4534,7 +4562,7 @@ snapshots:
       - react
       - react-dom
 
-  '@modern-js/builder@3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))':
+  '@modern-js/builder@3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))':
     dependencies:
       '@modern-js/utils': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@rsbuild/core': 2.0.0-beta.4(core-js@3.48.0)
@@ -4565,7 +4593,7 @@ snapshots:
       postcss-media-minmax: 5.0.0(postcss@8.5.8)
       postcss-nesting: 12.1.5(postcss@8.5.8)
       postcss-page-break: 3.0.4(postcss@8.5.8)
-      rsbuild-plugin-rsc: 0.0.1-beta.0(@rsbuild/core@2.0.0-beta.4(core-js@3.48.0))
+      rsbuild-plugin-rsc: 0.0.1-beta.0(@rsbuild/core@2.0.0-beta.4(core-js@3.48.0))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
       rspack-manifest-plugin: 5.2.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))
       ts-deepmerge: 7.0.3
     transitivePeerDependencies:
@@ -4606,10 +4634,10 @@ snapshots:
       - react
       - react-dom
 
-  '@modern-js/plugin-bff@3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(core-js@3.48.0)(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.19))(@types/node@20.19.35)(typescript@5.7.3))(tsconfig-paths@4.2.0)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))':
+  '@modern-js/plugin-bff@3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(core-js@3.48.0)(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.19))(@types/node@20.19.35)(typescript@5.7.3))(tsconfig-paths@4.2.0)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))':
     dependencies:
       '@modern-js/bff-core': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(ts-node@10.9.2(@swc/core@1.15.11(@swc/helpers@0.5.19))(@types/node@20.19.35)(typescript@5.7.3))(tsconfig-paths@4.2.0)
-      '@modern-js/builder': 3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))
+      '@modern-js/builder': 3.0.4(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(esbuild@0.25.5)(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(tslib@2.8.1)(typescript@5.7.3)(webpack@5.105.4(@swc/core@1.15.11(@swc/helpers@0.5.19))(esbuild@0.25.5))
       '@modern-js/create-request': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@modern-js/server-core': 3.0.4(core-js@3.48.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@modern-js/server-utils': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -4675,13 +4703,14 @@ snapshots:
       - react
       - react-dom
 
-  '@modern-js/render@3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@modern-js/render@3.0.4(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@modern-js/types': 3.0.4
       '@modern-js/utils': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@swc/helpers': 0.5.19
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
+      react-server-dom-rspack: 0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
 
   '@modern-js/runtime-utils@3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
@@ -4695,13 +4724,13 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@modern-js/runtime@3.0.4(core-js@3.48.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@modern-js/runtime@3.0.4(core-js@3.48.0)(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@loadable/component': 5.16.7(react@19.2.4)
       '@loadable/server': 5.16.7(@loadable/component@5.16.7(react@19.2.4))(react@19.2.4)
       '@modern-js/plugin': 3.0.4(core-js@3.48.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@modern-js/plugin-data-loader': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@modern-js/render': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@modern-js/render': 3.0.4(react-dom@19.2.4(react@19.2.4))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       '@modern-js/runtime-utils': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@modern-js/types': 3.0.4
       '@modern-js/utils': 3.0.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -7005,6 +7034,12 @@ snapshots:
     optionalDependencies:
       react-dom: 19.2.4(react@19.2.4)
 
+  react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+    dependencies:
+      '@rspack/core': 2.0.0-beta.5(@swc/helpers@0.5.19)
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
   react-side-effect@2.1.2(react@19.2.4):
     dependencies:
       react: 19.2.4
@@ -7042,9 +7077,10 @@ snapshots:
 
   reusify@1.1.0: {}
 
-  rsbuild-plugin-rsc@0.0.1-beta.0(@rsbuild/core@2.0.0-beta.4(core-js@3.48.0)):
+  rsbuild-plugin-rsc@0.0.1-beta.0(@rsbuild/core@2.0.0-beta.4(core-js@3.48.0))(react-server-dom-rspack@0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)):
     dependencies:
       '@rsbuild/core': 2.0.0-beta.4(core-js@3.48.0)
+      react-server-dom-rspack: 0.0.1-beta.1(@rspack/core@2.0.0-beta.5(@swc/helpers@0.5.19))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
 
   rslog@1.3.2: {}
 
@@ -7472,6 +7508,11 @@ snapshots:
       util: 0.12.5
     optionalDependencies:
       '@zxing/text-encoding': 0.9.0
+
+  web-haptics@0.0.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+    optionalDependencies:
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
 
   web-streams-polyfill@3.3.3: {}
 

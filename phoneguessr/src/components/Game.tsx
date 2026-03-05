@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useWebHaptics } from 'web-haptics/react';
 import { CropReveal } from './CropReveal';
 import { Confetti } from './Confetti';
 import { PhoneAutocomplete } from './PhoneAutocomplete';
@@ -32,6 +33,7 @@ type GameState = 'loading' | 'ready' | 'playing' | 'won' | 'lost';
 
 export function Game() {
   const { t } = useTranslation();
+  const haptic = useWebHaptics();
   const { user } = useAuth();
   const [gameState, setGameState] = useState<GameState>('loading');
   const [puzzle, setPuzzle] = useState<PuzzleData | null>(null);
@@ -76,6 +78,7 @@ export function Game() {
   }, []);
 
   const handleStart = () => {
+    haptic.trigger('medium');
     setGameState('playing');
     setTimerRunning(true);
   };
@@ -102,13 +105,17 @@ export function Game() {
     setGuesses(newGuesses);
 
     if (feedback === 'correct') {
+      haptic.trigger('success');
       setTimerRunning(false);
       setGameState('won');
       saveResult(newGuesses, true);
-    } else if (newGuesses.length >= MAX_GUESSES) {
-      setTimerRunning(false);
-      setGameState('lost');
-      saveResult(newGuesses, false);
+    } else {
+      haptic.trigger('error');
+      if (newGuesses.length >= MAX_GUESSES) {
+        setTimerRunning(false);
+        setGameState('lost');
+        saveResult(newGuesses, false);
+      }
     }
   };
 
