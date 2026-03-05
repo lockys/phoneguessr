@@ -6,7 +6,7 @@
   ],
   "functions": {
     "api/**/*.ts": {
-      "includeFiles": ["phoneguessr/src/**", "phoneguessr/config/public/phones/**"]
+      "includeFiles": "phoneguessr/{src,config/public/phones}/**"
     }
   }
 }
