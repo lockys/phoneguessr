@@ -1,0 +1,25 @@
+import { useHonoContext } from '@modern-js/server-core';
+import { IS_MOCK } from '../../../src/mock';
+
+export const get = async () => {
+  const c = useHonoContext();
+
+  if (IS_MOCK) {
+    return c.redirect('/');
+  }
+
+  const { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI } = await import('../../../src/lib/auth');
+
+  const params = new URLSearchParams({
+    client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: GOOGLE_REDIRECT_URI,
+    response_type: 'code',
+    scope: 'openid profile email',
+    access_type: 'online',
+    prompt: 'select_account',
+  });
+
+  return c.redirect(
+    `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`,
+  );
+};

@@ -1,0 +1,66 @@
+{
+  "game.title": "PhoneGuessr",
+  "game.loading": "パズルを読み込み中...",
+  "game.meta.title": "PhoneGuessr - 毎日のスマホ当てゲーム",
+  "game.meta.description": "切り抜き写真からスマホを当てよう。毎日1問出題。",
+  "game.start": "スタート",
+
+  "auth.signIn": "Googleでログイン",
+  "auth.signOut": "ログアウト",
+
+  "result.win": "正解！",
+  "result.loss": "また明日挑戦しよう！",
+  "result.guesses": "推測回数",
+  "result.score": "スコア",
+  "result.time": "時間",
+  "result.copied": "コピー済み！",
+  "result.share": "シェア",
+  "result.signInPrompt": "ログインしてスコアをリーダーボードに保存しよう！",
+
+  "guess.wrongBrand": "ブランド不正解",
+  "guess.rightBrand": "ブランド正解",
+  "guess.correct": "正解！",
+  "guess.remaining": "残り {{count}} 回",
+
+  "input.placeholder": "このスマホは何？",
+
+  "crop.alt": "謎のスマホ",
+
+  "profile.yourStats": "あなたの統計",
+  "profile.played": "プレイ数",
+  "profile.wins": "勝利",
+  "profile.winRate": "勝率",
+  "profile.streak": "連勝",
+  "profile.best": "最高",
+  "profile.loading": "統計を読み込み中...",
+  "profile.signInPrompt": "ログインしてデバイス間で統計を同期",
+
+  "leaderboard.title": "リーダーボード",
+  "leaderboard.daily": "デイリー",
+  "leaderboard.weekly": "ウィークリー",
+  "leaderboard.monthly": "マンスリー",
+  "leaderboard.allTime": "累計",
+  "leaderboard.loading": "読み込み中...",
+  "leaderboard.empty": "まだ記録がありません。最初の挑戦者になろう！",
+  "leaderboard.wins": "{{count}} 勝",
+
+  "about.title": "PhoneGuessr",
+  "about.tagline": "毎日のスマホ当てゲーム",
+  "about.howToPlay": "遊び方",
+  "about.rule1": "謎のスマホ画像がブロックの後ろに隠されています",
+  "about.rule2": "スマホの名前を入力して候補から選択",
+  "about.rule3": "不正解のたびに画像がもっと見える",
+  "about.rule4": "できるだけ少ない回数で当てよう",
+  "about.rule5": "各パズルは6回まで推測できます",
+  "about.rule6": "毎日新しいパズルが登場",
+  "about.scoring": "スコア計算",
+  "about.scoringText": "スコアは時間に不正解1回につき10秒のペナルティを加算。低いほど良い。ログインしてリーダーボードに参加！",
+  "about.credits": "クレジット",
+  "about.createdBy": "Calvin Jeng 制作",
+  "about.imageSource": "スマホ画像はメーカーのプレスキットから取得",
+
+  "nav.profile": "プロフィール",
+  "nav.game": "ゲーム",
+  "nav.leaderboard": "ランキング",
+  "nav.about": "概要"
+}

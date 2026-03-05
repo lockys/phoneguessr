@@ -1,0 +1,66 @@
+{
+  "game.title": "PhoneGuessr",
+  "game.loading": "Loading puzzle...",
+  "game.meta.title": "PhoneGuessr - Daily Phone Guessing Game",
+  "game.meta.description": "Identify phones from cropped photos. One puzzle per day.",
+  "game.start": "Start",
+
+  "auth.signIn": "Sign in with Google",
+  "auth.signOut": "Sign out",
+
+  "result.win": "You got it!",
+  "result.loss": "Better luck tomorrow!",
+  "result.guesses": "Guesses",
+  "result.score": "Score",
+  "result.time": "Time",
+  "result.copied": "Copied!",
+  "result.share": "Share",
+  "result.signInPrompt": "Sign in to save your score to the leaderboard!",
+
+  "guess.wrongBrand": "Wrong brand",
+  "guess.rightBrand": "Right brand",
+  "guess.correct": "Correct!",
+  "guess.remaining": "{{count}} guesses left",
+
+  "input.placeholder": "Guess the phone...",
+
+  "crop.alt": "Mystery phone",
+
+  "profile.yourStats": "Your Stats",
+  "profile.played": "Played",
+  "profile.wins": "Wins",
+  "profile.winRate": "Win Rate",
+  "profile.streak": "Streak",
+  "profile.best": "Best",
+  "profile.loading": "Loading stats...",
+  "profile.signInPrompt": "Sign in to sync your stats across devices",
+
+  "leaderboard.title": "Leaderboard",
+  "leaderboard.daily": "Daily",
+  "leaderboard.weekly": "Weekly",
+  "leaderboard.monthly": "Monthly",
+  "leaderboard.allTime": "All-Time",
+  "leaderboard.loading": "Loading...",
+  "leaderboard.empty": "No entries yet. Be the first to solve today's puzzle!",
+  "leaderboard.wins": "{{count}} wins",
+
+  "about.title": "PhoneGuessr",
+  "about.tagline": "Daily phone guessing game",
+  "about.howToPlay": "How to Play",
+  "about.rule1": "A mystery phone image is hidden behind blocks",
+  "about.rule2": "Type a phone name and select from the suggestions",
+  "about.rule3": "Each wrong guess reveals more of the image",
+  "about.rule4": "Guess correctly in as few tries as possible",
+  "about.rule5": "You have 6 guesses per puzzle",
+  "about.rule6": "A new puzzle is available every day",
+  "about.scoring": "Scoring",
+  "about.scoringText": "Your score is based on time plus a 10-second penalty per wrong guess. Lower is better. Sign in to appear on the leaderboard!",
+  "about.credits": "Credits",
+  "about.createdBy": "Created by Calvin Jeng",
+  "about.imageSource": "Phone images sourced from manufacturer press kits",
+
+  "nav.profile": "Profile",
+  "nav.game": "Game",
+  "nav.leaderboard": "Leaderboard",
+  "nav.about": "About"
+}

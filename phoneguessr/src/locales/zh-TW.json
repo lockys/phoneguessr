@@ -1,0 +1,66 @@
+{
+  "game.title": "PhoneGuessr",
+  "game.loading": "載入謎題中...",
+  "game.meta.title": "PhoneGuessr - 每日手機猜謎遊戲",
+  "game.meta.description": "從裁切的照片中辨識手機。每天一道謎題。",
+  "game.start": "開始",
+
+  "auth.signIn": "使用 Google 登入",
+  "auth.signOut": "登出",
+
+  "result.win": "答對了！",
+  "result.loss": "明天再接再厲！",
+  "result.guesses": "猜測次數",
+  "result.score": "分數",
+  "result.time": "時間",
+  "result.copied": "已複製！",
+  "result.share": "分享",
+  "result.signInPrompt": "登入以將分數儲存至排行榜！",
+
+  "guess.wrongBrand": "品牌錯誤",
+  "guess.rightBrand": "品牌正確",
+  "guess.correct": "正確！",
+  "guess.remaining": "還剩 {{count}} 次機會",
+
+  "input.placeholder": "猜猜這是什麼手機",
+
+  "crop.alt": "神秘手機",
+
+  "profile.yourStats": "你的統計",
+  "profile.played": "已玩",
+  "profile.wins": "勝利",
+  "profile.winRate": "勝率",
+  "profile.streak": "連勝",
+  "profile.best": "最佳",
+  "profile.loading": "載入統計中...",
+  "profile.signInPrompt": "登入以跨裝置同步你的統計資料",
+
+  "leaderboard.title": "排行榜",
+  "leaderboard.daily": "每日",
+  "leaderboard.weekly": "每週",
+  "leaderboard.monthly": "每月",
+  "leaderboard.allTime": "總排名",
+  "leaderboard.loading": "載入中...",
+  "leaderboard.empty": "尚無記錄。成為第一個解開今日謎題的人！",
+  "leaderboard.wins": "{{count}} 勝",
+
+  "about.title": "PhoneGuessr",
+  "about.tagline": "每日手機猜謎遊戲",
+  "about.howToPlay": "如何遊玩",
+  "about.rule1": "一張神秘手機照片隱藏在方塊後面",
+  "about.rule2": "輸入手機名稱並從建議中選擇",
+  "about.rule3": "每次猜錯都會揭露更多圖片",
+  "about.rule4": "盡可能用最少次數猜對",
+  "about.rule5": "每道謎題有 6 次猜測機會",
+  "about.rule6": "每天都有新的謎題",
+  "about.scoring": "計分方式",
+  "about.scoringText": "分數根據時間加上每次猜錯 10 秒的罰時計算。分數越低越好。登入即可登上排行榜！",
+  "about.credits": "製作團隊",
+  "about.createdBy": "由 Calvin Jeng 製作",
+  "about.imageSource": "手機圖片來源於製造商媒體資源",
+
+  "nav.profile": "個人檔案",
+  "nav.game": "遊戲",
+  "nav.leaderboard": "排行榜",
+  "nav.about": "關於"
+}

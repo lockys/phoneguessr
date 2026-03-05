@@ -1,0 +1,22 @@
+[
+  { "brand": "Apple", "model": "iPhone 16 Pro Max", "imagePath": "/public/phones/apple-iphone-16-pro-max.jpg" },
+  { "brand": "Apple", "model": "iPhone 16 Pro", "imagePath": "/public/phones/apple-iphone-16-pro.jpg" },
+  { "brand": "Apple", "model": "iPhone 16", "imagePath": "/public/phones/apple-iphone-16.jpg" },
+  { "brand": "Apple", "model": "iPhone 15 Pro Max", "imagePath": "/public/phones/apple-iphone-15-pro-max.jpg" },
+  { "brand": "Apple", "model": "iPhone 15 Pro", "imagePath": "/public/phones/apple-iphone-15-pro.jpg" },
+  { "brand": "Apple", "model": "iPhone 15", "imagePath": "/public/phones/apple-iphone-15.jpg" },
+  { "brand": "Apple", "model": "iPhone 14 Pro", "imagePath": "/public/phones/apple-iphone-14-pro.jpg" },
+  { "brand": "Samsung", "model": "Galaxy S25 Ultra", "imagePath": "/public/phones/samsung-galaxy-s25-ultra.jpg" },
+  { "brand": "Samsung", "model": "Galaxy S24 Ultra", "imagePath": "/public/phones/samsung-galaxy-s24-ultra.jpg" },
+  { "brand": "Samsung", "model": "Galaxy S24", "imagePath": "/public/phones/samsung-galaxy-s24.jpg" },
+  { "brand": "Samsung", "model": "Galaxy Z Fold 6", "imagePath": "/public/phones/samsung-galaxy-z-fold-6.jpg" },
+  { "brand": "Samsung", "model": "Galaxy Z Flip 6", "imagePath": "/public/phones/samsung-galaxy-z-flip-6.jpg" },
+  { "brand": "Google", "model": "Pixel 9 Pro", "imagePath": "/public/phones/google-pixel-9-pro.jpg" },
+  { "brand": "Google", "model": "Pixel 9", "imagePath": "/public/phones/google-pixel-9.jpg" },
+  { "brand": "Google", "model": "Pixel 8 Pro", "imagePath": "/public/phones/google-pixel-8-pro.jpg" },
+  { "brand": "Google", "model": "Pixel 8", "imagePath": "/public/phones/google-pixel-8.jpg" },
+  { "brand": "OnePlus", "model": "13", "imagePath": "/public/phones/oneplus-13.png" },
+  { "brand": "OnePlus", "model": "12", "imagePath": "/public/phones/oneplus-12.jpg" },
+  { "brand": "Nothing", "model": "Phone 2", "imagePath": "/public/phones/nothing-phone-2.png" },
+  { "brand": "Nothing", "model": "Phone 1", "imagePath": "/public/phones/nothing-phone-1.png" }
+]
