@@ -1,2 +1,10 @@
 # Ralphy Progress Log
 
+## 2026-03-06: BE: Implement POST /api/profile/update endpoint
+- Created BFF endpoint: phoneguessr/api/lambda/profile/update.ts
+- Created Vercel serverless endpoint: api/profile/update.ts
+- Extracted shared validation utility: phoneguessr/src/lib/validation.ts
+- Added 13 unit tests for displayName validation: phoneguessr/tests/validation.test.ts
+- Endpoint accepts { displayName: string }, validates (1-50 chars, no HTML), updates users table
+- Mock mode returns static { success: true } without DB/auth
+- Auth required via session cookie verification
