@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "dependencies": {
+    "drizzle-orm": "^0.45.1",
+    "pg": "^8.20.0",
+    "jose": "^6.1.3"
+  }
+}

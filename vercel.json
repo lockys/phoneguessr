@@ -5,8 +5,11 @@
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "functions": {
+    "api/**/*.ts": {
+      "includeFiles": "phoneguessr/src/**"
+    },
     "api/puzzle/image.ts": {
-      "includeFiles": "phoneguessr/config/public/phones/**"
+      "includeFiles": "phoneguessr/config/public/phones/**,phoneguessr/src/**"
     }
   }
 }
