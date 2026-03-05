@@ -1,10 +1,24 @@
 # Ralphy Progress Log
 
-## 2026-03-06: BE: Implement POST /api/profile/update endpoint
-- Created BFF endpoint: phoneguessr/api/lambda/profile/update.ts
-- Created Vercel serverless endpoint: api/profile/update.ts
-- Extracted shared validation utility: phoneguessr/src/lib/validation.ts
-- Added 13 unit tests for displayName validation: phoneguessr/tests/validation.test.ts
-- Endpoint accepts { displayName: string }, validates (1-50 chars, no HTML), updates users table
-- Mock mode returns static { success: true } without DB/auth
-- Auth required via session cookie verification
+## PO: Define addictive game mechanics spec — DONE
+
+Created OpenSpec change `addictive-game-mechanics` with complete proposal, design, specs, and tasks.
+
+### Artifacts created:
+- **proposal.md** — Motivation and capability mapping for 6 retention mechanics
+- **design.md** — 8 key design decisions (hint penalty model, streak rules, difficulty as property, proximity as additive feedback, etc.)
+- **9 spec files** with user stories and acceptance criteria:
+  - New: hint-system, streak-tracking, difficulty-tiers, proximity-feedback, yesterday-reveal
+  - Modified: share-card, scoring, game-play, phone-data
+- **tasks.md** — 37 implementation tasks across 8 groups
+
+### Business logic implemented and tested:
+- `src/lib/scoring.ts` — Updated score formula: elapsed + (guesses × 10) + (hints × 15)
+- `src/lib/streak.ts` — Streak calculation with milestone tracking
+- `src/lib/proximity.ts` — Proximity feedback computation with graceful null handling
+- `src/lib/share.ts` — Enhanced share text with emoji grid, difficulty, streak, hints
+
+### Test infrastructure:
+- Added vitest as test runner (48 tests, all passing)
+- Tests cover: scoring formula, streak logic, proximity computation, share text generation
+
