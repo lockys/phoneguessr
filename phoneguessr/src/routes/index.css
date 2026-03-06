@@ -371,6 +371,32 @@ body {
 
 .autocomplete-wrapper {
   position: relative;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: var(--surface);
+}
+
+.autocomplete-wrapper:has(.autocomplete-input:not(:disabled)) {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    conic-gradient(from var(--glow-angle, 0deg), #6366f1, #8b5cf6, #d946ef, #f43f5e, #f97316, #eab308, #22c55e, #06b6d4, #6366f1) border-box;
+  animation: glow-rotate 3s linear infinite;
+}
+
+.autocomplete-wrapper:has(.autocomplete-input:focus) {
+  animation: glow-rotate 1.5s linear infinite;
+  box-shadow: 0 0 16px 2px rgba(139, 92, 246, 0.3);
+}
+
+@property --glow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes glow-rotate {
+  to { --glow-angle: 360deg; }
 }
 
 .autocomplete-typing-placeholder {
@@ -403,16 +429,12 @@ body {
   width: 100%;
   padding: 12px 16px;
   font-size: 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
   color: var(--text);
   outline: none;
   text-align: center;
-}
-
-.autocomplete-input:focus {
-  border-color: var(--accent);
 }
 
 .autocomplete-input:disabled {
