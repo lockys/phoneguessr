@@ -16,7 +16,13 @@ interface ResultModalProps {
   onClose: () => void;
 }
 
-export function ResultModal({ won, guesses, elapsed, puzzleNumber, onClose }: ResultModalProps) {
+export function ResultModal({
+  won,
+  guesses,
+  elapsed,
+  puzzleNumber,
+  onClose,
+}: ResultModalProps) {
   const { t } = useTranslation();
   const { user, login } = useAuth();
   const [copied, setCopied] = useState(false);
@@ -26,17 +32,31 @@ export function ResultModal({ won, guesses, elapsed, puzzleNumber, onClose }: Re
 
   const handleShare = async () => {
     const text = generateShareText(puzzleNumber, guesses, won);
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API unavailable (insecure context or permission denied)
+    }
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) onClose();
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') onClose();
+  };
+
   return (
-    <div className="modal-backdrop" onClick={handleBackdropClick}>
+    <div
+      className="modal-backdrop"
+      onClick={handleBackdropClick}
+      onKeyDown={handleKeyDown}
+      role="dialog"
+      aria-modal="true"
+    >
       <div className="modal-card">
         <button type="button" className="modal-close" onClick={onClose}>
           &times;
@@ -73,7 +93,11 @@ export function ResultModal({ won, guesses, elapsed, puzzleNumber, onClose }: Re
           {!user && (
             <div className="auth-prompt">
               <p>{t('result.signInPrompt')}</p>
-              <button type="button" className="auth-btn auth-btn-login" onClick={login}>
+              <button
+                type="button"
+                className="auth-btn auth-btn-login"
+                onClick={login}
+              >
                 {t('auth.signIn')}
               </button>
             </div>

@@ -4,7 +4,6 @@ import { useAuth } from '../lib/auth-context';
 import { GuessDistribution } from './GuessDistribution';
 import { LanguageSelector } from './LanguageSelector';
 
-
 interface Stats {
   gamesPlayed: number;
   wins: number;
@@ -25,10 +24,13 @@ function getLocalStats(): Stats {
     const key = localStorage.key(i);
     if (!key?.startsWith('phoneguessr_')) continue;
     const date = key.replace('phoneguessr_', '');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
     try {
       const data = JSON.parse(localStorage.getItem(key) || '');
       results.push({ date, won: !!data.won });
-    } catch { /* skip */ }
+    } catch {
+      /* skip */
+    }
   }
 
   results.sort((a, b) => b.date.localeCompare(a.date));
@@ -87,7 +89,9 @@ export function ProfilePanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ displayName }),
       });
-    } catch { /* mock mode - save locally */ }
+    } catch {
+      /* mock mode - save locally */
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -130,8 +134,11 @@ export function ProfilePanel() {
       {user && (
         <div className="profile-form">
           <div className="profile-form-field">
-            <label className="profile-form-label">{t('profile.displayName')}</label>
+            <label className="profile-form-label" htmlFor="profile-name">
+              {t('profile.displayName')}
+            </label>
             <input
+              id="profile-name"
               type="text"
               className="profile-form-input"
               value={displayName}
@@ -140,10 +147,16 @@ export function ProfilePanel() {
             />
           </div>
           <div className="profile-form-field">
-            <label className="profile-form-label">{t('profile.language')}</label>
-            <LanguageSelector />
+            <label className="profile-form-label" htmlFor="profile-lang">
+              {t('profile.language')}
+            </label>
+            <LanguageSelector id="profile-lang" />
           </div>
-          <button type="button" className="profile-form-save" onClick={handleSave}>
+          <button
+            type="button"
+            className="profile-form-save"
+            onClick={handleSave}
+          >
             {saved ? t('profile.saved') : t('profile.save')}
           </button>
         </div>
@@ -152,12 +165,15 @@ export function ProfilePanel() {
       {!user && (
         <div className="profile-auth-prompt">
           <p>{t('profile.signInPrompt')}</p>
-          <button type="button" className="auth-btn auth-btn-login" onClick={login}>
+          <button
+            type="button"
+            className="auth-btn auth-btn-login"
+            onClick={login}
+          >
             {t('auth.signIn')}
           </button>
         </div>
       )}
-
     </div>
   );
 }

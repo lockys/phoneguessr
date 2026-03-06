@@ -40,7 +40,7 @@ describe('GuessDistribution', () => {
 
   it('shows empty state when only lost games exist', () => {
     setLocalStorage({
-      phoneguessr_2026_03_01: {
+      'phoneguessr_2026-03-01': {
         guesses: [
           { phoneName: 'a', feedback: 'wrong_brand' },
           { phoneName: 'b', feedback: 'wrong_brand' },
@@ -59,12 +59,12 @@ describe('GuessDistribution', () => {
 
   it('renders bars for won games', () => {
     setLocalStorage({
-      phoneguessr_2026_03_01: {
+      'phoneguessr_2026-03-01': {
         guesses: [{ phoneName: 'iPhone 16', feedback: 'correct' }],
         elapsed: 5,
         won: true,
       },
-      phoneguessr_2026_03_02: {
+      'phoneguessr_2026-03-02': {
         guesses: [
           { phoneName: 'Samsung S24', feedback: 'wrong_brand' },
           { phoneName: 'iPhone 16', feedback: 'correct' },
@@ -72,7 +72,7 @@ describe('GuessDistribution', () => {
         elapsed: 10,
         won: true,
       },
-      phoneguessr_2026_03_03: {
+      'phoneguessr_2026-03-03': {
         guesses: [{ phoneName: 'Pixel 9', feedback: 'correct' }],
         elapsed: 3,
         won: true,
@@ -101,7 +101,7 @@ describe('GuessDistribution', () => {
 
   it('highlights current game bar when currentGuessCount is provided', () => {
     setLocalStorage({
-      phoneguessr_2026_03_01: {
+      'phoneguessr_2026-03-01': {
         guesses: [
           { phoneName: 'a', feedback: 'wrong_brand' },
           { phoneName: 'b', feedback: 'wrong_brand' },
@@ -121,7 +121,7 @@ describe('GuessDistribution', () => {
 
   it('does not highlight any bar when no currentGuessCount', () => {
     setLocalStorage({
-      phoneguessr_2026_03_01: {
+      'phoneguessr_2026-03-01': {
         guesses: [{ phoneName: 'a', feedback: 'correct' }],
         elapsed: 5,
         won: true,
@@ -137,7 +137,7 @@ describe('GuessDistribution', () => {
 
   it('ignores non-phoneguessr localStorage keys', () => {
     setLocalStorage({
-      phoneguessr_2026_03_01: {
+      'phoneguessr_2026-03-01': {
         guesses: [{ phoneName: 'a', feedback: 'correct' }],
         elapsed: 5,
         won: true,
@@ -154,9 +154,15 @@ describe('GuessDistribution', () => {
     expect(screen.getByText('No data yet')).toBeInTheDocument();
   });
 
+  it('ignores phoneguessr_onboarded key', () => {
+    localStorage.setItem('phoneguessr_onboarded', '1');
+    render(<GuessDistribution />);
+    expect(screen.getByText('No data yet')).toBeInTheDocument();
+  });
+
   it('shows zero count bars with minimal width', () => {
     setLocalStorage({
-      phoneguessr_2026_03_01: {
+      'phoneguessr_2026-03-01': {
         guesses: [{ phoneName: 'a', feedback: 'correct' }],
         elapsed: 5,
         won: true,

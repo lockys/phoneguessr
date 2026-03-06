@@ -35,11 +35,12 @@ function getDateSeed(): number {
 export function BlockGrid({ level, revealed, isWin }: BlockGridProps) {
   const initialRevealedRef = useRef(revealed);
 
-  // Skip rendering entirely for completed puzzles loaded from localStorage
-  if (initialRevealedRef.current) return null;
-
   const removalOrder = useMemo(
-    () => seededShuffle(Array.from({ length: TOTAL_BLOCKS }, (_, i) => i), getDateSeed()),
+    () =>
+      seededShuffle(
+        Array.from({ length: TOTAL_BLOCKS }, (_, i) => i),
+        getDateSeed(),
+      ),
     [],
   );
 
@@ -58,6 +59,9 @@ export function BlockGrid({ level, revealed, isWin }: BlockGridProps) {
     () => removalOrder.filter(idx => !gameplayRemovedSet.has(idx)),
     [removalOrder, gameplayRemovedSet],
   );
+
+  // Skip rendering for completed puzzles loaded from localStorage
+  if (initialRevealedRef.current) return null;
 
   return (
     <div className="block-grid">
@@ -93,7 +97,8 @@ export function BlockGrid({ level, revealed, isWin }: BlockGridProps) {
         } else if (wasRemovedDuringGameplay && !revealed) {
           // Stagger within the removal batch
           const posInRemoval = removalOrder.indexOf(i);
-          const batchStart = Math.floor(posInRemoval / BLOCKS_PER_LEVEL) * BLOCKS_PER_LEVEL;
+          const batchStart =
+            Math.floor(posInRemoval / BLOCKS_PER_LEVEL) * BLOCKS_PER_LEVEL;
           const batchIndex = posInRemoval - batchStart;
           style = { ...style, transitionDelay: `${batchIndex * 30}ms` };
         }
@@ -103,7 +108,9 @@ export function BlockGrid({ level, revealed, isWin }: BlockGridProps) {
           wasRemovedDuringGameplay ? 'block-removed' : '',
           needsCascade && isWin ? 'block-cascade-win' : '',
           needsCascade && !isWin ? 'block-cascade-loss' : '',
-        ].filter(Boolean).join(' ');
+        ]
+          .filter(Boolean)
+          .join(' ');
 
         return <div key={i} className={className} style={style} />;
       })}

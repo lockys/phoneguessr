@@ -84,6 +84,8 @@ export function Game() {
     elapsedRef.current = secs;
   }, []);
 
+  const handleRevealComplete = useCallback(() => setShowModal(true), []);
+
   const handleStart = () => {
     haptic.trigger('medium');
     setGameState('playing');
@@ -120,22 +122,25 @@ export function Game() {
       phoneName: `${phone.brand} ${phone.model}`,
       feedback,
     };
-    const newGuesses = [...guesses, newGuess];
-    setGuesses(newGuesses);
+    setGuesses(prev => {
+      const newGuesses = [...prev, newGuess];
 
-    if (feedback === 'correct') {
-      haptic.trigger('success');
-      setTimerRunning(false);
-      setGameState('won');
-      saveResult(newGuesses, true);
-    } else {
-      haptic.trigger('error');
-      if (newGuesses.length >= MAX_GUESSES) {
+      if (feedback === 'correct') {
+        haptic.trigger('success');
         setTimerRunning(false);
-        setGameState('lost');
-        saveResult(newGuesses, false);
+        setGameState('won');
+        saveResult(newGuesses, true);
+      } else {
+        haptic.trigger('error');
+        if (newGuesses.length >= MAX_GUESSES) {
+          setTimerRunning(false);
+          setGameState('lost');
+          saveResult(newGuesses, false);
+        }
       }
-    }
+
+      return newGuesses;
+    });
   };
 
   const saveResult = async (finalGuesses: Guess[], won: boolean) => {
@@ -190,7 +195,7 @@ export function Game() {
                 ? false
                 : undefined
           }
-          onRevealComplete={() => setShowModal(true)}
+          onRevealComplete={handleRevealComplete}
           onImageDrawn={() => setImageData('')}
         />
         {gameState === 'ready' && (

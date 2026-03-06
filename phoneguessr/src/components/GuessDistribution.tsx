@@ -14,7 +14,8 @@ function getDistribution(): number[] {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (!key?.startsWith('phoneguessr_')) continue;
-    if (key === 'phoneguessr_lang') continue;
+    const dateStr = key.replace('phoneguessr_', '');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) continue;
     try {
       const data: GameResult = JSON.parse(localStorage.getItem(key) || '');
       if (data.won && Array.isArray(data.guesses)) {
