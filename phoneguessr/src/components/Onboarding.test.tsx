@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Onboarding, isOnboarded } from './Onboarding';
 
 describe('Onboarding', () => {
-  let onDone: ReturnType<typeof vi.fn>;
+  let onDone: () => void;
 
   beforeEach(() => {
     onDone = vi.fn();
@@ -46,9 +46,10 @@ describe('Onboarding', () => {
     document.body.innerHTML = '';
   });
 
-  it('renders step 1 text on initial render', () => {
+  it('renders step 1 title on initial render', () => {
     render(<Onboarding onDone={onDone} />);
-    expect(screen.getByText('onboarding.step1')).toBeInTheDocument();
+    expect(screen.getByText('onboarding.step1.title')).toBeInTheDocument();
+    expect(screen.getByText('onboarding.step1.desc')).toBeInTheDocument();
   });
 
   it('shows skip and next buttons', () => {
@@ -60,14 +61,14 @@ describe('Onboarding', () => {
   it('advances to step 2 when Next is clicked', () => {
     render(<Onboarding onDone={onDone} />);
     fireEvent.click(screen.getByText('onboarding.next'));
-    expect(screen.getByText('onboarding.step2')).toBeInTheDocument();
+    expect(screen.getByText('onboarding.step2.title')).toBeInTheDocument();
   });
 
   it('advances to step 3 when Next is clicked twice', () => {
     render(<Onboarding onDone={onDone} />);
     fireEvent.click(screen.getByText('onboarding.next'));
     fireEvent.click(screen.getByText('onboarding.next'));
-    expect(screen.getByText('onboarding.step3')).toBeInTheDocument();
+    expect(screen.getByText('onboarding.step3.title')).toBeInTheDocument();
   });
 
   it('shows Done button on last step', () => {
@@ -93,20 +94,21 @@ describe('Onboarding', () => {
     expect(localStorage.getItem('phoneguessr_onboarded')).toBe('1');
   });
 
-  it('renders step indicator dots', () => {
+  it('renders progress bars', () => {
     const { container } = render(<Onboarding onDone={onDone} />);
-    const dots = container.querySelectorAll('.onboarding-dot');
-    expect(dots).toHaveLength(3);
-    expect(dots[0]).toHaveClass('onboarding-dot-active');
-    expect(dots[1]).not.toHaveClass('onboarding-dot-active');
+    const bars = container.querySelectorAll('.onboarding-progress-bar');
+    expect(bars).toHaveLength(3);
+    expect(bars[0]).toHaveClass('onboarding-progress-active');
+    expect(bars[1]).not.toHaveClass('onboarding-progress-active');
   });
 
-  it('updates active dot when step changes', () => {
+  it('fills progress bars as steps advance', () => {
     const { container } = render(<Onboarding onDone={onDone} />);
     fireEvent.click(screen.getByText('onboarding.next'));
-    const dots = container.querySelectorAll('.onboarding-dot');
-    expect(dots[0]).not.toHaveClass('onboarding-dot-active');
-    expect(dots[1]).toHaveClass('onboarding-dot-active');
+    const bars = container.querySelectorAll('.onboarding-progress-bar');
+    expect(bars[0]).toHaveClass('onboarding-progress-active');
+    expect(bars[1]).toHaveClass('onboarding-progress-active');
+    expect(bars[2]).not.toHaveClass('onboarding-progress-active');
   });
 
   it('renders a spotlight element', () => {
@@ -114,6 +116,12 @@ describe('Onboarding', () => {
     expect(
       container.querySelector('.onboarding-spotlight'),
     ).toBeInTheDocument();
+  });
+
+  it('renders bottom card layout', () => {
+    const { container } = render(<Onboarding onDone={onDone} />);
+    expect(container.querySelector('.onboarding-card')).toBeInTheDocument();
+    expect(container.querySelector('.onboarding-step-indicator')).toBeInTheDocument();
   });
 });
 

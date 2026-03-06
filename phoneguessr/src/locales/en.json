@@ -71,10 +71,14 @@
   "nav.leaderboard": "Leaderboard",
   "nav.about": "About",
 
-  "onboarding.step1": "A phone is hidden behind blocks",
-  "onboarding.step2": "Type to guess — feedback guides you",
-  "onboarding.step3": "Fewer guesses = better score!",
+  "onboarding.stepOf": "Step {{current}} of {{total}}",
+  "onboarding.step1.title": "Spot the phone",
+  "onboarding.step1.desc": "A mystery phone is hidden behind blocks. Each wrong guess removes some blocks to reveal more of the image.",
+  "onboarding.step2.title": "Make your guess",
+  "onboarding.step2.desc": "Type a phone name in the search box and pick from the suggestions. You'll get feedback: green for correct, yellow for right brand, red for wrong.",
+  "onboarding.step3.title": "Beat the clock",
+  "onboarding.step3.desc": "You have 6 guesses. Fewer guesses and faster times mean a better score. Come back every day for a new puzzle!",
   "onboarding.skip": "Skip",
   "onboarding.next": "Next",
-  "onboarding.done": "Got it!"
+  "onboarding.done": "Let's play!"
 }

@@ -1,33 +1,24 @@
-# PhoneGuessr - Role-Based Task Plan
-# Model B: Roles as parallel groups, sequential dependencies between groups
-#
-# Group execution order:
-#   1 → Product Owner (requirements & specs)
-#   2 → Tech Lead (architecture & API spec review)
-#   3 → Backend + Frontend (parallel implementation)
-#   4 → QA (testing & validation)
-#   5 → Code Reviewer (final review)
-#
-# Each role should use openspec skills (opsx:propose, opsx:apply, opsx:explore)
-# or superpowers (brainstorming, test-driven-development, etc.) as needed.
-
 tasks:
-  # ──────────────────────────────────────────────
-  # GROUP 1: Product Owner — Requirements & Vision
-  # ──────────────────────────────────────────────
   - title: "PO: Define addictive game mechanics spec"
     parallel_group: 1
     completed: true
-    description: |
+    description: >
       Role: Product Owner (read prd/product-owner.md for context)
+
       Use: /opsx:explore to brainstorm, then /opsx:propose to formalize
 
-      Design fun, addictive game mechanics for PhoneGuessr. Research what makes
-      daily puzzle games (Wordle, Connections, Contexto) sticky. Propose mechanics:
 
-      1. **Hint system** — Let players buy hints (reveal brand, year, price range)
+      Design fun, addictive game mechanics for PhoneGuessr. Research what makes
+
+      daily puzzle games (Wordle, Connections, Contexto) sticky. Propose
+      mechanics:
+
+
+      1. **Hint system** — Let players buy hints (reveal brand, year, price
+      range)
          at the cost of score penalty. Adds strategic depth.
-      2. **Streak rewards** — Visual streak counter with milestones (7-day, 30-day).
+      2. **Streak rewards** — Visual streak counter with milestones (7-day,
+      30-day).
          Losing a streak should feel consequential. Add streak-based titles/badges.
       3. **Difficulty tiers** — Easy (flagship phones), Medium (mid-range), Hard
          (obscure/regional phones). Daily puzzle rotates difficulty.
@@ -39,7 +30,6 @@ tasks:
          social sharing. Make it feel worth sharing.
 
       Output: OpenSpec proposal with user stories and acceptance criteria.
-
   - title: "PO: Define phone data expansion requirements"
     parallel_group: 1
     completed: true
@@ -63,7 +53,6 @@ tasks:
          for local development to remain useful.
 
       Output: OpenSpec proposal with data schema changes and sourcing plan.
-
   - title: "PO: Define UI polish and visual identity spec"
     parallel_group: 1
     completed: true
@@ -88,10 +77,6 @@ tasks:
          splash screen, and offline fallback page.
 
       Output: OpenSpec proposal with mockups/descriptions and priority order.
-
-  # ──────────────────────────────────────────────
-  # GROUP 2: Tech Lead — Architecture & API Design
-  # ──────────────────────────────────────────────
   - title: "TL: Design API spec for new game mechanics"
     parallel_group: 2
     completed: true
@@ -131,7 +116,6 @@ tasks:
 
       Output: OpenSpec specs for each new API capability.
       Write to openspec/changes/<change-name>/specs/
-
   - title: "TL: Design phone data schema and pipeline"
     parallel_group: 2
     completed: true
@@ -157,10 +141,6 @@ tasks:
       5. Migration strategy for existing data
 
       Output: OpenSpec design doc with ERD and migration plan.
-
-  # ──────────────────────────────────────────────
-  # GROUP 3a: Backend — Implementation
-  # ──────────────────────────────────────────────
   - title: "BE: Implement POST /api/profile/update endpoint"
     parallel_group: 3
     completed: true
@@ -179,7 +159,6 @@ tasks:
 
       Must: verify auth, validate displayName (1-50 chars, no XSS),
       update users table. Mock mode returns static success.
-
   - title: "BE: Implement hint system API"
     parallel_group: 3
     completed: true
@@ -196,7 +175,6 @@ tasks:
          - Max 2 hints per game, each adds 15s penalty to score
       3. Mock mode: return realistic hint data from MOCK_PHONES
       4. Both API layers (root /api + BFF /api/lambda)
-
   - title: "BE: Implement yesterday's puzzle reveal API"
     parallel_group: 3
     completed: true
@@ -211,7 +189,6 @@ tasks:
          facts: string[], stats: { totalPlayers, avgGuesses, winRate } }
       4. Cache response (same for all users for 24h)
       5. Mock mode: return data from MOCK_PHONES
-
   - title: "BE: Implement streak tracking API"
     parallel_group: 3
     completed: true
@@ -227,7 +204,6 @@ tasks:
            milestones: { '7day': bool, '30day': bool, '100day': bool } }
       4. Streak breaks if user misses a day
       5. Mock mode: return mock streak data
-
   - title: "BE: Expand phone catalog to 100+ phones"
     parallel_group: 3
     completed: true
@@ -254,7 +230,6 @@ tasks:
          at least 50 phones for meaningful local testing
       5. Source and add phone images to config/public/phones/
          (press kit photos, consistent style)
-
   - title: "BE: Add database migration for new features"
     parallel_group: 3
     completed: true
@@ -269,10 +244,6 @@ tasks:
       4. Create hints table (userId, puzzleId, hintType, createdAt)
       5. Run: cd phoneguessr && npx drizzle-kit generate
       6. Test: cd phoneguessr && npx drizzle-kit push (against local DB)
-
-  # ──────────────────────────────────────────────
-  # GROUP 3b: Frontend — Implementation (parallel with backend)
-  # ──────────────────────────────────────────────
   - title: "FE: Build hint system UI"
     parallel_group: 3
     completed: true
@@ -290,7 +261,6 @@ tasks:
       6. Haptic feedback on hint use (web-haptics)
       7. Add i18n keys to all 5 locale files
       8. CSS in index.css using existing design tokens
-
   - title: "FE: Build yesterday's puzzle reveal UI"
     parallel_group: 3
     completed: true
@@ -305,7 +275,6 @@ tasks:
       4. Show community stats: "X players, Y% solved, avg Z guesses"
       5. Animate in on first view
       6. i18n keys in all 5 locales
-
   - title: "FE: Build streak display and milestones UI"
     parallel_group: 3
     completed: true
@@ -320,7 +289,6 @@ tasks:
       4. Streak break notification when returning after missing a day
       5. Animation on streak increment
       6. i18n keys in all 5 locales
-
   - title: "FE: Enhanced share card with emoji grid"
     parallel_group: 3
     completed: true
@@ -338,7 +306,6 @@ tasks:
       4. Preview in the ResultModal before copying
       5. Add "Share" button with clipboard API + haptic
       6. i18n: localize the share text template
-
   - title: "FE: Guess feedback animations"
     parallel_group: 3
     completed: true
@@ -353,7 +320,6 @@ tasks:
       4. Wrong guess: subtle shake animation
       5. Use CSS keyframes, keep it performant (transform/opacity only)
       6. Respect prefers-reduced-motion
-
   - title: "FE: First-time player onboarding"
     parallel_group: 3
     completed: true
@@ -369,7 +335,6 @@ tasks:
       5. Skip button + Next/Done buttons
       6. Semi-transparent backdrop with spotlight on target area
       7. i18n keys in all 5 locales
-
   - title: "FE: Stats visualization with guess distribution"
     parallel_group: 3
     completed: true
@@ -383,33 +348,40 @@ tasks:
       3. Calculate from localStorage game history
       4. Keep it minimal — CSS-only bars, no charting library
       5. i18n keys for labels
-
-  # ──────────────────────────────────────────────
-  # GROUP 4: QA — Testing & Validation
-  # ──────────────────────────────────────────────
   - title: "QA: Test all new API endpoints"
     parallel_group: 4
-    completed: false
-    description: |
+    completed: true
+    description: >
       Role: QA Engineer (read prd/qa.md for context)
+
       Use: superpowers:verification-before-completion
+
 
       Test every API endpoint in mock mode (npm run dev:mock):
 
-      1. POST /api/profile/update — valid name, empty name, XSS attempt, unauthenticated
+
+      1. POST /api/profile/update — valid name, empty name, XSS attempt,
+      unauthenticated
+
       2. POST /api/hint — valid request, max hints exceeded, invalid hint type
+
       3. GET /api/puzzle/yesterday — returns data, handles no yesterday puzzle
+
       4. GET /api/streak — authenticated, unauthenticated, streak calculation
+
       5. GET /api/phones — verify expanded catalog returns all phones
+
       6. POST /api/guess — all feedback types with new phone data
+
       7. Cross-check: frontend fetch calls match API response shapes
+
       8. Verify all existing endpoints still work (regression)
 
-      Document results with pass/fail per endpoint.
 
+      Document results with pass/fail per endpoint.
   - title: "QA: Test UI features across browsers and viewports"
     parallel_group: 4
-    completed: false
+    completed: true
     description: |
       Role: QA Engineer (read prd/qa.md for context)
 
@@ -424,10 +396,9 @@ tasks:
       7. Stats histogram: bars render, correct distribution
       8. All i18n: switch all 5 languages, verify no missing keys
       9. Mobile: test on 375px width, touch interactions, virtual keyboard
-
   - title: "QA: Verify phone data completeness"
     parallel_group: 4
-    completed: false
+    completed: true
     description: |
       Role: QA Engineer (read prd/qa.md for context)
 
@@ -440,13 +411,9 @@ tasks:
       5. Difficulty distribution: roughly equal easy/medium/hard
       6. No duplicate entries (same brand + model)
       7. MOCK_PHONES array matches a subset of the full catalog
-
-  # ──────────────────────────────────────────────
-  # GROUP 5: Code Reviewer — Final Review
-  # ──────────────────────────────────────────────
   - title: "CR: Review all API endpoint implementations"
     parallel_group: 5
-    completed: false
+    completed: true
     description: |
       Role: Code Reviewer (read prd/code-reviewer.md for context)
       Use: superpowers:requesting-code-review
@@ -462,10 +429,9 @@ tasks:
       7. Auth checks on protected endpoints
       8. Error responses use appropriate HTTP status codes
       9. Mock handlers return same shapes as production
-
   - title: "CR: Review frontend components and UX"
     parallel_group: 5
-    completed: false
+    completed: true
     description: |
       Role: Code Reviewer (read prd/code-reviewer.md for context)
       Use: superpowers:requesting-code-review
@@ -482,10 +448,9 @@ tasks:
       8. prefers-reduced-motion respected
       9. Accessibility: keyboard nav, aria labels where needed
       10. No console.log or debug code left in
-
   - title: "CR: Review schema changes and data integrity"
     parallel_group: 5
-    completed: false
+    completed: true
     description: |
       Role: Code Reviewer (read prd/code-reviewer.md for context)
 

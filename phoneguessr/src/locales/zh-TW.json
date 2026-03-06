@@ -71,10 +71,14 @@
   "nav.leaderboard": "排行榜",
   "nav.about": "關於",
 
-  "onboarding.step1": "手機照片隱藏在方塊後面",
-  "onboarding.step2": "輸入猜測 — 提示會引導你",
-  "onboarding.step3": "猜測次數越少，分數越好！",
+  "onboarding.stepOf": "第 {{current}} 步，共 {{total}} 步",
+  "onboarding.step1.title": "找出手機",
+  "onboarding.step1.desc": "一部神秘手機隱藏在方塊後面。每次猜錯都會移除一些方塊，露出更多圖片。",
+  "onboarding.step2.title": "輸入猜測",
+  "onboarding.step2.desc": "在搜尋框輸入手機名稱並從建議中選擇。綠色代表正確，黃色代表品牌正確，紅色代表錯誤。",
+  "onboarding.step3.title": "挑戰計時",
+  "onboarding.step3.desc": "你有 6 次猜測機會。猜測次數越少、速度越快，分數越高。每天都有新謎題！",
   "onboarding.skip": "跳過",
   "onboarding.next": "下一步",
-  "onboarding.done": "了解！"
+  "onboarding.done": "開始遊戲！"
 }

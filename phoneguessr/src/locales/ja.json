@@ -71,10 +71,14 @@
   "nav.leaderboard": "ランキング",
   "nav.about": "概要",
 
-  "onboarding.step1": "スマホがブロックの後ろに隠れています",
-  "onboarding.step2": "入力して推測 — フィードバックがガイドします",
-  "onboarding.step3": "推測回数が少ないほどスコアが良くなります！",
+  "onboarding.stepOf": "ステップ {{current}} / {{total}}",
+  "onboarding.step1.title": "スマホを見つけよう",
+  "onboarding.step1.desc": "ブロックの後ろに隠れたスマホを当てましょう。不正解のたびにブロックが取り除かれ、画像がもっと見えるようになります。",
+  "onboarding.step2.title": "推測しよう",
+  "onboarding.step2.desc": "検索ボックスにスマホ名を入力し、候補から選びましょう。緑は正解、黄色はブランド正解、赤は不正解です。",
+  "onboarding.step3.title": "タイムアタック",
+  "onboarding.step3.desc": "チャンスは6回。少ない推測数と速いタイムでハイスコアを目指しましょう。毎日新しいパズルが登場！",
   "onboarding.skip": "スキップ",
   "onboarding.next": "次へ",
-  "onboarding.done": "わかった！"
+  "onboarding.done": "プレイ開始！"
 }

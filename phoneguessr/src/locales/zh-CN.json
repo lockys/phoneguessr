@@ -71,10 +71,14 @@
   "nav.leaderboard": "排行榜",
   "nav.about": "关于",
 
-  "onboarding.step1": "手机照片隐藏在方块后面",
-  "onboarding.step2": "输入猜测 — 提示会引导你",
-  "onboarding.step3": "猜测次数越少，分数越好！",
+  "onboarding.stepOf": "第 {{current}} 步，共 {{total}} 步",
+  "onboarding.step1.title": "找出手机",
+  "onboarding.step1.desc": "一部神秘手机隐藏在方块后面。每次猜错都会移除一些方块，露出更多图片。",
+  "onboarding.step2.title": "输入猜测",
+  "onboarding.step2.desc": "在搜索框输入手机名称并从建议中选择。绿色代表正确，黄色代表品牌正确，红色代表错误。",
+  "onboarding.step3.title": "挑战计时",
+  "onboarding.step3.desc": "你有 6 次猜测机会。猜测次数越少、速度越快，分数越高。每天都有新谜题！",
   "onboarding.skip": "跳过",
   "onboarding.next": "下一步",
-  "onboarding.done": "了解！"
+  "onboarding.done": "开始游戏！"
 }

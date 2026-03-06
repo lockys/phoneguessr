@@ -153,3 +153,9 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
 - Phone catalog: 20 → 120 phones, 40 → 140 images, 5 → 14 brands
 - OpenSpec changes: 4 active proposals
 - Tests: vitest framework set up, ~30 test cases across libs and components
+- [✓] 2026-03-06 01:46 - QA: Test all new API endpoints
+- [✓] 2026-03-06 01:46 - QA: Test UI features across browsers and viewports
+- [✓] 2026-03-06 01:46 - QA: Verify phone data completeness
+- [✓] 2026-03-06 02:04 - CR: Review all API endpoint implementations
+- [✓] 2026-03-06 02:04 - CR: Review frontend components and UX
+- [✓] 2026-03-06 02:04 - CR: Review schema changes and data integrity

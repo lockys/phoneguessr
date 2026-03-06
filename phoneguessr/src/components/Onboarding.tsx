@@ -5,7 +5,7 @@ const TOTAL_STEPS = 3;
 const STORAGE_KEY = 'phoneguessr_onboarded';
 
 /** CSS selectors for each step's spotlight target */
-const STEP_TARGETS = ['.crop-wrapper', '.guess-history', '.guess-history'];
+const STEP_TARGETS = ['.crop-wrapper', '.crop-wrapper', '.guess-history'];
 
 interface SpotlightRect {
   top: number;
@@ -63,16 +63,19 @@ export function Onboarding({ onDone }: OnboardingProps) {
     onDone();
   };
 
-  const stepKeys = [
-    'onboarding.step1',
-    'onboarding.step2',
-    'onboarding.step3',
+  const stepTitleKeys = [
+    'onboarding.step1.title',
+    'onboarding.step2.title',
+    'onboarding.step3.title',
+  ] as const;
+
+  const stepDescKeys = [
+    'onboarding.step1.desc',
+    'onboarding.step2.desc',
+    'onboarding.step3.desc',
   ] as const;
 
   const isLast = step === TOTAL_STEPS - 1;
-
-  // Position tooltip below or above the spotlight based on available space
-  const tooltipAbove = rect ? rect.top > window.innerHeight / 2 : false;
 
   return (
     <div className="onboarding-backdrop">
@@ -88,24 +91,19 @@ export function Onboarding({ onDone }: OnboardingProps) {
         />
       )}
 
-      <div
-        className="onboarding-tooltip"
-        style={
-          rect
-            ? {
-                top: tooltipAbove ? rect.top - 12 : rect.top + rect.height + 12,
-                transform: tooltipAbove ? 'translateY(-100%)' : undefined,
-              }
-            : undefined
-        }
-      >
-        <p className="onboarding-text">{t(stepKeys[step])}</p>
+      <div className="onboarding-card">
+        <div className="onboarding-step-indicator">
+          {t('onboarding.stepOf', { current: step + 1, total: TOTAL_STEPS })}
+        </div>
 
-        <div className="onboarding-dots">
-          {['step1', 'step2', 'step3'].map((id, i) => (
-            <span
-              key={id}
-              className={`onboarding-dot${i === step ? ' onboarding-dot-active' : ''}`}
+        <h3 className="onboarding-title">{t(stepTitleKeys[step])}</h3>
+        <p className="onboarding-desc">{t(stepDescKeys[step])}</p>
+
+        <div className="onboarding-progress">
+          {Array.from({ length: TOTAL_STEPS }, (_, i) => (
+            <div
+              key={i}
+              className={`onboarding-progress-bar${i <= step ? ' onboarding-progress-active' : ''}`}
             />
           ))}
         </div>

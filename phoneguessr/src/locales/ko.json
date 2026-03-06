@@ -71,10 +71,14 @@
   "nav.leaderboard": "리더보드",
   "nav.about": "소개",
 
-  "onboarding.step1": "스마트폰이 블록 뒤에 숨겨져 있습니다",
-  "onboarding.step2": "입력해서 추측 — 피드백이 안내합니다",
-  "onboarding.step3": "추측 횟수가 적을수록 점수가 높아요!",
+  "onboarding.stepOf": "{{total}}단계 중 {{current}}단계",
+  "onboarding.step1.title": "폰을 찾아보세요",
+  "onboarding.step1.desc": "블록 뒤에 숨겨진 스마트폰을 맞춰보세요. 오답마다 블록이 제거되어 이미지가 더 많이 보입니다.",
+  "onboarding.step2.title": "추측해보세요",
+  "onboarding.step2.desc": "검색창에 폰 이름을 입력하고 추천 목록에서 선택하세요. 초록색은 정답, 노란색은 브랜드 정답, 빨간색은 오답입니다.",
+  "onboarding.step3.title": "시간에 도전",
+  "onboarding.step3.desc": "6번의 기회가 있어요. 적은 추측과 빠른 시간이 높은 점수로 이어집니다. 매일 새로운 퍼즐이 나와요!",
   "onboarding.skip": "건너뛰기",
   "onboarding.next": "다음",
-  "onboarding.done": "알겠어요!"
+  "onboarding.done": "시작하기!"
 }
