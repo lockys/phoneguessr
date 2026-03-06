@@ -14,7 +14,12 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx src/db/seed.ts",
+<<<<<<< HEAD
     "test": "vitest run"
+=======
+    "test": "vitest run",
+    "test:watch": "vitest"
+>>>>>>> 3e4b354 (Design phone data schema and pipeline with 121 phones)
   },
   "packageManager": "pnpm@10.28.2",
   "engines": {

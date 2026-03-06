@@ -1,24 +1,33 @@
 import {
-  pgTable,
-  serial,
-  varchar,
-  text,
   boolean,
-  timestamp,
-  integer,
   date,
+  index,
+  integer,
+  pgTable,
   real,
+  serial,
+  text,
+  timestamp,
   uniqueIndex,
+  varchar,
 } from 'drizzle-orm/pg-core';
 
-export const phones = pgTable('phones', {
-  id: serial('id').primaryKey(),
-  brand: varchar('brand', { length: 100 }).notNull(),
-  model: varchar('model', { length: 200 }).notNull(),
-  imagePath: text('image_path').notNull(),
-  active: boolean('active').notNull().default(true),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+export const phones = pgTable(
+  'phones',
+  {
+    id: serial('id').primaryKey(),
+    brand: varchar('brand', { length: 100 }).notNull(),
+    model: varchar('model', { length: 200 }).notNull(),
+    imagePath: text('image_path').notNull(),
+    active: boolean('active').notNull().default(true),
+    releaseYear: integer('release_year'),
+    priceTier: varchar('price_tier', { length: 20 }),
+    formFactor: varchar('form_factor', { length: 20 }),
+    region: varchar('region', { length: 50 }),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  table => [uniqueIndex('phones_brand_model_idx').on(table.brand, table.model)],
+);
 
 export const dailyPuzzles = pgTable(
   'daily_puzzles',
@@ -70,3 +79,33 @@ export const results = pgTable('results', {
   elapsedSeconds: real('elapsed_seconds').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+export const phoneFacts = pgTable(
+  'phone_facts',
+  {
+    id: serial('id').primaryKey(),
+    phoneId: integer('phone_id')
+      .notNull()
+      .references(() => phones.id),
+    factType: varchar('fact_type', { length: 50 }).notNull(),
+    factText: text('fact_text').notNull(),
+    locale: varchar('locale', { length: 10 }).notNull().default('en'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  table => [index('phone_facts_phone_idx').on(table.phoneId)],
+);
+
+export const streaks = pgTable(
+  'streaks',
+  {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id),
+    currentStreak: integer('current_streak').notNull().default(0),
+    bestStreak: integer('best_streak').notNull().default(0),
+    lastPlayedDate: date('last_played_date'),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  table => [uniqueIndex('streaks_user_idx').on(table.userId)],
+);

@@ -1,22 +1,2230 @@
 [
-  { "brand": "Apple", "model": "iPhone 16 Pro Max", "imagePath": "/public/phones/apple-iphone-16-pro-max.jpg" },
-  { "brand": "Apple", "model": "iPhone 16 Pro", "imagePath": "/public/phones/apple-iphone-16-pro.jpg" },
-  { "brand": "Apple", "model": "iPhone 16", "imagePath": "/public/phones/apple-iphone-16.jpg" },
-  { "brand": "Apple", "model": "iPhone 15 Pro Max", "imagePath": "/public/phones/apple-iphone-15-pro-max.jpg" },
-  { "brand": "Apple", "model": "iPhone 15 Pro", "imagePath": "/public/phones/apple-iphone-15-pro.jpg" },
-  { "brand": "Apple", "model": "iPhone 15", "imagePath": "/public/phones/apple-iphone-15.jpg" },
-  { "brand": "Apple", "model": "iPhone 14 Pro", "imagePath": "/public/phones/apple-iphone-14-pro.jpg" },
-  { "brand": "Samsung", "model": "Galaxy S25 Ultra", "imagePath": "/public/phones/samsung-galaxy-s25-ultra.jpg" },
-  { "brand": "Samsung", "model": "Galaxy S24 Ultra", "imagePath": "/public/phones/samsung-galaxy-s24-ultra.jpg" },
-  { "brand": "Samsung", "model": "Galaxy S24", "imagePath": "/public/phones/samsung-galaxy-s24.jpg" },
-  { "brand": "Samsung", "model": "Galaxy Z Fold 6", "imagePath": "/public/phones/samsung-galaxy-z-fold-6.jpg" },
-  { "brand": "Samsung", "model": "Galaxy Z Flip 6", "imagePath": "/public/phones/samsung-galaxy-z-flip-6.jpg" },
-  { "brand": "Google", "model": "Pixel 9 Pro", "imagePath": "/public/phones/google-pixel-9-pro.jpg" },
-  { "brand": "Google", "model": "Pixel 9", "imagePath": "/public/phones/google-pixel-9.jpg" },
-  { "brand": "Google", "model": "Pixel 8 Pro", "imagePath": "/public/phones/google-pixel-8-pro.jpg" },
-  { "brand": "Google", "model": "Pixel 8", "imagePath": "/public/phones/google-pixel-8.jpg" },
-  { "brand": "OnePlus", "model": "13", "imagePath": "/public/phones/oneplus-13.png" },
-  { "brand": "OnePlus", "model": "12", "imagePath": "/public/phones/oneplus-12.jpg" },
-  { "brand": "Nothing", "model": "Phone 2", "imagePath": "/public/phones/nothing-phone-2.png" },
-  { "brand": "Nothing", "model": "Phone 1", "imagePath": "/public/phones/nothing-phone-1.png" }
+  {
+    "brand": "Apple",
+    "model": "iPhone 16 Pro Max",
+    "imagePath": "/public/phones/apple-iphone-16-pro-max.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First iPhone with a dedicated Camera Control button"
+      },
+      {
+        "type": "spec",
+        "text": "6.9-inch Super Retina XDR, A18 Pro chip, 48MP main camera"
+      }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 16 Pro",
+    "imagePath": "/public/phones/apple-iphone-16-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Smallest Pro iPhone with 120Hz ProMotion display"
+      },
+      { "type": "spec", "text": "6.3-inch OLED, A18 Pro chip, 5x optical zoom" }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 16",
+    "imagePath": "/public/phones/apple-iphone-16.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "First non-Pro iPhone with Action Button" },
+      { "type": "spec", "text": "6.1-inch OLED, A18 chip, 48MP dual camera" }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "imagePath": "/public/phones/apple-iphone-15-pro-max.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First iPhone with titanium frame and USB-C"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch OLED, A17 Pro chip, 5x periscope telephoto"
+      }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 15 Pro",
+    "imagePath": "/public/phones/apple-iphone-15-pro.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Introduced the Action Button replacing the mute switch"
+      },
+      { "type": "spec", "text": "6.1-inch OLED, A17 Pro chip, titanium design" }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 15",
+    "imagePath": "/public/phones/apple-iphone-15.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First standard iPhone with Dynamic Island"
+      },
+      { "type": "spec", "text": "6.1-inch OLED, A16 Bionic, 48MP main camera" }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 14 Pro",
+    "imagePath": "/public/phones/apple-iphone-14-pro.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Introduced Dynamic Island and always-on display to iPhone"
+      },
+      { "type": "spec", "text": "6.1-inch OLED, A16 Bionic, 48MP main camera" }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 14",
+    "imagePath": "/public/phones/apple-iphone-14.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First iPhone with Emergency SOS via satellite"
+      },
+      { "type": "spec", "text": "6.1-inch OLED, A15 Bionic, 12MP dual camera" }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 13 Pro",
+    "imagePath": "/public/phones/apple-iphone-13-pro.jpg",
+    "releaseYear": 2021,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First iPhone with ProMotion 120Hz display"
+      },
+      {
+        "type": "spec",
+        "text": "6.1-inch OLED, A15 Bionic, macro photography mode"
+      }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 13",
+    "imagePath": "/public/phones/apple-iphone-13.jpg",
+    "releaseYear": 2021,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Introduced diagonal dual camera layout" },
+      { "type": "spec", "text": "6.1-inch OLED, A15 Bionic, Cinematic Mode" }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone SE (2022)",
+    "imagePath": "/public/phones/apple-iphone-se-2022.jpg",
+    "releaseYear": 2022,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Budget iPhone with A15 Bionic chip and 5G"
+      },
+      {
+        "type": "spec",
+        "text": "4.7-inch LCD, Touch ID home button, 12MP camera"
+      }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 16 Plus",
+    "imagePath": "/public/phones/apple-iphone-16-plus.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Large-screen iPhone with Camera Control button"
+      },
+      { "type": "spec", "text": "6.7-inch OLED, A18 chip, 48MP dual camera" }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 15 Plus",
+    "imagePath": "/public/phones/apple-iphone-15-plus.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Largest non-Pro iPhone with USB-C and Dynamic Island"
+      },
+      { "type": "spec", "text": "6.7-inch OLED, A16 Bionic, 48MP main camera" }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 14 Plus",
+    "imagePath": "/public/phones/apple-iphone-14-plus.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "First Plus-sized non-Pro iPhone model" },
+      {
+        "type": "spec",
+        "text": "6.7-inch OLED, A15 Bionic, all-day battery life"
+      }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 14 Pro Max",
+    "imagePath": "/public/phones/apple-iphone-14-pro-max.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Largest iPhone with Dynamic Island at launch"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch OLED, A16 Bionic, 48MP camera system"
+      }
+    ]
+  },
+
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S25 Ultra",
+    "imagePath": "/public/phones/samsung-galaxy-s25-ultra.jpg",
+    "releaseYear": 2025,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Galaxy S Ultra with rounded corners and titanium frame"
+      },
+      {
+        "type": "spec",
+        "text": "6.9-inch AMOLED, Snapdragon 8 Elite, 200MP camera"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S25+",
+    "imagePath": "/public/phones/samsung-galaxy-s25-plus.jpg",
+    "releaseYear": 2025,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Galaxy AI with Circle to Search and live translation"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Snapdragon 8 Elite, 50MP triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S25",
+    "imagePath": "/public/phones/samsung-galaxy-s25.jpg",
+    "releaseYear": 2025,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Compact flagship with full Galaxy AI suite"
+      },
+      {
+        "type": "spec",
+        "text": "6.2-inch AMOLED, Snapdragon 8 Elite, 50MP triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S24 Ultra",
+    "imagePath": "/public/phones/samsung-galaxy-s24-ultra.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Galaxy with built-in Galaxy AI features"
+      },
+      {
+        "type": "spec",
+        "text": "6.8-inch AMOLED, Snapdragon 8 Gen 3, 200MP camera, S Pen"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S24+",
+    "imagePath": "/public/phones/samsung-galaxy-s24-plus.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Galaxy AI with live translation during phone calls"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Snapdragon 8 Gen 3, 50MP triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S24",
+    "imagePath": "/public/phones/samsung-galaxy-s24.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Compact Galaxy flagship with AI photo editing"
+      },
+      {
+        "type": "spec",
+        "text": "6.2-inch AMOLED, Snapdragon 8 Gen 3 (Exynos 2400 in some regions)"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S23 Ultra",
+    "imagePath": "/public/phones/samsung-galaxy-s23-ultra.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Galaxy S with 200MP main camera sensor"
+      },
+      {
+        "type": "spec",
+        "text": "6.8-inch AMOLED, Snapdragon 8 Gen 2, 200MP camera, S Pen"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S23",
+    "imagePath": "/public/phones/samsung-galaxy-s23.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First compact Galaxy S with Snapdragon worldwide"
+      },
+      {
+        "type": "spec",
+        "text": "6.1-inch AMOLED, Snapdragon 8 Gen 2, 50MP triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy Z Fold 6",
+    "imagePath": "/public/phones/samsung-galaxy-z-fold-6.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Slimmest Galaxy Z Fold with improved hinge design"
+      },
+      {
+        "type": "spec",
+        "text": "7.6-inch inner + 6.3-inch cover display, Snapdragon 8 Gen 3"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy Z Fold 5",
+    "imagePath": "/public/phones/samsung-galaxy-z-fold-5.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Galaxy Z Fold with gapless folding design"
+      },
+      {
+        "type": "spec",
+        "text": "7.6-inch inner display, Snapdragon 8 Gen 2, Flex Mode"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy Z Flip 6",
+    "imagePath": "/public/phones/samsung-galaxy-z-flip-6.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "flip",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Most capable Galaxy flip phone with AI-powered cover screen"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch inner + 3.4-inch cover display, Snapdragon 8 Gen 3"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy Z Flip 5",
+    "imagePath": "/public/phones/samsung-galaxy-z-flip-5.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "flip",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Galaxy Flip with large Flex Window cover screen"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch inner + 3.4-inch cover display, Snapdragon 8 Gen 2"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy A55",
+    "imagePath": "/public/phones/samsung-galaxy-a55.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Best-selling mid-range Samsung with flagship-like design"
+      },
+      {
+        "type": "spec",
+        "text": "6.6-inch AMOLED, Exynos 1480, 50MP triple camera, IP67"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy A35",
+    "imagePath": "/public/phones/samsung-galaxy-a35.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Affordable Samsung with 4 years of OS updates"
+      },
+      {
+        "type": "spec",
+        "text": "6.6-inch AMOLED, Exynos 1380, 50MP OIS camera"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy A15",
+    "imagePath": "/public/phones/samsung-galaxy-a15.jpg",
+    "releaseYear": 2024,
+    "priceTier": "budget",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "One of the world's best-selling budget smartphones"
+      },
+      {
+        "type": "spec",
+        "text": "6.5-inch AMOLED, MediaTek Helio G99, 50MP camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Google",
+    "model": "Pixel 9 Pro XL",
+    "imagePath": "/public/phones/google-pixel-9-pro-xl.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Google's largest Pixel with new flat-edge design"
+      },
+      {
+        "type": "spec",
+        "text": "6.8-inch OLED, Tensor G4, 50MP triple camera with 5x zoom"
+      }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel 9 Pro",
+    "imagePath": "/public/phones/google-pixel-9-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First compact Pixel Pro with triple camera system"
+      },
+      {
+        "type": "spec",
+        "text": "6.3-inch OLED, Tensor G4, 50MP triple camera, 16GB RAM"
+      }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel 9",
+    "imagePath": "/public/phones/google-pixel-9.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Complete redesign with flat edges and pill-shaped camera bar"
+      },
+      { "type": "spec", "text": "6.3-inch OLED, Tensor G4, 50MP dual camera" }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel 9 Pro Fold",
+    "imagePath": "/public/phones/google-pixel-9-pro-fold.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Google's second foldable with thinner, wider design"
+      },
+      {
+        "type": "spec",
+        "text": "8-inch inner + 6.3-inch cover display, Tensor G4"
+      }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel 8 Pro",
+    "imagePath": "/public/phones/google-pixel-8-pro.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Pixel with a built-in temperature sensor"
+      },
+      { "type": "spec", "text": "6.7-inch OLED, Tensor G3, 50MP triple camera" }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel 8",
+    "imagePath": "/public/phones/google-pixel-8.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "7 years of OS and security updates guaranteed"
+      },
+      { "type": "spec", "text": "6.2-inch OLED, Tensor G3, 50MP dual camera" }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel 8a",
+    "imagePath": "/public/phones/google-pixel-8a.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Budget Pixel with same 7-year update promise"
+      },
+      { "type": "spec", "text": "6.1-inch OLED, Tensor G3, 64MP main camera" }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel 7 Pro",
+    "imagePath": "/public/phones/google-pixel-7-pro.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Introduced the iconic visor camera bar design"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch OLED, Tensor G2, 50MP triple camera with 5x zoom"
+      }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel 7",
+    "imagePath": "/public/phones/google-pixel-7.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Refined aluminum camera bar with Face Unlock"
+      },
+      { "type": "spec", "text": "6.3-inch OLED, Tensor G2, 50MP dual camera" }
+    ]
+  },
+
+  {
+    "brand": "OnePlus",
+    "model": "13",
+    "imagePath": "/public/phones/oneplus-13.png",
+    "releaseYear": 2025,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Hasselblad-tuned triple camera with magnetic ring support"
+      },
+      {
+        "type": "spec",
+        "text": "6.82-inch AMOLED, Snapdragon 8 Elite, 50MP triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "OnePlus",
+    "model": "12",
+    "imagePath": "/public/phones/oneplus-12.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Returned to flagship pricing with Hasselblad cameras"
+      },
+      {
+        "type": "spec",
+        "text": "6.82-inch AMOLED, Snapdragon 8 Gen 3, 50MP periscope telephoto"
+      }
+    ]
+  },
+  {
+    "brand": "OnePlus",
+    "model": "12R",
+    "imagePath": "/public/phones/oneplus-12r.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Flagship chipset at mid-range price point"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Snapdragon 8 Gen 2, 50MP camera, 100W charging"
+      }
+    ]
+  },
+  {
+    "brand": "OnePlus",
+    "model": "Nord 4",
+    "imagePath": "/public/phones/oneplus-nord-4.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "First all-metal unibody 5G phone" },
+      {
+        "type": "spec",
+        "text": "6.74-inch AMOLED, Snapdragon 7+ Gen 3, 50MP Sony LYT-600"
+      }
+    ]
+  },
+  {
+    "brand": "OnePlus",
+    "model": "Open",
+    "imagePath": "/public/phones/oneplus-open.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "OnePlus' first foldable with creaseless display"
+      },
+      {
+        "type": "spec",
+        "text": "7.82-inch inner + 6.31-inch cover display, Snapdragon 8 Gen 2"
+      }
+    ]
+  },
+  {
+    "brand": "OnePlus",
+    "model": "11",
+    "imagePath": "/public/phones/oneplus-11.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Hasselblad collaboration with alert slider retained"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Snapdragon 8 Gen 2, 50MP triple camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Nothing",
+    "model": "Phone 2a Plus",
+    "imagePath": "/public/phones/nothing-phone-2a-plus.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Glyph interface LEDs with enhanced brightness"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Dimensity 7350 Pro, 50MP dual camera"
+      }
+    ]
+  },
+  {
+    "brand": "Nothing",
+    "model": "Phone 2a",
+    "imagePath": "/public/phones/nothing-phone-2a.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Affordable Nothing phone with simplified Glyph interface"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Dimensity 7200 Pro, 50MP dual camera"
+      }
+    ]
+  },
+  {
+    "brand": "Nothing",
+    "model": "Phone 2",
+    "imagePath": "/public/phones/nothing-phone-2.png",
+    "releaseYear": 2023,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Upgraded Glyph interface with customizable LED patterns"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch OLED, Snapdragon 8+ Gen 1, 50MP dual camera"
+      }
+    ]
+  },
+  {
+    "brand": "Nothing",
+    "model": "Phone 1",
+    "imagePath": "/public/phones/nothing-phone-1.png",
+    "releaseYear": 2022,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Debut phone with iconic transparent back and Glyph LEDs"
+      },
+      {
+        "type": "spec",
+        "text": "6.55-inch OLED, Snapdragon 778G+, 50MP dual camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Xiaomi",
+    "model": "14 Ultra",
+    "imagePath": "/public/phones/xiaomi-14-ultra.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Leica Summilux quad camera with variable aperture"
+      },
+      {
+        "type": "spec",
+        "text": "6.73-inch AMOLED, Snapdragon 8 Gen 3, 50MP quad camera"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "14 Pro",
+    "imagePath": "/public/phones/xiaomi-14-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "china",
+    "facts": [
+      { "type": "feature", "text": "Micro-curved display with Leica optics" },
+      {
+        "type": "spec",
+        "text": "6.73-inch AMOLED, Snapdragon 8 Gen 3, 50MP Leica triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "14",
+    "imagePath": "/public/phones/xiaomi-14.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Compact flagship with Leica optics" },
+      {
+        "type": "spec",
+        "text": "6.36-inch AMOLED, Snapdragon 8 Gen 3, 50MP Leica triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "13 Ultra",
+    "imagePath": "/public/phones/xiaomi-13-ultra.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Leica-branded camera system with 1-inch sensor"
+      },
+      {
+        "type": "spec",
+        "text": "6.73-inch AMOLED, Snapdragon 8 Gen 2, 50MP 1-inch main sensor"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "13 Pro",
+    "imagePath": "/public/phones/xiaomi-13-pro.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Xiaomi with Leica partnership globally"
+      },
+      {
+        "type": "spec",
+        "text": "6.73-inch AMOLED, Snapdragon 8 Gen 2, 50MP Leica cameras"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "13",
+    "imagePath": "/public/phones/xiaomi-13.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Compact Xiaomi flagship with flat display"
+      },
+      {
+        "type": "spec",
+        "text": "6.36-inch AMOLED, Snapdragon 8 Gen 2, 50MP Leica cameras"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "Mix Fold 4",
+    "imagePath": "/public/phones/xiaomi-mix-fold-4.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "china",
+    "facts": [
+      { "type": "feature", "text": "Thinnest book-style foldable at 9.47mm" },
+      {
+        "type": "spec",
+        "text": "7.98-inch inner display, Snapdragon 8 Gen 3, Leica cameras"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "Mix Flip",
+    "imagePath": "/public/phones/xiaomi-mix-flip.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "flip",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Xiaomi's first flip phone with Leica cameras"
+      },
+      {
+        "type": "spec",
+        "text": "6.86-inch inner + 4.01-inch cover display, Snapdragon 8 Gen 3"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "Redmi Note 13 Pro+",
+    "imagePath": "/public/phones/xiaomi-redmi-note-13-pro-plus.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "200MP camera and IP68 rating at mid-range price"
+      },
+      {
+        "type": "spec",
+        "text": "6.67-inch AMOLED, Dimensity 7200 Ultra, 200MP main camera"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "Redmi Note 13 Pro",
+    "imagePath": "/public/phones/xiaomi-redmi-note-13-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "200MP camera in a mid-range Redmi phone" },
+      {
+        "type": "spec",
+        "text": "6.67-inch AMOLED, Snapdragon 7s Gen 2, 200MP main camera"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "Poco F6 Pro",
+    "imagePath": "/public/phones/xiaomi-poco-f6-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Flagship Snapdragon 8 Gen 2 at mid-range pricing"
+      },
+      {
+        "type": "spec",
+        "text": "6.67-inch AMOLED, Snapdragon 8 Gen 2, 50MP OIS camera, 120W charging"
+      }
+    ]
+  },
+
+  {
+    "brand": "Sony",
+    "model": "Xperia 1 VI",
+    "imagePath": "/public/phones/sony-xperia-1-vi.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Switched from 4K to brighter 1080p display"
+      },
+      {
+        "type": "spec",
+        "text": "6.5-inch OLED, Snapdragon 8 Gen 3, 48MP Exmor T sensor"
+      }
+    ]
+  },
+  {
+    "brand": "Sony",
+    "model": "Xperia 1 V",
+    "imagePath": "/public/phones/sony-xperia-1-v.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Last Sony phone with 4K OLED display" },
+      {
+        "type": "spec",
+        "text": "6.5-inch 4K OLED, Snapdragon 8 Gen 2, dual-layer Exmor T sensor"
+      }
+    ]
+  },
+  {
+    "brand": "Sony",
+    "model": "Xperia 5 V",
+    "imagePath": "/public/phones/sony-xperia-5-v.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Compact Sony flagship with dual-layer camera sensor"
+      },
+      {
+        "type": "spec",
+        "text": "6.1-inch OLED, Snapdragon 8 Gen 2, 48MP Exmor T"
+      }
+    ]
+  },
+  {
+    "brand": "Sony",
+    "model": "Xperia 10 VI",
+    "imagePath": "/public/phones/sony-xperia-10-vi.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Ultra-light mid-range Sony at just 159 grams"
+      },
+      {
+        "type": "spec",
+        "text": "6.1-inch OLED, Snapdragon 6 Gen 1, 48MP dual camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Motorola",
+    "model": "Razr+ (2024)",
+    "imagePath": "/public/phones/motorola-razr-plus-2024.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "flip",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Largest cover screen on any flip phone at 4 inches"
+      },
+      {
+        "type": "spec",
+        "text": "6.9-inch inner + 4-inch cover display, Snapdragon 8s Gen 3"
+      }
+    ]
+  },
+  {
+    "brand": "Motorola",
+    "model": "Razr (2024)",
+    "imagePath": "/public/phones/motorola-razr-2024.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "flip",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Most affordable flip phone with large external display"
+      },
+      {
+        "type": "spec",
+        "text": "6.9-inch inner + 3.6-inch cover display, Dimensity 7300X"
+      }
+    ]
+  },
+  {
+    "brand": "Motorola",
+    "model": "Edge 50 Ultra",
+    "imagePath": "/public/phones/motorola-edge-50-ultra.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Wood and vegan leather back panel options"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Snapdragon 8s Gen 3, 50MP periscope telephoto"
+      }
+    ]
+  },
+  {
+    "brand": "Motorola",
+    "model": "Edge 50 Pro",
+    "imagePath": "/public/phones/motorola-edge-50-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Vegan leather design with 125W fast charging"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Snapdragon 7 Gen 3, 50MP triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Motorola",
+    "model": "Moto G Power (2024)",
+    "imagePath": "/public/phones/motorola-moto-g-power-2024.jpg",
+    "releaseYear": 2024,
+    "priceTier": "budget",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Multi-day battery life with vegan leather design"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch LCD, Dimensity 7020, 50MP camera, 5000mAh battery"
+      }
+    ]
+  },
+  {
+    "brand": "Motorola",
+    "model": "Moto G Stylus (2024)",
+    "imagePath": "/public/phones/motorola-moto-g-stylus-2024.jpg",
+    "releaseYear": 2024,
+    "priceTier": "budget",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Budget phone with built-in stylus" },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Snapdragon 6s Gen 3, 50MP camera, stylus"
+      }
+    ]
+  },
+
+  {
+    "brand": "OPPO",
+    "model": "Find X7 Ultra",
+    "imagePath": "/public/phones/oppo-find-x7-ultra.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Dual periscope telephoto cameras with Hasselblad tuning"
+      },
+      {
+        "type": "spec",
+        "text": "6.82-inch AMOLED, Dimensity 9300, dual periscope zoom"
+      }
+    ]
+  },
+  {
+    "brand": "OPPO",
+    "model": "Find N3 Flip",
+    "imagePath": "/public/phones/oppo-find-n3-flip.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "flip",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First flip phone with Hasselblad camera partnership"
+      },
+      {
+        "type": "spec",
+        "text": "6.8-inch inner + 3.26-inch cover display, Dimensity 9200"
+      }
+    ]
+  },
+  {
+    "brand": "OPPO",
+    "model": "Find N3",
+    "imagePath": "/public/phones/oppo-find-n3.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Ultra-thin foldable with Hasselblad cameras"
+      },
+      {
+        "type": "spec",
+        "text": "7.82-inch inner display, Snapdragon 8 Gen 2, 48MP triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "OPPO",
+    "model": "Reno 12 Pro",
+    "imagePath": "/public/phones/oppo-reno-12-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "AI-powered portrait photography at mid-range"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Dimensity 7300 Energy, 50MP triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "OPPO",
+    "model": "Reno 11 Pro",
+    "imagePath": "/public/phones/oppo-reno-11-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Orbiting light portrait camera system" },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Dimensity 8200, 50MP triple camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Huawei",
+    "model": "Mate 60 Pro",
+    "imagePath": "/public/phones/huawei-mate-60-pro.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Surprise launch with Kirin 9000s chip despite US sanctions"
+      },
+      {
+        "type": "spec",
+        "text": "6.82-inch OLED, Kirin 9000s, 48MP variable aperture camera"
+      }
+    ]
+  },
+  {
+    "brand": "Huawei",
+    "model": "Mate X5",
+    "imagePath": "/public/phones/huawei-mate-x5.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Huawei's premium foldable without Google services"
+      },
+      {
+        "type": "spec",
+        "text": "7.85-inch inner display, Kirin 9000s, 50MP triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Huawei",
+    "model": "Pura 70 Ultra",
+    "imagePath": "/public/phones/huawei-pura-70-ultra.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Retractable camera mechanism, unique in smartphones"
+      },
+      {
+        "type": "spec",
+        "text": "6.8-inch OLED, Kirin 9010, 50MP variable aperture + retractable lens"
+      }
+    ]
+  },
+  {
+    "brand": "Huawei",
+    "model": "Pura 70 Pro",
+    "imagePath": "/public/phones/huawei-pura-70-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Rebranded P series with new Pura identity"
+      },
+      {
+        "type": "spec",
+        "text": "6.8-inch OLED, Kirin 9010, 50MP variable aperture camera"
+      }
+    ]
+  },
+  {
+    "brand": "Huawei",
+    "model": "Nova 12 Ultra",
+    "imagePath": "/public/phones/huawei-nova-12-ultra.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Selfie-focused mid-range with 60MP front camera"
+      },
+      {
+        "type": "spec",
+        "text": "6.76-inch OLED, Kirin 9000SL, 50MP triple camera, 100W charging"
+      }
+    ]
+  },
+
+  {
+    "brand": "Vivo",
+    "model": "X200 Pro",
+    "imagePath": "/public/phones/vivo-x200-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Zeiss APO telephoto with 200MP sensor" },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Dimensity 9400, 200MP Zeiss periscope"
+      }
+    ]
+  },
+  {
+    "brand": "Vivo",
+    "model": "X200",
+    "imagePath": "/public/phones/vivo-x200.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Compact flagship with Zeiss co-engineered cameras"
+      },
+      {
+        "type": "spec",
+        "text": "6.67-inch AMOLED, Dimensity 9400, 50MP Zeiss triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Vivo",
+    "model": "X100 Pro",
+    "imagePath": "/public/phones/vivo-x100-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Zeiss APO floating telephoto lens system" },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Dimensity 9300, 50MP Zeiss periscope"
+      }
+    ]
+  },
+  {
+    "brand": "Vivo",
+    "model": "X Fold 3 Pro",
+    "imagePath": "/public/phones/vivo-x-fold-3-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Lightest book-style foldable with Zeiss cameras"
+      },
+      {
+        "type": "spec",
+        "text": "8.03-inch inner display, Snapdragon 8 Gen 3, Zeiss triple camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Asus",
+    "model": "ROG Phone 8 Pro",
+    "imagePath": "/public/phones/asus-rog-phone-8-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Gaming phone with AniMe Vision LED matrix on back"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Snapdragon 8 Gen 3, 24GB RAM, AeroActive cooler"
+      }
+    ]
+  },
+  {
+    "brand": "Asus",
+    "model": "ROG Phone 8",
+    "imagePath": "/public/phones/asus-rog-phone-8.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Most normal-looking ROG Phone with slim design"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Snapdragon 8 Gen 3, 16GB RAM, IP68"
+      }
+    ]
+  },
+  {
+    "brand": "Asus",
+    "model": "Zenfone 11 Ultra",
+    "imagePath": "/public/phones/asus-zenfone-11-ultra.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Shifted from compact to large screen, dropping Zenfone compact identity"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Snapdragon 8 Gen 3, 50MP triple camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Realme",
+    "model": "GT 6",
+    "imagePath": "/public/phones/realme-gt-6.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "6000 nit peak brightness display at mid-range"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Snapdragon 8s Gen 3, 50MP Sony LYT-808"
+      }
+    ]
+  },
+  {
+    "brand": "Realme",
+    "model": "GT 5 Pro",
+    "imagePath": "/public/phones/realme-gt-5-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Flagship Snapdragon 8 Gen 3 at aggressive pricing"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Snapdragon 8 Gen 3, 50MP periscope telephoto"
+      }
+    ]
+  },
+  {
+    "brand": "Realme",
+    "model": "12 Pro+",
+    "imagePath": "/public/phones/realme-12-pro-plus.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Periscope zoom camera in a mid-range phone"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch AMOLED, Snapdragon 7s Gen 2, 50MP periscope"
+      }
+    ]
+  },
+  {
+    "brand": "Realme",
+    "model": "Narzo 70 Pro",
+    "imagePath": "/public/phones/realme-narzo-70-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "budget",
+    "formFactor": "bar",
+    "region": "india",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Sony IMX890 camera sensor at budget price"
+      },
+      {
+        "type": "spec",
+        "text": "6.67-inch AMOLED, Dimensity 7050, 50MP Sony IMX890"
+      }
+    ]
+  },
+
+  {
+    "brand": "Honor",
+    "model": "Magic6 Pro",
+    "imagePath": "/public/phones/honor-magic6-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Eye-tracking AI for intent detection" },
+      {
+        "type": "spec",
+        "text": "6.78-inch OLED, Snapdragon 8 Gen 3, 50MP periscope, silicon-carbon battery"
+      }
+    ]
+  },
+  {
+    "brand": "Honor",
+    "model": "Magic V3",
+    "imagePath": "/public/phones/honor-magic-v3.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "World's thinnest foldable at 9.2mm folded"
+      },
+      {
+        "type": "spec",
+        "text": "7.92-inch inner display, Snapdragon 8 Gen 3, 50MP periscope"
+      }
+    ]
+  },
+  {
+    "brand": "Honor",
+    "model": "200 Pro",
+    "imagePath": "/public/phones/honor-200-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Studio Harcourt portrait mode collaboration"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch OLED, Snapdragon 8s Gen 3, 50MP periscope"
+      }
+    ]
+  },
+
+  {
+    "brand": "Nokia",
+    "model": "G42",
+    "imagePath": "/public/phones/nokia-g42.jpg",
+    "releaseYear": 2023,
+    "priceTier": "budget",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "QuickFix repairability with iFixit partnership"
+      },
+      {
+        "type": "spec",
+        "text": "6.56-inch LCD, Snapdragon 480+, 50MP camera, 3-day battery"
+      }
+    ]
+  },
+  {
+    "brand": "Nokia",
+    "model": "X30",
+    "imagePath": "/public/phones/nokia-x30.jpg",
+    "releaseYear": 2022,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Made from 100% recycled aluminum frame" },
+      {
+        "type": "spec",
+        "text": "6.43-inch AMOLED, Snapdragon 695, 50MP PureView camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Apple",
+    "model": "iPhone 16e",
+    "imagePath": "/public/phones/apple-iphone-16e.jpg",
+    "releaseYear": 2025,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Budget iPhone with A18 chip and Apple Intelligence"
+      },
+      {
+        "type": "spec",
+        "text": "6.1-inch OLED, A18 chip, 48MP camera, Face ID"
+      }
+    ]
+  },
+  {
+    "brand": "Apple",
+    "model": "iPhone 13 Pro Max",
+    "imagePath": "/public/phones/apple-iphone-13-pro-max.jpg",
+    "releaseYear": 2021,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First iPhone Pro Max with ProMotion 120Hz"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch OLED, A15 Bionic, ProRes video recording"
+      }
+    ]
+  },
+
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S22 Ultra",
+    "imagePath": "/public/phones/samsung-galaxy-s22-ultra.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Merged Galaxy Note and S Ultra lines with built-in S Pen"
+      },
+      {
+        "type": "spec",
+        "text": "6.8-inch AMOLED, Snapdragon 8 Gen 1, 108MP camera, S Pen"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy Z Fold 4",
+    "imagePath": "/public/phones/samsung-galaxy-z-fold-4.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Slimmer hinge design with improved durability"
+      },
+      {
+        "type": "spec",
+        "text": "7.6-inch inner display, Snapdragon 8+ Gen 1, IPX8"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy Z Flip 4",
+    "imagePath": "/public/phones/samsung-galaxy-z-flip-4.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "flip",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Improved battery life and slimmer hinge over Flip 3"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch inner + 1.9-inch cover display, Snapdragon 8+ Gen 1"
+      }
+    ]
+  },
+  {
+    "brand": "Samsung",
+    "model": "Galaxy A54",
+    "imagePath": "/public/phones/samsung-galaxy-a54.jpg",
+    "releaseYear": 2023,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Best-selling Android phone of 2023" },
+      {
+        "type": "spec",
+        "text": "6.4-inch AMOLED, Exynos 1380, 50MP OIS camera, IP67"
+      }
+    ]
+  },
+
+  {
+    "brand": "Google",
+    "model": "Pixel 7a",
+    "imagePath": "/public/phones/google-pixel-7a.jpg",
+    "releaseYear": 2023,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First A-series Pixel with wireless charging and 90Hz display"
+      },
+      { "type": "spec", "text": "6.1-inch OLED, Tensor G2, 64MP main camera" }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel Fold",
+    "imagePath": "/public/phones/google-pixel-fold.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Google's first foldable phone with Tensor G2"
+      },
+      {
+        "type": "spec",
+        "text": "7.6-inch inner + 5.8-inch cover display, Tensor G2"
+      }
+    ]
+  },
+
+  {
+    "brand": "Xiaomi",
+    "model": "15 Ultra",
+    "imagePath": "/public/phones/xiaomi-15-ultra.jpg",
+    "releaseYear": 2025,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "200MP periscope telephoto with Leica Summicron optics"
+      },
+      {
+        "type": "spec",
+        "text": "6.73-inch AMOLED, Snapdragon 8 Elite, 50MP Leica quad camera"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "15",
+    "imagePath": "/public/phones/xiaomi-15.jpg",
+    "releaseYear": 2025,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Compact Leica flagship with Snapdragon 8 Elite"
+      },
+      {
+        "type": "spec",
+        "text": "6.36-inch AMOLED, Snapdragon 8 Elite, 50MP Leica triple camera"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "Redmi K70 Ultra",
+    "imagePath": "/public/phones/xiaomi-redmi-k70-ultra.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Dimensity 9300+ at aggressive mid-range pricing"
+      },
+      {
+        "type": "spec",
+        "text": "6.67-inch AMOLED, Dimensity 9300+, 50MP Sony IMX906"
+      }
+    ]
+  },
+
+  {
+    "brand": "OnePlus",
+    "model": "13R",
+    "imagePath": "/public/phones/oneplus-13r.jpg",
+    "releaseYear": 2025,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Flagship Snapdragon 8 Gen 3 at R-series pricing"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Snapdragon 8 Gen 3, 50MP triple camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Vivo",
+    "model": "X Flip",
+    "imagePath": "/public/phones/vivo-x-flip.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "flip",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Vivo's first flip phone with Zeiss cameras"
+      },
+      {
+        "type": "spec",
+        "text": "6.74-inch inner + 3-inch cover display, Snapdragon 8+ Gen 1"
+      }
+    ]
+  },
+
+  {
+    "brand": "Honor",
+    "model": "Magic V2",
+    "imagePath": "/public/phones/honor-magic-v2.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Was the thinnest foldable at launch at 9.9mm"
+      },
+      {
+        "type": "spec",
+        "text": "7.92-inch inner display, Snapdragon 8 Gen 2, 50MP triple camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "OPPO",
+    "model": "Find X6 Pro",
+    "imagePath": "/public/phones/oppo-find-x6-pro.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Triple 50MP Hasselblad cameras with 1-inch sensor"
+      },
+      {
+        "type": "spec",
+        "text": "6.82-inch AMOLED, Dimensity 9200, 50MP 1-inch main sensor"
+      }
+    ]
+  },
+
+  {
+    "brand": "Motorola",
+    "model": "Razr+ (2023)",
+    "imagePath": "/public/phones/motorola-razr-plus-2023.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "flip",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Pioneered the largest cover screen on a flip phone"
+      },
+      {
+        "type": "spec",
+        "text": "6.9-inch inner + 3.6-inch cover display, Snapdragon 8+ Gen 1"
+      }
+    ]
+  },
+  {
+    "brand": "Motorola",
+    "model": "Edge 40 Pro",
+    "imagePath": "/public/phones/motorola-edge-40-pro.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Motorola's return to premium flagships with 125W charging"
+      },
+      {
+        "type": "spec",
+        "text": "6.67-inch AMOLED, Snapdragon 8 Gen 2, 50MP triple camera"
+      }
+    ]
+  },
+
+  {
+    "brand": "Asus",
+    "model": "ROG Phone 7 Ultimate",
+    "imagePath": "/public/phones/asus-rog-phone-7-ultimate.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Built-in AeroActive Portal for direct chip cooling"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Snapdragon 8 Gen 2, 16GB RAM, AeroActive Cooler 7"
+      }
+    ]
+  },
+
+  {
+    "brand": "Realme",
+    "model": "GT 7 Pro",
+    "imagePath": "/public/phones/realme-gt-7-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Realme flagship with underwater photography mode"
+      },
+      {
+        "type": "spec",
+        "text": "6.78-inch AMOLED, Snapdragon 8 Elite, 50MP Sony IMX882 periscope"
+      }
+    ]
+  },
+
+  {
+    "brand": "Nokia",
+    "model": "G60",
+    "imagePath": "/public/phones/nokia-g60.jpg",
+    "releaseYear": 2022,
+    "priceTier": "budget",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "Made with 60% recycled plastic" },
+      {
+        "type": "spec",
+        "text": "6.58-inch LCD, Snapdragon 695, 50MP camera, 3 years of updates"
+      }
+    ]
+  },
+
+  {
+    "brand": "Huawei",
+    "model": "Mate X3",
+    "imagePath": "/public/phones/huawei-mate-x3.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "region": "china",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Ultra-light foldable with quad-curved folding screen"
+      },
+      {
+        "type": "spec",
+        "text": "7.85-inch inner display, Snapdragon 8+ Gen 1, 50MP XMAGE cameras"
+      }
+    ]
+  },
+
+  {
+    "brand": "Samsung",
+    "model": "Galaxy S21 Ultra",
+    "imagePath": "/public/phones/samsung-galaxy-s21-ultra.jpg",
+    "releaseYear": 2021,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Galaxy S with optional S Pen support"
+      },
+      {
+        "type": "spec",
+        "text": "6.8-inch AMOLED, Snapdragon 888, 108MP camera, S Pen compatible"
+      }
+    ]
+  },
+  {
+    "brand": "Xiaomi",
+    "model": "Redmi Note 12 Pro+",
+    "imagePath": "/public/phones/xiaomi-redmi-note-12-pro-plus.jpg",
+    "releaseYear": 2023,
+    "priceTier": "mid-range",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      { "type": "feature", "text": "200MP camera at budget pricing" },
+      {
+        "type": "spec",
+        "text": "6.67-inch AMOLED, Dimensity 1080, 200MP main camera"
+      }
+    ]
+  },
+  {
+    "brand": "Google",
+    "model": "Pixel 6 Pro",
+    "imagePath": "/public/phones/google-pixel-6-pro.jpg",
+    "releaseYear": 2021,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Pixel with custom Google Tensor chip"
+      },
+      {
+        "type": "spec",
+        "text": "6.7-inch OLED, Tensor G1, 50MP main + 48MP telephoto"
+      }
+    ]
+  },
+  {
+    "brand": "Sony",
+    "model": "Xperia 1 IV",
+    "imagePath": "/public/phones/sony-xperia-1-iv.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "region": "global",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "World's first true optical zoom in a smartphone"
+      },
+      {
+        "type": "spec",
+        "text": "6.5-inch 4K OLED, Snapdragon 8 Gen 1, 85-125mm optical zoom"
+      }
+    ]
+  }
 ]
