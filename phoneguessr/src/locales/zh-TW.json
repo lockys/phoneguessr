@@ -71,6 +71,19 @@
   "nav.leaderboard": "排行榜",
   "nav.about": "關於",
 
+  "hint.brand": "品牌",
+  "hint.year": "年份",
+  "hint.price": "價位",
+  "hint.penaltyWarning": "每次提示 +15 秒罰時",
+  "hint.used": "已用 {{used}}/{{max}} 次提示",
+
+  "yesterday.title": "昨日答案",
+  "yesterday.funFacts": "趣味知識",
+  "yesterday.communityStats": "社群統計",
+  "yesterday.players": "玩家數",
+  "yesterday.winRate": "勝率",
+  "yesterday.avgGuesses": "平均猜測",
+
   "onboarding.stepOf": "第 {{current}} 步，共 {{total}} 步",
   "onboarding.step1.title": "找出手機",
   "onboarding.step1.desc": "一部神秘手機隱藏在方塊後面。每次猜錯都會移除一些方塊，露出更多圖片。",

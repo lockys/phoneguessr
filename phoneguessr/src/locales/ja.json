@@ -71,6 +71,19 @@
   "nav.leaderboard": "ランキング",
   "nav.about": "概要",
 
+  "hint.brand": "ブランド",
+  "hint.year": "発売年",
+  "hint.price": "価格帯",
+  "hint.penaltyWarning": "ヒント1回につき +15秒のペナルティ",
+  "hint.used": "{{used}}/{{max}} ヒント使用済み",
+
+  "yesterday.title": "昨日の答え",
+  "yesterday.funFacts": "豆知識",
+  "yesterday.communityStats": "コミュニティ統計",
+  "yesterday.players": "プレイヤー数",
+  "yesterday.winRate": "正解率",
+  "yesterday.avgGuesses": "平均推測数",
+
   "onboarding.stepOf": "ステップ {{current}} / {{total}}",
   "onboarding.step1.title": "スマホを見つけよう",
   "onboarding.step1.desc": "ブロックの後ろに隠れたスマホを当てましょう。不正解のたびにブロックが取り除かれ、画像がもっと見えるようになります。",

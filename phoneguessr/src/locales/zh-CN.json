@@ -71,6 +71,19 @@
   "nav.leaderboard": "排行榜",
   "nav.about": "关于",
 
+  "hint.brand": "品牌",
+  "hint.year": "年份",
+  "hint.price": "价位",
+  "hint.penaltyWarning": "每次提示 +15 秒罚时",
+  "hint.used": "已用 {{used}}/{{max}} 次提示",
+
+  "yesterday.title": "昨日答案",
+  "yesterday.funFacts": "趣味知识",
+  "yesterday.communityStats": "社区统计",
+  "yesterday.players": "玩家数",
+  "yesterday.winRate": "胜率",
+  "yesterday.avgGuesses": "平均猜测",
+
   "onboarding.stepOf": "第 {{current}} 步，共 {{total}} 步",
   "onboarding.step1.title": "找出手机",
   "onboarding.step1.desc": "一部神秘手机隐藏在方块后面。每次猜错都会移除一些方块，露出更多图片。",

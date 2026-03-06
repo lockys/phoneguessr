@@ -71,6 +71,19 @@
   "nav.leaderboard": "Leaderboard",
   "nav.about": "About",
 
+  "hint.brand": "Brand",
+  "hint.year": "Year",
+  "hint.price": "Price",
+  "hint.penaltyWarning": "+15s penalty per hint",
+  "hint.used": "{{used}}/{{max}} hints used",
+
+  "yesterday.title": "Yesterday's Answer",
+  "yesterday.funFacts": "Fun Facts",
+  "yesterday.communityStats": "Community Stats",
+  "yesterday.players": "Players",
+  "yesterday.winRate": "Win Rate",
+  "yesterday.avgGuesses": "Avg Guesses",
+
   "onboarding.stepOf": "Step {{current}} of {{total}}",
   "onboarding.step1.title": "Spot the phone",
   "onboarding.step1.desc": "A mystery phone is hidden behind blocks. Each wrong guess removes some blocks to reveal more of the image.",

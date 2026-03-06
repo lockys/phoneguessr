@@ -71,6 +71,19 @@
   "nav.leaderboard": "리더보드",
   "nav.about": "소개",
 
+  "hint.brand": "브랜드",
+  "hint.year": "출시 연도",
+  "hint.price": "가격대",
+  "hint.penaltyWarning": "힌트당 +15초 페널티",
+  "hint.used": "{{used}}/{{max}} 힌트 사용",
+
+  "yesterday.title": "어제의 정답",
+  "yesterday.funFacts": "재미있는 사실",
+  "yesterday.communityStats": "커뮤니티 통계",
+  "yesterday.players": "플레이어",
+  "yesterday.winRate": "정답률",
+  "yesterday.avgGuesses": "평균 추측",
+
   "onboarding.stepOf": "{{total}}단계 중 {{current}}단계",
   "onboarding.step1.title": "폰을 찾아보세요",
   "onboarding.step1.desc": "블록 뒤에 숨겨진 스마트폰을 맞춰보세요. 오답마다 블록이 제거되어 이미지가 더 많이 보입니다.",
