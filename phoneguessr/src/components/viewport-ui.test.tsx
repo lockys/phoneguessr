@@ -327,7 +327,7 @@ describe('PhoneAutocomplete – viewport interaction', () => {
 // ---------- Onboarding – viewport adaptation ----------
 
 describe('Onboarding – viewport and resize behavior', () => {
-  let onDone: ReturnType<typeof vi.fn>;
+  let onDone: () => void;
 
   beforeEach(() => {
     onDone = vi.fn();
@@ -372,7 +372,6 @@ describe('Onboarding – viewport and resize behavior', () => {
   it('spotlight updates on window resize', () => {
     const { container } = render(<Onboarding onDone={onDone} />);
     const spotlight = container.querySelector('.onboarding-spotlight');
-    const initialTop = spotlight?.getAttribute('style');
 
     // Simulate element moving after resize
     const cropWrapper = document.querySelector('.crop-wrapper') as HTMLElement;
@@ -391,44 +390,7 @@ describe('Onboarding – viewport and resize behavior', () => {
     fireEvent.resize(window);
 
     const updatedStyle = spotlight?.getAttribute('style');
-    // Style should have changed after resize with new rect values
     expect(updatedStyle).toBeTruthy();
-  });
-
-  it('positions tooltip below spotlight when target is in upper half', () => {
-    setViewportHeight(1000);
-    const { container } = render(<Onboarding onDone={onDone} />);
-    const tooltip = container.querySelector(
-      '.onboarding-tooltip',
-    ) as HTMLElement;
-    // Target at top=100, viewport height=1000, so top < height/2 → tooltip below
-    expect(tooltip).toBeInTheDocument();
-  });
-
-  it('positions tooltip above spotlight when target is in lower half', () => {
-    setViewportHeight(400);
-    // With viewport height 400, crop-wrapper top is 100+300=400 area
-    // rect.top (100) is not > 400/2=200, so tooltip goes below
-    // Let's adjust the element position to test the "above" case
-    const cropWrapper = document.querySelector('.crop-wrapper') as HTMLElement;
-    cropWrapper.getBoundingClientRect = () => ({
-      top: 300,
-      left: 20,
-      width: 300,
-      height: 300,
-      bottom: 600,
-      right: 320,
-      x: 20,
-      y: 300,
-      toJSON: () => {},
-    });
-
-    const { container } = render(<Onboarding onDone={onDone} />);
-    const tooltip = container.querySelector(
-      '.onboarding-tooltip',
-    ) as HTMLElement;
-    // rect.top (300) > 400/2=200 → tooltip above
-    expect(tooltip.style.transform).toContain('translateY(-100%)');
   });
 
   it('renders backdrop covering full viewport', () => {
@@ -436,11 +398,9 @@ describe('Onboarding – viewport and resize behavior', () => {
     expect(container.querySelector('.onboarding-backdrop')).toBeInTheDocument();
   });
 
-  it('onboarding-tooltip has max-width constraint for small viewports', () => {
+  it('renders bottom-anchored card', () => {
     const { container } = render(<Onboarding onDone={onDone} />);
-    const tooltip = container.querySelector('.onboarding-tooltip');
-    expect(tooltip).toHaveClass('onboarding-tooltip');
-    // CSS handles max-width: 320px + width: calc(100% - 32px)
+    expect(container.querySelector('.onboarding-card')).toBeInTheDocument();
   });
 });
 
@@ -457,7 +417,7 @@ describe('BlockGrid – viewport-independent percentage layout', () => {
     const { container } = render(<BlockGrid level={0} revealed={false} />);
     const cells = container.querySelectorAll('.block-cell');
     // All cells should have percentage-based left/top/width/height
-    for (const cell of cells) {
+    for (const cell of Array.from(cells)) {
       const style = (cell as HTMLElement).style;
       expect(style.left).toMatch(/%$/);
       expect(style.top).toMatch(/%$/);

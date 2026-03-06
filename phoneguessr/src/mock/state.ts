@@ -182,11 +182,11 @@ export function getMockHint(
       break;
     case 'year':
       hint = String(
-        (phone as Record<string, unknown>).releaseYear ?? 'Unknown',
+        (phone as unknown as Record<string, unknown>).releaseYear ?? 'Unknown',
       );
       break;
     case 'price_tier':
-      hint = String((phone as Record<string, unknown>).priceTier ?? 'Unknown');
+      hint = String((phone as unknown as Record<string, unknown>).priceTier ?? 'Unknown');
       break;
   }
 

@@ -27,7 +27,6 @@ async function seed() {
         releaseYear: phone.releaseYear,
         priceTier: phone.priceTier,
         formFactor: phone.formFactor,
-        region: phone.region,
       })
       .onConflictDoNothing()
       .returning({ id: phones.id });
