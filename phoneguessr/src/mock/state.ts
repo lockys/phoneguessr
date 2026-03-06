@@ -39,7 +39,12 @@ export function getMockImageData(): string | null {
   if (!fs.existsSync(imagePath)) return null;
   const buffer = fs.readFileSync(imagePath);
   const ext = path.extname(imagePath).slice(1).toLowerCase();
-  const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+  const mime =
+    ext === 'svg'
+      ? 'image/svg+xml'
+      : ext === 'png'
+        ? 'image/png'
+        : 'image/jpeg';
   return `data:${mime};base64,${buffer.toString('base64')}`;
 }
 

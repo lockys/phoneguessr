@@ -15,7 +15,7 @@ const APPROVED_BRANDS = [
   'Motorola',
   'Huawei',
   'OPPO',
-  'vivo',
+  'Vivo',
   'Realme',
   'ASUS',
   'Honor',
@@ -215,7 +215,7 @@ function validateMetadataFields(phones: PhoneEntry[]): ValidationResult[] {
 
 function validateImageFiles(phones: PhoneEntry[]): ValidationResult[] {
   const results: ValidationResult[] = [];
-  const imagesDir = join(__dirname, '..', '..', 'config', 'public', 'phones');
+  const imagesDir = join(__dirname, '..', 'config', 'public', 'phones');
   let missingCount = 0;
 
   for (const phone of phones) {
@@ -344,7 +344,7 @@ function validateCatalogTargets(phones: PhoneEntry[]): ValidationResult[] {
 
 function validateFileNaming(phones: PhoneEntry[]): ValidationResult[] {
   const results: ValidationResult[] = [];
-  const pattern = /^\/public\/phones\/[a-z0-9-]+\.(jpg|png)$/;
+  const pattern = /^\/public\/phones\/[a-z0-9-]+\.(jpg|png|svg)$/;
 
   for (const phone of phones) {
     if (!pattern.test(phone.imagePath)) {

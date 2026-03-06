@@ -103,10 +103,16 @@
 - CSS-only bars, green highlight for current game
 - Integrated into ProfilePanel + tests
 
-### Group 4: QA (0/3 remaining)
+### Group 4: QA (1/3 complete)
 - QA: Test all new API endpoints
 - QA: Test UI features across browsers and viewports
-- QA: Verify phone data completeness
+- QA: Verify phone data completeness ✓
+  - Converted data.test.ts from node:test to vitest (19 tests pass)
+  - Verified all 120 phones have image files on disk (jpg, png, svg)
+  - Verified MOCK_PHONES and phone-data.json are in sync
+  - Fixed SVG MIME type bug in getMockImageData
+  - Fixed validation script: wrong image path, missing SVG support, brand casing
+  - Fixed phone-data.test.ts: split current vs future metadata tests
 
 ### Group 5: Code Review (0/3 remaining)
 - CR: Review all API endpoint implementations
