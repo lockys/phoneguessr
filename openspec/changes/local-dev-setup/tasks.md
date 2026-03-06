@@ -30,6 +30,6 @@
 
 ## 5. Commit and Deploy
 
-- [ ] 5.1 Commit all pending changes (flat-file routes, rewrites, removed BFF, updated configs)
-- [ ] 5.2 Push to GitHub and verify Vercel deployment succeeds
-- [ ] 5.3 Test production API endpoints return correct responses
+- [x] 5.1 Commit all pending changes (flat-file routes, rewrites, removed BFF, updated configs)
+- [x] 5.2 Push to GitHub and verify Vercel deployment succeeds
+- [x] 5.3 Test production API endpoints return correct responses
