@@ -73,5 +73,12 @@
   "nav.profile": "프로필",
   "nav.game": "게임",
   "nav.leaderboard": "리더보드",
-  "nav.about": "소개"
+  "nav.about": "소개",
+
+  "yesterday.title": "어제의 정답",
+  "yesterday.funFacts": "재미있는 사실",
+  "yesterday.communityStats": "커뮤니티 통계",
+  "yesterday.players": "플레이어",
+  "yesterday.winRate": "승률",
+  "yesterday.avgGuesses": "평균 횟수"
 }

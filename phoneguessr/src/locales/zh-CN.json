@@ -73,5 +73,12 @@
   "nav.profile": "个人档案",
   "nav.game": "游戏",
   "nav.leaderboard": "排行榜",
-  "nav.about": "关于"
+  "nav.about": "关于",
+
+  "yesterday.title": "昨日答案",
+  "yesterday.funFacts": "趣味小知识",
+  "yesterday.communityStats": "社区统计",
+  "yesterday.players": "玩家数",
+  "yesterday.winRate": "胜率",
+  "yesterday.avgGuesses": "平均猜测"
 }

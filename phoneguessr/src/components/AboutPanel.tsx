@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { YesterdayReveal } from './YesterdayReveal';
 
 export function AboutPanel() {
   const { t } = useTranslation();
@@ -7,6 +8,8 @@ export function AboutPanel() {
     <div className="about-panel">
       <h2 className="about-title">{t('about.title')}</h2>
       <p className="about-tagline">{t('about.tagline')}</p>
+
+      <YesterdayReveal />
 
       <section className="about-section">
         <h3>{t('about.howToPlay')}</h3>

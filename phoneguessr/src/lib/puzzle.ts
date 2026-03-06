@@ -74,6 +74,46 @@ export async function getTodayPuzzle() {
 }
 
 /**
+ * Get yesterday's puzzle data for the reveal section.
+ */
+export async function getYesterdayPuzzle() {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const dateStr = yesterday.toISOString().slice(0, 10);
+
+  const existing = await db
+    .select()
+    .from(dailyPuzzles)
+    .where(eq(dailyPuzzles.puzzleDate, dateStr))
+    .limit(1);
+
+  if (existing.length === 0) {
+    throw new Error('No puzzle for yesterday');
+  }
+
+  const puzzle = existing[0];
+  const [phone] = await db
+    .select()
+    .from(phones)
+    .where(eq(phones.id, puzzle.phoneId))
+    .limit(1);
+
+  return {
+    phone: {
+      brand: phone.brand,
+      model: phone.model,
+      imagePath: phone.imagePath,
+    },
+    facts: [] as string[],
+    stats: {
+      totalPlayers: 0,
+      avgGuesses: 0,
+      winRate: 0,
+    },
+  };
+}
+
+/**
  * Select a phone for a given date using seeded randomness.
  * Cycles through all active phones before repeating.
  */

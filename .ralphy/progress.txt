@@ -1,19 +1,14 @@
 # Ralphy Progress Log
 
-## FE: Build hint system UI (agent-12)
-
-### Completed
-- Created `HintButtons` component (`phoneguessr/src/components/HintButtons.tsx`)
-  - 3 pill buttons: Brand, Year, Price (maps to hint types: brand, year, price_tier)
-  - Max 2 hints per game with counter display ("1/2 hints used")
-  - Used hints show revealed value inline with disabled styling
-  - Penalty warning ("+15s per hint") shown before first use
-  - Haptic feedback via web-haptics on hint use
-  - Mock mode support (client-side hints) and API mode (POST /api/hint)
-- Integrated HintButtons into Game component below PhoneAutocomplete (playing state only)
-- Added CSS styles in `index.css`: pill buttons with accent border, hover/active states, used state styling
-- Added i18n keys to all 5 locales (en, ja, ko, zh-TW, zh-CN): hint.brand, hint.year, hint.price, hint.used, hint.penaltyWarning
-- Set up vitest + @testing-library/react test infrastructure
-- Wrote 9 tests covering: render, penalty warning, mock reveal, haptic feedback, counter, max limit, disabled state, API call
-- All tests passing, Biome lint clean on changed files
-
+## FE: Build yesterday's puzzle reveal UI
+- Created `YesterdayReveal` component showing yesterday's phone (image, brand, model, release year)
+- Added fun facts card list and community stats (players, win rate, avg guesses)
+- Animate-in on first view using IntersectionObserver + CSS transitions
+- Added to AboutPanel as the first section after the tagline
+- Created BFF endpoint `GET /api/puzzle/yesterday` with mock mode support
+- Added `getYesterdayPuzzle()` to puzzle lib for production mode
+- Created Vercel serverless endpoint `api/puzzle/yesterday.ts`
+- Added mock data functions (`getMockYesterdayPuzzle`, `getMockYesterdayImageData`) to state.ts
+- i18n translations added for all 5 locales (en, zh-TW, zh-CN, ja, ko)
+- Set up vitest with jsdom, @testing-library/react, wrote 9 tests (all passing)
+- CSS styles added to index.css using existing design tokens

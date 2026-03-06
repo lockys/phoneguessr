@@ -73,5 +73,12 @@
   "nav.profile": "プロフィール",
   "nav.game": "ゲーム",
   "nav.leaderboard": "ランキング",
-  "nav.about": "概要"
+  "nav.about": "概要",
+
+  "yesterday.title": "昨日の答え",
+  "yesterday.funFacts": "豆知識",
+  "yesterday.communityStats": "コミュニティ統計",
+  "yesterday.players": "プレイヤー",
+  "yesterday.winRate": "勝率",
+  "yesterday.avgGuesses": "平均回数"
 }

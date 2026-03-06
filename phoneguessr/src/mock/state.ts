@@ -1,15 +1,19 @@
-import path from 'node:path';
 import fs from 'node:fs';
+import path from 'node:path';
 import { MOCK_PHONES } from './data.ts';
 
 /**
  * Get today's mock puzzle. Uses date-based index into the phone array.
  */
-function getDailyIndex(): number {
-  const today = new Date().toISOString().slice(0, 10);
-  const [y, m, d] = today.split('-').map(Number);
+function dateToIndex(dateStr: string): number {
+  const [y, m, d] = dateStr.split('-').map(Number);
   const seed = y * 10000 + m * 100 + d;
   return seed % MOCK_PHONES.length;
+}
+
+function getDailyIndex(): number {
+  const today = new Date().toISOString().slice(0, 10);
+  return dateToIndex(today);
 }
 
 export function getMockPuzzle() {
@@ -32,12 +36,14 @@ export function getMockPuzzle() {
 
 export function getMockImageData(): string | null {
   const puzzle = getMockPuzzle();
-  const imagePath = path.resolve('config/public', puzzle.imagePath.replace(/^\/public\//, ''));
+  const imagePath = path.resolve(
+    'config/public',
+    puzzle.imagePath.replace(/^\/public\//, ''),
+  );
   if (!fs.existsSync(imagePath)) return null;
   const buffer = fs.readFileSync(imagePath);
   const ext = path.extname(imagePath).slice(1).toLowerCase();
-  const mime =
-    ext === 'svg' ? 'image/svg+xml' : ext === 'png' ? 'image/png' : 'image/jpeg';
+  const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
   return `data:${mime};base64,${buffer.toString('base64')}`;
 }
 
@@ -51,14 +57,48 @@ export function getMockProfileStats() {
   };
 }
 
-export function getMockStreak() {
-  const today = new Date().toISOString().slice(0, 10);
+export function getMockYesterdayPuzzle() {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const dateStr = yesterday.toISOString().slice(0, 10);
+  const index = dateToIndex(dateStr);
+  const phone = MOCK_PHONES[index];
+
   return {
-    currentStreak: 5,
-    bestStreak: 12,
-    lastPlayedDate: today,
-    milestones: { '7day': true, '30day': false, '100day': false },
+    phone: {
+      brand: phone.brand,
+      model: phone.model,
+      releaseYear: 2024,
+    },
+    facts: [
+      `Released in 2024 as part of ${phone.brand}'s flagship lineup`,
+      'Features a ceramic back panel with enhanced durability',
+      'Supports satellite emergency messaging',
+    ],
+    stats: {
+      totalPlayers: 142,
+      avgGuesses: 3.4,
+      winRate: 68,
+    },
   };
+}
+
+export function getMockYesterdayImageData(): string | null {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const dateStr = yesterday.toISOString().slice(0, 10);
+  const index = dateToIndex(dateStr);
+  const phone = MOCK_PHONES[index];
+
+  const imagePath = path.resolve(
+    'config/public',
+    phone.imagePath.replace(/^\/public\//, ''),
+  );
+  if (!fs.existsSync(imagePath)) return null;
+  const buffer = fs.readFileSync(imagePath);
+  const ext = path.extname(imagePath).slice(1).toLowerCase();
+  const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+  return `data:${mime};base64,${buffer.toString('base64')}`;
 }
 
 export function getMockFeedback(

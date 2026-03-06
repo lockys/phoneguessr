@@ -73,5 +73,12 @@
   "nav.profile": "Profile",
   "nav.game": "Game",
   "nav.leaderboard": "Leaderboard",
-  "nav.about": "About"
+  "nav.about": "About",
+
+  "yesterday.title": "Yesterday's Answer",
+  "yesterday.funFacts": "Fun Facts",
+  "yesterday.communityStats": "Community Stats",
+  "yesterday.players": "Players",
+  "yesterday.winRate": "Win Rate",
+  "yesterday.avgGuesses": "Avg Guesses"
 }

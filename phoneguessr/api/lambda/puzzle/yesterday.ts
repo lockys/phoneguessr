@@ -1,22 +1,25 @@
 import { IS_MOCK } from '../../../src/mock/index.ts';
-import { getMockYesterdayPuzzle } from '../../../src/mock/state.ts';
+import {
+  getMockYesterdayImageData,
+  getMockYesterdayPuzzle,
+} from '../../../src/mock/state.ts';
 
 export const get = async () => {
   if (IS_MOCK) {
-    return getMockYesterdayPuzzle();
+    const data = getMockYesterdayPuzzle();
+    const imageData = getMockYesterdayImageData();
+    return {
+      ...data,
+      imageData,
+    };
   }
 
+  // Production: delegate to puzzle lib
   const { getYesterdayPuzzle } = await import('../../../src/lib/puzzle');
-
-  const data = await getYesterdayPuzzle();
-  if (!data) {
-    return Response.json(
-      { error: 'No puzzle found for yesterday' },
-      { status: 404 },
-    );
+  try {
+    const result = await getYesterdayPuzzle();
+    return result;
+  } catch {
+    return { error: 'no_yesterday_puzzle' };
   }
-
-  return Response.json(data, {
-    headers: { 'Cache-Control': 'public, max-age=86400' },
-  });
 };
