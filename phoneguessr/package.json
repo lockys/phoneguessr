@@ -6,6 +6,7 @@
     "dev:mock": "MOCK_API=true modern dev",
     "build": "modern build",
     "serve": "modern serve",
+    "test": "vitest run",
     "lint": "biome check",
     "test": "vitest run",
     "test:watch": "vitest",

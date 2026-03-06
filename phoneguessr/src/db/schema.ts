@@ -1,17 +1,25 @@
 import {
   boolean,
   date,
+<<<<<<< HEAD
   index,
+=======
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   integer,
   pgTable,
   real,
   serial,
   text,
   timestamp,
+<<<<<<< HEAD
+=======
+  unique,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
 
+<<<<<<< HEAD
 export const phones = pgTable(
   'phones',
   {
@@ -28,6 +36,18 @@ export const phones = pgTable(
   },
   table => [uniqueIndex('phones_brand_model_idx').on(table.brand, table.model)],
 );
+=======
+export const phones = pgTable('phones', {
+  id: serial('id').primaryKey(),
+  brand: varchar('brand', { length: 100 }).notNull(),
+  model: varchar('model', { length: 200 }).notNull(),
+  imagePath: text('image_path').notNull(),
+  releaseYear: integer('release_year'),
+  priceTier: varchar('price_tier', { length: 20 }),
+  active: boolean('active').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
 
 export const dailyPuzzles = pgTable(
   'daily_puzzles',
@@ -64,6 +84,28 @@ export const guesses = pgTable('guesses', {
   feedback: varchar('feedback', { length: 20 }).notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+export const hints = pgTable(
+  'hints',
+  {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id),
+    puzzleId: integer('puzzle_id')
+      .notNull()
+      .references(() => dailyPuzzles.id),
+    hintType: varchar('hint_type', { length: 20 }).notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  table => [
+    unique('hints_user_puzzle_type_idx').on(
+      table.userId,
+      table.puzzleId,
+      table.hintType,
+    ),
+  ],
+);
 
 export const results = pgTable('results', {
   id: serial('id').primaryKey(),

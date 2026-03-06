@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MOCK_PHONES } from './data';
 import { getMockPuzzle, getMockYesterdayPuzzle } from './state';
@@ -47,5 +48,96 @@ describe('getMockYesterdayPuzzle', () => {
 
     expect(result1.phone.brand).toBe(result2.phone.brand);
     expect(result1.phone.model).toBe(result2.phone.model);
+=======
+import { beforeEach, describe, expect, it } from 'vitest';
+import { MOCK_PHONES } from './data';
+import { getMockHint, getMockPuzzle, resetMockHints } from './state';
+
+describe('getMockHint', () => {
+  beforeEach(() => {
+    resetMockHints();
+  });
+
+  it('returns brand hint for the daily puzzle phone', () => {
+    const result = getMockHint('brand');
+    expect('hint' in result).toBe(true);
+    if ('hint' in result) {
+      const puzzle = getMockPuzzle();
+      const phone = MOCK_PHONES.find(p => p.id === puzzle._answerId);
+      expect(result.hint).toBe(phone?.brand);
+      expect(result.penalty).toBe(15);
+      expect(result.hintsUsed).toBe(1);
+      expect(result.hintsRemaining).toBe(1);
+    }
+  });
+
+  it('returns year hint for the daily puzzle phone', () => {
+    const result = getMockHint('year');
+    expect('hint' in result).toBe(true);
+    if ('hint' in result) {
+      const puzzle = getMockPuzzle();
+      const phone = MOCK_PHONES.find(p => p.id === puzzle._answerId);
+      expect(result.hint).toBe(String(phone?.releaseYear));
+    }
+  });
+
+  it('returns price_tier hint for the daily puzzle phone', () => {
+    const result = getMockHint('price_tier');
+    expect('hint' in result).toBe(true);
+    if ('hint' in result) {
+      const puzzle = getMockPuzzle();
+      const phone = MOCK_PHONES.find(p => p.id === puzzle._answerId);
+      expect(result.hint).toBe(phone?.priceTier);
+    }
+  });
+
+  it('allows two different hint types', () => {
+    const first = getMockHint('brand');
+    expect('hint' in first).toBe(true);
+    if ('hint' in first) {
+      expect(first.hintsUsed).toBe(1);
+      expect(first.hintsRemaining).toBe(1);
+    }
+
+    const second = getMockHint('year');
+    expect('hint' in second).toBe(true);
+    if ('hint' in second) {
+      expect(second.hintsUsed).toBe(2);
+      expect(second.hintsRemaining).toBe(0);
+    }
+  });
+
+  it('rejects duplicate hint type', () => {
+    getMockHint('brand');
+    const duplicate = getMockHint('brand');
+    expect('error' in duplicate).toBe(true);
+    if ('error' in duplicate) {
+      expect(duplicate.error).toBe('max_hints_reached');
+      expect(duplicate.status).toBe(409);
+    }
+  });
+
+  it('rejects third hint after max reached', () => {
+    getMockHint('brand');
+    getMockHint('year');
+    const third = getMockHint('price_tier');
+    expect('error' in third).toBe(true);
+    if ('error' in third) {
+      expect(third.error).toBe('max_hints_reached');
+      expect(third.status).toBe(409);
+    }
+  });
+
+  it('resetMockHints clears hint state', () => {
+    getMockHint('brand');
+    getMockHint('year');
+    resetMockHints();
+
+    const result = getMockHint('brand');
+    expect('hint' in result).toBe(true);
+    if ('hint' in result) {
+      expect(result.hintsUsed).toBe(1);
+    }
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   });
 });

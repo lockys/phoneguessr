@@ -6,10 +6,15 @@ export interface MockPhone {
   brand: string;
   model: string;
   imagePath: string;
+<<<<<<< HEAD
   releaseYear?: number;
   priceTier?: PriceTier;
   formFactor?: FormFactor;
   region?: string;
+=======
+  releaseYear: number;
+  priceTier: 'budget' | 'mid' | 'flagship';
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
 }
 
 export const MOCK_PHONES: MockPhone[] = [
@@ -20,8 +25,11 @@ export const MOCK_PHONES: MockPhone[] = [
     imagePath: '/public/phones/apple-iphone-16-pro-max.jpg',
     releaseYear: 2024,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
+=======
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   },
   {
     id: 2,
@@ -30,8 +38,11 @@ export const MOCK_PHONES: MockPhone[] = [
     imagePath: '/public/phones/apple-iphone-16-pro.jpg',
     releaseYear: 2024,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
+=======
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   },
   {
     id: 3,
@@ -39,9 +50,13 @@ export const MOCK_PHONES: MockPhone[] = [
     model: 'iPhone 16',
     imagePath: '/public/phones/apple-iphone-16.jpg',
     releaseYear: 2024,
+<<<<<<< HEAD
     priceTier: 'flagship',
     formFactor: 'bar',
     region: 'global',
+=======
+    priceTier: 'mid',
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   },
   {
     id: 4,
@@ -50,8 +65,11 @@ export const MOCK_PHONES: MockPhone[] = [
     imagePath: '/public/phones/apple-iphone-15-pro-max.jpg',
     releaseYear: 2023,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
+=======
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   },
   {
     id: 5,
@@ -60,8 +78,11 @@ export const MOCK_PHONES: MockPhone[] = [
     imagePath: '/public/phones/apple-iphone-15-pro.jpg',
     releaseYear: 2023,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
+=======
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   },
   {
     id: 6,
@@ -69,9 +90,13 @@ export const MOCK_PHONES: MockPhone[] = [
     model: 'iPhone 15',
     imagePath: '/public/phones/apple-iphone-15.jpg',
     releaseYear: 2023,
+<<<<<<< HEAD
     priceTier: 'flagship',
     formFactor: 'bar',
     region: 'global',
+=======
+    priceTier: 'mid',
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   },
   {
     id: 7,
@@ -80,6 +105,7 @@ export const MOCK_PHONES: MockPhone[] = [
     imagePath: '/public/phones/apple-iphone-14-pro.jpg',
     releaseYear: 2022,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
   },
@@ -95,51 +121,82 @@ export const MOCK_PHONES: MockPhone[] = [
   },
   {
     id: 9,
+=======
+  },
+  {
+    id: 8,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Samsung',
     model: 'Galaxy S25 Ultra',
     imagePath: '/public/phones/samsung-galaxy-s25-ultra.jpg',
     releaseYear: 2025,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
   },
   {
     id: 10,
+=======
+  },
+  {
+    id: 9,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Samsung',
     model: 'Galaxy S24 Ultra',
     imagePath: '/public/phones/samsung-galaxy-s24-ultra.jpg',
     releaseYear: 2024,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
   },
   {
     id: 11,
+=======
+  },
+  {
+    id: 10,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Samsung',
     model: 'Galaxy S24',
     imagePath: '/public/phones/samsung-galaxy-s24.jpg',
     releaseYear: 2024,
+<<<<<<< HEAD
     priceTier: 'flagship',
     formFactor: 'bar',
     region: 'global',
   },
   {
     id: 12,
+=======
+    priceTier: 'mid',
+  },
+  {
+    id: 11,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Samsung',
     model: 'Galaxy Z Fold 6',
     imagePath: '/public/phones/samsung-galaxy-z-fold-6.jpg',
     releaseYear: 2024,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'fold',
     region: 'global',
   },
   {
     id: 13,
+=======
+  },
+  {
+    id: 12,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Samsung',
     model: 'Galaxy Z Flip 6',
     imagePath: '/public/phones/samsung-galaxy-z-flip-6.jpg',
     releaseYear: 2024,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'flip',
     region: 'global',
   },
@@ -165,40 +222,65 @@ export const MOCK_PHONES: MockPhone[] = [
   },
   {
     id: 16,
+=======
+  },
+  {
+    id: 13,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Google',
     model: 'Pixel 9 Pro',
     imagePath: '/public/phones/google-pixel-9-pro.jpg',
     releaseYear: 2024,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
   },
   {
     id: 17,
+=======
+  },
+  {
+    id: 14,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Google',
     model: 'Pixel 9',
     imagePath: '/public/phones/google-pixel-9.jpg',
     releaseYear: 2024,
+<<<<<<< HEAD
     priceTier: 'flagship',
     formFactor: 'bar',
     region: 'global',
   },
   {
     id: 18,
+=======
+    priceTier: 'mid',
+  },
+  {
+    id: 15,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Google',
     model: 'Pixel 8 Pro',
     imagePath: '/public/phones/google-pixel-8-pro.jpg',
     releaseYear: 2023,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
   },
   {
     id: 19,
+=======
+  },
+  {
+    id: 16,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Google',
     model: 'Pixel 8',
     imagePath: '/public/phones/google-pixel-8.jpg',
     releaseYear: 2023,
+<<<<<<< HEAD
     priceTier: 'flagship',
     formFactor: 'bar',
     region: 'global',
@@ -215,20 +297,33 @@ export const MOCK_PHONES: MockPhone[] = [
   },
   {
     id: 21,
+=======
+    priceTier: 'mid',
+  },
+  {
+    id: 17,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'OnePlus',
     model: '13',
     imagePath: '/public/phones/oneplus-13.png',
     releaseYear: 2025,
     priceTier: 'flagship',
+<<<<<<< HEAD
     formFactor: 'bar',
     region: 'global',
   },
   {
     id: 22,
+=======
+  },
+  {
+    id: 18,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'OnePlus',
     model: '12',
     imagePath: '/public/phones/oneplus-12.jpg',
     releaseYear: 2024,
+<<<<<<< HEAD
     priceTier: 'flagship',
     formFactor: 'bar',
     region: 'global',
@@ -245,20 +340,34 @@ export const MOCK_PHONES: MockPhone[] = [
   },
   {
     id: 24,
+=======
+    priceTier: 'mid',
+  },
+  {
+    id: 19,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Nothing',
     model: 'Phone 2',
     imagePath: '/public/phones/nothing-phone-2.png',
     releaseYear: 2023,
+<<<<<<< HEAD
     priceTier: 'mid-range',
     formFactor: 'bar',
     region: 'global',
   },
   {
     id: 25,
+=======
+    priceTier: 'mid',
+  },
+  {
+    id: 20,
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
     brand: 'Nothing',
     model: 'Phone 1',
     imagePath: '/public/phones/nothing-phone-1.png',
     releaseYear: 2022,
+<<<<<<< HEAD
     priceTier: 'mid-range',
     formFactor: 'bar',
     region: 'global',
@@ -512,6 +621,9 @@ export const MOCK_PHONES: MockPhone[] = [
     priceTier: 'flagship',
     formFactor: 'bar',
     region: 'global',
+=======
+    priceTier: 'budget',
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
   },
 ];
 

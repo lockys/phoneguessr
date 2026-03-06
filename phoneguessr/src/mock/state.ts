@@ -53,6 +53,7 @@ export function getMockProfileStats() {
   };
 }
 
+<<<<<<< HEAD
 /**
  * Get yesterday's mock puzzle for the reveal endpoint.
  */
@@ -81,6 +82,61 @@ export function getMockYesterdayPuzzle() {
   };
 }
 
+=======
+// In-memory hint tracking for mock mode
+const mockHintsUsed: Map<string, string[]> = new Map();
+
+export function getMockHint(
+  hintType: 'brand' | 'year' | 'price_tier',
+):
+  | { hint: string; penalty: number; hintsUsed: number; hintsRemaining: number }
+  | { error: string; status: number } {
+  const puzzle = getMockPuzzle();
+  const phone = MOCK_PHONES.find(p => p.id === puzzle._answerId);
+  if (!phone) {
+    return { error: 'Puzzle phone not found', status: 404 };
+  }
+
+  const key = `mock_user_${puzzle.puzzleId}`;
+  const usedHints = mockHintsUsed.get(key) ?? [];
+
+  if (usedHints.length >= 2) {
+    return { error: 'max_hints_reached', status: 409 };
+  }
+
+  if (usedHints.includes(hintType)) {
+    return { error: 'max_hints_reached', status: 409 };
+  }
+
+  let hint: string;
+  switch (hintType) {
+    case 'brand':
+      hint = phone.brand;
+      break;
+    case 'year':
+      hint = String(phone.releaseYear);
+      break;
+    case 'price_tier':
+      hint = phone.priceTier;
+      break;
+  }
+
+  usedHints.push(hintType);
+  mockHintsUsed.set(key, usedHints);
+
+  return {
+    hint,
+    penalty: 15,
+    hintsUsed: usedHints.length,
+    hintsRemaining: 2 - usedHints.length,
+  };
+}
+
+export function resetMockHints(): void {
+  mockHintsUsed.clear();
+}
+
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
 export function getMockFeedback(
   guessedPhoneId: number,
 ): 'correct' | 'right_brand' | 'wrong_brand' {

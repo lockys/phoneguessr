@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MOCK_PHONES } from './data';
+<<<<<<< HEAD
 import type { FormFactor, PriceTier } from './data';
 
 const VALID_PRICE_TIERS: PriceTier[] = ['budget', 'mid-range', 'flagship'];
@@ -48,4 +49,27 @@ describe('MOCK_PHONES', () => {
       expect(tiers).toContain(tier);
     }
   });
+=======
+
+describe('MOCK_PHONES', () => {
+  it('has releaseYear for all phones', () => {
+    for (const phone of MOCK_PHONES) {
+      expect(phone.releaseYear).toBeTypeOf('number');
+      expect(phone.releaseYear).toBeGreaterThanOrEqual(2020);
+      expect(phone.releaseYear).toBeLessThanOrEqual(2026);
+    }
+  });
+
+  it('has valid priceTier for all phones', () => {
+    const validTiers = ['budget', 'mid', 'flagship'];
+    for (const phone of MOCK_PHONES) {
+      expect(validTiers).toContain(phone.priceTier);
+    }
+  });
+
+  it('has unique ids', () => {
+    const ids = MOCK_PHONES.map(p => p.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+>>>>>>> 3428b9a (feat: implement hint system API endpoint)
 });

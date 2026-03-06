@@ -1,23 +1,30 @@
 # Ralphy Progress Log
 
-## TL: Design phone data schema and pipeline
-**Status:** Complete
-**Branch:** ralphy/agent-5-1772725373014-5evxwn-tl-design-phone-data-schema-and-pipeline
+## BE: Implement hint system API (agent-7)
 
 ### What was done:
-1. **Design doc** — Created `docs/plans/2026-03-05-phone-data-schema-design.md` with ERD, migration plan, and 5 design decisions
-2. **Schema expansion** — Added `releaseYear`, `priceTier`, `formFactor`, `region` columns to `phones` table; added `phone_facts` and `streaks` tables; added `(brand, model)` unique index
-3. **Phone catalog** — Expanded `phone-data.json` from 20 to 121 phones across 15 brands, each with metadata and 2 facts
-4. **Mock data** — Updated `MockPhone` interface with typed metadata fields; expanded to 50 phones covering all form factors and price tiers
-5. **Seed script** — Updated to insert new metadata fields and seed `phone_facts` from JSON data
-6. **Difficulty utility** — Created `src/lib/difficulty.ts` with `computeDifficulty()` function (computed, not stored)
-7. **Test suite** — Added vitest with 25 tests: phone-data validation (11), mock data correctness (7), difficulty logic (7)
-8. **Vitest setup** — Installed vitest, added `test` and `test:watch` scripts to package.json
+- Added `hints` table to DB schema with unique constraint on (userId, puzzleId, hintType)
+- Added `releaseYear` and `priceTier` columns to `phones` table (nullable for backward compat)
+- Created `POST /api/hint` endpoint (root API layer) with full validation:
+  - Input validation (only brand/year/price_tier allowed)
+  - Auth required (401)
+  - Puzzle existence check (404)
+  - Puzzle completion check (409 puzzle_completed)
+  - Max 2 hints per puzzle (409 max_hints_reached)
+  - Duplicate hint type check (409 max_hints_reached)
+- Created `POST /api/lambda/hint` BFF endpoint following existing patterns
+- Extended MockPhone with releaseYear and priceTier fields
+- Added getMockHint() and resetMockHints() to mock state
+- Installed vitest, wrote 10 tests covering mock hint logic
+- All tests pass, lint passes on new/modified files
 
-### Design decisions:
-- Add columns directly to `phones` table (not separate metadata table) — all fields are 1:1
-- Difficulty is computed from brand popularity + release recency, not stored
-- Images stay in git (`config/public/phones/`) — too small for CDN overhead
-- New columns are nullable for backwards-compatible migration
-- `phone-data.json` remains single source of truth for seeding
+### Files changed:
+- phoneguessr/src/db/schema.ts (added hints table, phone columns)
+- phoneguessr/src/mock/data.ts (extended MockPhone interface)
+- phoneguessr/src/mock/state.ts (added getMockHint, resetMockHints)
+- phoneguessr/api/lambda/hint.ts (new BFF endpoint)
+- api/hint.ts (new root API endpoint)
+- phoneguessr/src/mock/state.test.ts (new tests)
+- phoneguessr/src/mock/data.test.ts (new tests)
+- phoneguessr/package.json (added vitest, test script)
 
