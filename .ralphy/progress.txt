@@ -1,12 +1,11 @@
 # Ralphy Progress Log
 
-## BE: Expand phone catalog to 100+ phones
-- Expanded MOCK_PHONES from 20 to 120 phones across 14 brands
-- Brands: Apple (20), Samsung (22), Google (12), OnePlus (9), Nothing (4), Xiaomi (12), Sony (5), Motorola (7), Huawei (7), OPPO (5), Vivo (5), ASUS (4), Realme (4), Honor (4)
-- Updated phone-data.json (production seed) to stay in sync with mock data
-- Updated generate-placeholders.ts with all 120 phones and 9 new brand color schemes
-- Fixed output directory in generate-placeholders.ts (public/ -> config/public/)
-- Generated 120 SVG placeholder images
-- Added SVG MIME type support to getMockImageData in state.ts
-- Added test suite (src/mock/data.test.ts) with 11 tests covering catalog integrity
-- Added npm test script to package.json
+## BE: Add database migration for new features
+- Updated `phoneguessr/src/db/schema.ts`:
+  - Added 4 nullable columns to `phones` table: `releaseYear`, `priceTier`, `formFactor`, `difficulty`
+  - Created `phoneFacts` table (phone_id FK -> phones, fact_text, fact_type)
+  - Created `streaks` table (user_id FK -> users, current_streak default 0, best_streak default 0, last_played_date)
+  - Created `hints` table (user_id FK -> users, puzzle_id FK -> daily_puzzles, hint_type)
+- Generated initial Drizzle migration: `phoneguessr/drizzle/0000_flaky_revanche.sql`
+- Added schema validation test: `phoneguessr/src/db/schema.test.ts` (49 assertions, all passing)
+- All new phone columns are nullable to preserve compatibility with existing seed data

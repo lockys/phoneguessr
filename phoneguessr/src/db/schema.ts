@@ -1,42 +1,16 @@
 import {
   boolean,
   date,
-<<<<<<< HEAD
-  index,
-=======
->>>>>>> 3428b9a (feat: implement hint system API endpoint)
   integer,
   pgTable,
   real,
   serial,
   text,
   timestamp,
-<<<<<<< HEAD
-=======
-  unique,
->>>>>>> 3428b9a (feat: implement hint system API endpoint)
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
 
-<<<<<<< HEAD
-export const phones = pgTable(
-  'phones',
-  {
-    id: serial('id').primaryKey(),
-    brand: varchar('brand', { length: 100 }).notNull(),
-    model: varchar('model', { length: 200 }).notNull(),
-    imagePath: text('image_path').notNull(),
-    active: boolean('active').notNull().default(true),
-    releaseYear: integer('release_year'),
-    priceTier: varchar('price_tier', { length: 20 }),
-    formFactor: varchar('form_factor', { length: 20 }),
-    region: varchar('region', { length: 50 }),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-  },
-  table => [uniqueIndex('phones_brand_model_idx').on(table.brand, table.model)],
-);
-=======
 export const phones = pgTable('phones', {
   id: serial('id').primaryKey(),
   brand: varchar('brand', { length: 100 }).notNull(),
@@ -44,10 +18,11 @@ export const phones = pgTable('phones', {
   imagePath: text('image_path').notNull(),
   releaseYear: integer('release_year'),
   priceTier: varchar('price_tier', { length: 20 }),
+  formFactor: varchar('form_factor', { length: 20 }),
+  difficulty: varchar('difficulty', { length: 10 }),
   active: boolean('active').notNull().default(true),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
->>>>>>> 3428b9a (feat: implement hint system API endpoint)
 
 export const dailyPuzzles = pgTable(
   'daily_puzzles',
@@ -85,28 +60,6 @@ export const guesses = pgTable('guesses', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
-export const hints = pgTable(
-  'hints',
-  {
-    id: serial('id').primaryKey(),
-    userId: integer('user_id')
-      .notNull()
-      .references(() => users.id),
-    puzzleId: integer('puzzle_id')
-      .notNull()
-      .references(() => dailyPuzzles.id),
-    hintType: varchar('hint_type', { length: 20 }).notNull(),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-  },
-  table => [
-    unique('hints_user_puzzle_type_idx').on(
-      table.userId,
-      table.puzzleId,
-      table.hintType,
-    ),
-  ],
-);
-
 export const results = pgTable('results', {
   id: serial('id').primaryKey(),
   userId: integer('user_id')
@@ -122,32 +75,35 @@ export const results = pgTable('results', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
-export const phoneFacts = pgTable(
-  'phone_facts',
-  {
-    id: serial('id').primaryKey(),
-    phoneId: integer('phone_id')
-      .notNull()
-      .references(() => phones.id),
-    factType: varchar('fact_type', { length: 50 }).notNull(),
-    factText: text('fact_text').notNull(),
-    locale: varchar('locale', { length: 10 }).notNull().default('en'),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-  },
-  table => [index('phone_facts_phone_idx').on(table.phoneId)],
-);
+export const phoneFacts = pgTable('phone_facts', {
+  id: serial('id').primaryKey(),
+  phoneId: integer('phone_id')
+    .notNull()
+    .references(() => phones.id),
+  factText: text('fact_text').notNull(),
+  factType: varchar('fact_type', { length: 50 }).notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
 
-export const streaks = pgTable(
-  'streaks',
-  {
-    id: serial('id').primaryKey(),
-    userId: integer('user_id')
-      .notNull()
-      .references(() => users.id),
-    currentStreak: integer('current_streak').notNull().default(0),
-    bestStreak: integer('best_streak').notNull().default(0),
-    lastPlayedDate: date('last_played_date'),
-    updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  },
-  table => [uniqueIndex('streaks_user_idx').on(table.userId)],
-);
+export const streaks = pgTable('streaks', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id),
+  currentStreak: integer('current_streak').notNull().default(0),
+  bestStreak: integer('best_streak').notNull().default(0),
+  lastPlayedDate: date('last_played_date'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
+export const hints = pgTable('hints', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id),
+  puzzleId: integer('puzzle_id')
+    .notNull()
+    .references(() => dailyPuzzles.id),
+  hintType: varchar('hint_type', { length: 20 }).notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
