@@ -16,10 +16,9 @@ export const get = async () => {
 
   // Production: delegate to puzzle lib
   const { getYesterdayPuzzle } = await import('../../../src/lib/puzzle');
-  try {
-    const result = await getYesterdayPuzzle();
-    return result;
-  } catch {
-    return { error: 'no_yesterday_puzzle' };
+  const result = await getYesterdayPuzzle();
+  if (!result) {
+    return Response.json({ error: 'no_yesterday_puzzle' }, { status: 404 });
   }
+  return result;
 };

@@ -9,25 +9,31 @@ export const get = async () => {
 
   const c = useHonoContext();
 
-  const { getDb } = await import('../../../src/db');
+  const { getCookie } = await import('hono/cookie');
+  const { db } = await import('../../../src/db');
   const { results } = await import('../../../src/db/schema');
   const { eq, sql } = await import('drizzle-orm');
+  const { COOKIE_NAME, verifySessionToken } = await import(
+    '../../../src/lib/auth'
+  );
 
-  // Get user from auth cookie
-  const { verifySession } = await import('../../../src/lib/auth');
-  const user = await verifySession(c);
-  if (!user) {
+  const token = getCookie(c, COOKIE_NAME);
+  if (!token) {
     return c.json({ error: 'Unauthorized' }, 401);
   }
 
-  const db = getDb();
+  const session = await verifySessionToken(token);
+  if (!session) {
+    return c.json({ error: 'Unauthorized' }, 401);
+  }
+
   const rows = await db
     .select({
       gamesPlayed: sql<number>`count(*)`,
       wins: sql<number>`count(*) filter (where ${results.isWin} = true)`,
     })
     .from(results)
-    .where(eq(results.userId, user.id));
+    .where(eq(results.userId, session.userId));
 
   const { gamesPlayed, wins } = rows[0] || { gamesPlayed: 0, wins: 0 };
 
@@ -35,7 +41,7 @@ export const get = async () => {
   const allResults = await db
     .select({ isWin: results.isWin })
     .from(results)
-    .where(eq(results.userId, user.id))
+    .where(eq(results.userId, session.userId))
     .orderBy(sql`${results.createdAt} desc`);
 
   let currentStreak = 0;

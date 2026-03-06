@@ -18,7 +18,10 @@ export const get = async () => {
   const path = await import('node:path');
   const fs = await import('node:fs');
 
-  const imagePath = path.resolve('config/public', phone.imagePath.replace(/^\/public\//, ''));
+  const imagePath = path.resolve(
+    'config/public',
+    phone.imagePath.replace(/^\/public\//, ''),
+  );
 
   if (!fs.existsSync(imagePath)) {
     return c.json({ error: 'Image not found' }, 404);
@@ -26,7 +29,12 @@ export const get = async () => {
 
   const buffer = fs.readFileSync(imagePath);
   const ext = path.extname(imagePath).slice(1).toLowerCase();
-  const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+  const mime =
+    ext === 'png'
+      ? 'image/png'
+      : ext === 'svg'
+        ? 'image/svg+xml'
+        : 'image/jpeg';
   const base64 = buffer.toString('base64');
 
   return c.json({ imageData: `data:${mime};base64,${base64}` });
