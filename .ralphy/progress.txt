@@ -1,23 +1,28 @@
 # Ralphy Progress Log
 
-## PO: Define UI polish and visual identity spec
+## TL: Design API spec for new game mechanics
+**Status:** Complete
+**Branch:** ralphy/agent-4-1772725373014-5y37ln-tl-design-api-spec-for-new-game-mechanics
 
-Created OpenSpec change `2026-03-05-ui-polish-visual-identity` with full proposal, design doc, task breakdown, and 7 individual capability specs.
+### What was done
+- Designed API specs for 7 new/modified capabilities:
+  - POST /api/hint — hint system with score penalty (max 2 per puzzle)
+  - GET /api/streak — streak tracking derived from results table
+  - GET /api/puzzle/yesterday — yesterday's answer + facts + community stats
+  - POST /api/profile/update — display name updates
+  - POST /api/guess — enhanced feedback with attribute details (sameYear, samePriceTier, sameFormFactor)
+  - GET /api/puzzle/today — difficulty tier indicator
+  - Schema changes: phone metadata columns, hints table, phone_facts table
 
-### Deliverables
-- `openspec/changes/2026-03-05-ui-polish-visual-identity/proposal.md` — Why, what changes, capabilities, impact, priority order
-- `openspec/changes/2026-03-05-ui-polish-visual-identity/design.md` — Context, goals/non-goals, 7 design decisions with rationale, risks/trade-offs
-- `openspec/changes/2026-03-05-ui-polish-visual-identity/tasks.md` — 50+ implementation tasks across 8 sections
-- 7 individual specs with scenario-based requirements:
-  1. `guess-feedback-animation` — Slide-in, color reveal, shake/pulse, haptics
-  2. `image-reveal-celebration` — Radial glow behind phone image on win
-  3. `stats-visualization` — Wordle-style guess distribution histogram
-  4. `onboarding-tutorial` — 3-step spotlight tutorial for new players
-  5. `theme-system` — Light/dark theme with CSS custom property overrides
-  6. `sound-effects` — Lazy-loaded SFX with mute toggle
-  7. `pwa-manifest` — Web app manifest, icons, offline fallback, service worker
+### Artifacts created
+- `docs/plans/2026-03-05-new-game-mechanics-api-design.md` — full design doc
+- `openspec/changes/2026-03-05-new-game-mechanics-api/proposal.md` — change proposal
+- `openspec/changes/2026-03-05-new-game-mechanics-api/specs/` — 7 OpenSpec spec files
+- `tests/validate-api-specs.sh` — validation script (44 checks, all passing)
 
-### Priority Order
-- P1: Guess feedback animation, Image reveal celebration (core gameplay feel)
-- P2: Stats visualization, Onboarding tutorial (engagement & retention)
-- P3: PWA manifest, Sound effects, Dark/light theme (platform polish)
+### Key design decisions
+1. No separate streaks table — derive from results table to avoid sync issues
+2. Hint penalty applied at result submission time, not in hint endpoint
+3. Phone metadata columns are nullable for backward compatibility
+4. Share card is client-only — no API changes needed
+5. Score formula: `elapsed_seconds + (wrong_guesses × 10) + (hints_used × 15)`
