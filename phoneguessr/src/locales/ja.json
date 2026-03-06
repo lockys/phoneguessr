@@ -22,6 +22,12 @@
   "guess.correct": "正解！",
   "guess.remaining": "残り {{count}} 回",
 
+  "hint.brand": "ブランド",
+  "hint.year": "発売年",
+  "hint.price": "価格帯",
+  "hint.used": "{{used}}/{{max}} ヒント使用",
+  "hint.penaltyWarning": "ヒント1回につき+15秒",
+
   "input.placeholder": "このスマホは何？",
 
   "crop.alt": "謎のスマホ",

@@ -1,12 +1,12 @@
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  test: {
-    include: ['src/**/*.test.ts'],
+  esbuild: {
+    jsx: 'automatic',
   },
-  resolve: {
-    alias: {
-      '@': './src',
-    },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/__tests__/setup.ts'],
   },
 });

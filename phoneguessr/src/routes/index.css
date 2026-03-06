@@ -482,6 +482,72 @@ body {
   color: var(--text-muted);
 }
 
+/* Hint Buttons */
+.hint-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.hint-buttons {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.hint-pill {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hint-pill:hover:not(:disabled) {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+.hint-pill:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.hint-pill:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.hint-pill-used {
+  background: rgba(233, 69, 96, 0.1);
+  border-color: var(--accent);
+  opacity: 1 !important;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.hint-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.hint-penalty {
+  color: var(--yellow);
+}
+
+.hint-counter {
+  color: var(--text-muted);
+}
+
 /* Guess History */
 .guess-history {
   display: flex;

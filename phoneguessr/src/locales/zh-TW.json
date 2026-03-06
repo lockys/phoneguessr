@@ -22,6 +22,12 @@
   "guess.correct": "正確！",
   "guess.remaining": "還剩 {{count}} 次機會",
 
+  "hint.brand": "品牌",
+  "hint.year": "年份",
+  "hint.price": "價位",
+  "hint.used": "已使用 {{used}}/{{max}} 個提示",
+  "hint.penaltyWarning": "每個提示 +15 秒罰時",
+
   "input.placeholder": "猜猜這是什麼手機",
 
   "crop.alt": "神秘手機",

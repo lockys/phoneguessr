@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWebHaptics } from 'web-haptics/react';
-import { CropReveal } from './CropReveal';
-import { Confetti } from './Confetti';
-import { PhoneAutocomplete } from './PhoneAutocomplete';
-import { Timer } from './Timer';
-import { GuessHistory } from './GuessHistory';
-import { ResultModal } from './ResultModal';
 import { useAuth } from '../lib/auth-context';
+import { Confetti } from './Confetti';
+import { CropReveal } from './CropReveal';
+import { GuessHistory } from './GuessHistory';
+import { HintButtons } from './HintButtons';
+import { PhoneAutocomplete } from './PhoneAutocomplete';
+import { ResultModal } from './ResultModal';
+import { Timer } from './Timer';
 
 const MAX_GUESSES = 6;
 
@@ -175,13 +176,19 @@ export function Game() {
 
       <div className="crop-wrapper">
         <CropReveal
-        imageSrc={imageData}
-        level={guesses.length}
-        revealed={isFinished}
-        isWin={gameState === 'won' ? true : gameState === 'lost' ? false : undefined}
-        onRevealComplete={() => setShowModal(true)}
-        onImageDrawn={() => setImageData('')}
-      />
+          imageSrc={imageData}
+          level={guesses.length}
+          revealed={isFinished}
+          isWin={
+            gameState === 'won'
+              ? true
+              : gameState === 'lost'
+                ? false
+                : undefined
+          }
+          onRevealComplete={() => setShowModal(true)}
+          onImageDrawn={() => setImageData('')}
+        />
         {gameState === 'ready' && (
           <div className="start-overlay">
             <button type="button" className="start-btn" onClick={handleStart}>
@@ -195,11 +202,18 @@ export function Game() {
       <GuessHistory guesses={guesses} maxGuesses={MAX_GUESSES} />
 
       {gameState === 'playing' && (
-        <PhoneAutocomplete
-          phones={phoneList}
-          onSelect={handleGuess}
-          disabled={false}
-        />
+        <>
+          <PhoneAutocomplete
+            phones={phoneList}
+            onSelect={handleGuess}
+            disabled={false}
+          />
+          <HintButtons
+            puzzleId={puzzle.puzzleId}
+            isMockMode={puzzle._mockAnswerId != null}
+            mockAnswerBrand={puzzle._mockAnswerBrand}
+          />
+        </>
       )}
 
       {showModal && isFinished && (

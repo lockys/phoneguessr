@@ -1,11 +1,19 @@
 # Ralphy Progress Log
 
-## BE: Add database migration for new features
-- Updated `phoneguessr/src/db/schema.ts`:
-  - Added 4 nullable columns to `phones` table: `releaseYear`, `priceTier`, `formFactor`, `difficulty`
-  - Created `phoneFacts` table (phone_id FK -> phones, fact_text, fact_type)
-  - Created `streaks` table (user_id FK -> users, current_streak default 0, best_streak default 0, last_played_date)
-  - Created `hints` table (user_id FK -> users, puzzle_id FK -> daily_puzzles, hint_type)
-- Generated initial Drizzle migration: `phoneguessr/drizzle/0000_flaky_revanche.sql`
-- Added schema validation test: `phoneguessr/src/db/schema.test.ts` (49 assertions, all passing)
-- All new phone columns are nullable to preserve compatibility with existing seed data
+## FE: Build hint system UI (agent-12)
+
+### Completed
+- Created `HintButtons` component (`phoneguessr/src/components/HintButtons.tsx`)
+  - 3 pill buttons: Brand, Year, Price (maps to hint types: brand, year, price_tier)
+  - Max 2 hints per game with counter display ("1/2 hints used")
+  - Used hints show revealed value inline with disabled styling
+  - Penalty warning ("+15s per hint") shown before first use
+  - Haptic feedback via web-haptics on hint use
+  - Mock mode support (client-side hints) and API mode (POST /api/hint)
+- Integrated HintButtons into Game component below PhoneAutocomplete (playing state only)
+- Added CSS styles in `index.css`: pill buttons with accent border, hover/active states, used state styling
+- Added i18n keys to all 5 locales (en, ja, ko, zh-TW, zh-CN): hint.brand, hint.year, hint.price, hint.used, hint.penaltyWarning
+- Set up vitest + @testing-library/react test infrastructure
+- Wrote 9 tests covering: render, penalty warning, mock reveal, haptic feedback, counter, max limit, disabled state, API call
+- All tests passing, Biome lint clean on changed files
+
