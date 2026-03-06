@@ -1,6 +1,7 @@
 {
   "name": "phoneguessr",
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "dev": "modern dev",
     "dev:mock": "MOCK_API=true modern dev",
