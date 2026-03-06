@@ -1,6 +1,9 @@
-import path from 'node:path';
 import fs from 'node:fs';
-import { getTodayPuzzle, getYesterdayPuzzle } from '../phoneguessr/src/lib/puzzle.js';
+import path from 'node:path';
+import {
+  getTodayPuzzle,
+  getYesterdayPuzzle,
+} from '../phoneguessr/src/lib/puzzle.js';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -20,7 +23,10 @@ export async function GET(request: Request) {
     case 'image': {
       const { phone } = await getTodayPuzzle();
       const imagePath = path.resolve(
-        path.join(__dirname, '..', 'phoneguessr', 'config', 'public'),
+        process.cwd(),
+        'phoneguessr',
+        'config',
+        'public',
         phone.imagePath.replace(/^\/public\//, ''),
       );
 
@@ -30,7 +36,12 @@ export async function GET(request: Request) {
 
       const buffer = fs.readFileSync(imagePath);
       const ext = path.extname(imagePath).slice(1).toLowerCase();
-      const mime = ext === 'png' ? 'image/png' : ext === 'svg' ? 'image/svg+xml' : 'image/jpeg';
+      const mime =
+        ext === 'png'
+          ? 'image/png'
+          : ext === 'svg'
+            ? 'image/svg+xml'
+            : 'image/jpeg';
       const base64 = buffer.toString('base64');
       return Response.json({ imageData: `data:${mime};base64,${base64}` });
     }
