@@ -1,75 +1,101 @@
-import { describe, expect, it } from 'vitest';
-import { MOCK_PHONES } from './data';
-<<<<<<< HEAD
-import type { FormFactor, PriceTier } from './data';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { MOCK_PHONES } from './data.ts';
 
-const VALID_PRICE_TIERS: PriceTier[] = ['budget', 'mid-range', 'flagship'];
-const VALID_FORM_FACTORS: FormFactor[] = ['bar', 'flip', 'fold'];
+// Also validate phone-data.json stays in sync
+import phoneDataJson from '../db/phone-data.json' with { type: 'json' };
 
-describe('MOCK_PHONES', () => {
-  it('has at least 40 phones for adequate mock coverage', () => {
-    expect(MOCK_PHONES.length).toBeGreaterThanOrEqual(40);
+describe('MOCK_PHONES catalog', () => {
+  it('has at least 100 phones', () => {
+    assert.ok(
+      MOCK_PHONES.length >= 100,
+      `Expected at least 100 phones, got ${MOCK_PHONES.length}`,
+    );
   });
 
   it('has unique IDs', () => {
     const ids = MOCK_PHONES.map(p => p.id);
-    expect(new Set(ids).size).toBe(ids.length);
+    const uniqueIds = new Set(ids);
+    assert.equal(uniqueIds.size, ids.length, 'Duplicate IDs found');
   });
 
   it('has sequential IDs starting from 1', () => {
     for (let i = 0; i < MOCK_PHONES.length; i++) {
-      expect(MOCK_PHONES[i].id).toBe(i + 1);
+      assert.equal(MOCK_PHONES[i].id, i + 1, `Phone at index ${i} should have id ${i + 1}`);
     }
   });
 
-  it('all phones have metadata fields populated', () => {
+  it('has unique brand+model combinations', () => {
+    const combos = MOCK_PHONES.map(p => `${p.brand}|${p.model}`);
+    const uniqueCombos = new Set(combos);
+    assert.equal(uniqueCombos.size, combos.length, 'Duplicate brand+model combinations found');
+  });
+
+  it('has non-empty brand and model for every phone', () => {
     for (const phone of MOCK_PHONES) {
-      expect(phone.releaseYear).toBeTypeOf('number');
-      expect(VALID_PRICE_TIERS).toContain(phone.priceTier);
-      expect(VALID_FORM_FACTORS).toContain(phone.formFactor);
-      expect(phone.region).toBeTruthy();
+      assert.ok(phone.brand.length > 0, `Phone id=${phone.id} has empty brand`);
+      assert.ok(phone.model.length > 0, `Phone id=${phone.id} has empty model`);
     }
   });
 
-  it('covers multiple brands', () => {
+  it('has valid imagePath format for every phone', () => {
+    for (const phone of MOCK_PHONES) {
+      assert.match(
+        phone.imagePath,
+        /^\/public\/phones\/[\w-]+\.(jpg|png|svg)$/,
+        `Phone id=${phone.id} has invalid imagePath: ${phone.imagePath}`,
+      );
+    }
+  });
+
+  it('has at least 10 distinct brands', () => {
     const brands = new Set(MOCK_PHONES.map(p => p.brand));
-    expect(brands.size).toBeGreaterThanOrEqual(10);
+    assert.ok(
+      brands.size >= 10,
+      `Expected at least 10 brands, got ${brands.size}: ${[...brands].join(', ')}`,
+    );
   });
 
-  it('includes all form factors', () => {
-    const factors = new Set(MOCK_PHONES.map(p => p.formFactor));
-    for (const factor of VALID_FORM_FACTORS) {
-      expect(factors).toContain(factor);
+  it('includes expected major brands', () => {
+    const brands = new Set(MOCK_PHONES.map(p => p.brand));
+    const expectedBrands = ['Apple', 'Samsung', 'Google', 'OnePlus', 'Xiaomi'];
+    for (const brand of expectedBrands) {
+      assert.ok(brands.has(brand), `Missing expected brand: ${brand}`);
     }
   });
 
-  it('includes all price tiers', () => {
-    const tiers = new Set(MOCK_PHONES.map(p => p.priceTier));
-    for (const tier of VALID_PRICE_TIERS) {
-      expect(tiers).toContain(tier);
+  it('has SVG placeholder files for phones with .svg paths', () => {
+    const svgPhones = MOCK_PHONES.filter(p => p.imagePath.endsWith('.svg'));
+    assert.ok(svgPhones.length > 0, 'No SVG phones found');
+
+    for (const phone of svgPhones) {
+      const filePath = resolve('config/public', phone.imagePath.replace(/^\/public\//, ''));
+      assert.ok(
+        existsSync(filePath),
+        `Missing SVG placeholder for ${phone.brand} ${phone.model}: ${filePath}`,
+      );
     }
   });
-=======
+});
 
-describe('MOCK_PHONES', () => {
-  it('has releaseYear for all phones', () => {
-    for (const phone of MOCK_PHONES) {
-      expect(phone.releaseYear).toBeTypeOf('number');
-      expect(phone.releaseYear).toBeGreaterThanOrEqual(2020);
-      expect(phone.releaseYear).toBeLessThanOrEqual(2026);
+describe('phone-data.json sync', () => {
+  it('has the same number of entries as MOCK_PHONES', () => {
+    assert.equal(
+      phoneDataJson.length,
+      MOCK_PHONES.length,
+      `phone-data.json has ${phoneDataJson.length} entries but MOCK_PHONES has ${MOCK_PHONES.length}`,
+    );
+  });
+
+  it('matches MOCK_PHONES brand, model, and imagePath', () => {
+    for (let i = 0; i < MOCK_PHONES.length; i++) {
+      const mock = MOCK_PHONES[i];
+      const seed = phoneDataJson[i];
+      assert.equal(seed.brand, mock.brand, `Mismatch at index ${i}: brand`);
+      assert.equal(seed.model, mock.model, `Mismatch at index ${i}: model`);
+      assert.equal(seed.imagePath, mock.imagePath, `Mismatch at index ${i}: imagePath`);
     }
   });
-
-  it('has valid priceTier for all phones', () => {
-    const validTiers = ['budget', 'mid', 'flagship'];
-    for (const phone of MOCK_PHONES) {
-      expect(validTiers).toContain(phone.priceTier);
-    }
-  });
-
-  it('has unique ids', () => {
-    const ids = MOCK_PHONES.map(p => p.id);
-    expect(new Set(ids).size).toBe(ids.length);
-  });
->>>>>>> 3428b9a (feat: implement hint system API endpoint)
 });

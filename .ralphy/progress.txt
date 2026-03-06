@@ -1,13 +1,12 @@
 # Ralphy Progress Log
 
-## BE: Implement streak tracking API
-- Created `phoneguessr/src/lib/streak.ts` - streak calculation utility with `calculateStreakFromDates()`, `daysBetween()`, and `getTodayUTC()` functions
-- Created `phoneguessr/api/lambda/streak.ts` - GET /api/streak endpoint that returns currentStreak, bestStreak, lastPlayedDate, and milestones (7day, 30day, 100day)
-  - Calculates streaks from results table joined with dailyPuzzles for UTC dates
-  - Returns zeroed data for unauthenticated users
-  - Mock mode returns hardcoded streak data
-- Added `getMockStreak()` to `phoneguessr/src/mock/state.ts`
-- Added vitest as dev dependency with test scripts
-- Created `phoneguessr/src/lib/streak.test.ts` with 14 tests covering edge cases
-- All tests pass, new files pass Biome lint
-
+## BE: Expand phone catalog to 100+ phones
+- Expanded MOCK_PHONES from 20 to 120 phones across 14 brands
+- Brands: Apple (20), Samsung (22), Google (12), OnePlus (9), Nothing (4), Xiaomi (12), Sony (5), Motorola (7), Huawei (7), OPPO (5), Vivo (5), ASUS (4), Realme (4), Honor (4)
+- Updated phone-data.json (production seed) to stay in sync with mock data
+- Updated generate-placeholders.ts with all 120 phones and 9 new brand color schemes
+- Fixed output directory in generate-placeholders.ts (public/ -> config/public/)
+- Generated 120 SVG placeholder images
+- Added SVG MIME type support to getMockImageData in state.ts
+- Added test suite (src/mock/data.test.ts) with 11 tests covering catalog integrity
+- Added npm test script to package.json
