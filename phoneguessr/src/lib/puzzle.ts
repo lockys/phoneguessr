@@ -1,6 +1,6 @@
 import { avg, count, eq, notInArray, sql } from 'drizzle-orm';
-import { db } from '../db';
-import { dailyPuzzles, phones, results } from '../db/schema';
+import { db } from '../db/index.js';
+import { dailyPuzzles, phones, results } from '../db/schema.js';
 
 /**
  * Get today's UTC date string (YYYY-MM-DD).
