@@ -5,15 +5,11 @@ import { MOCK_PHONES } from './data.ts';
 /**
  * Get today's mock puzzle. Uses date-based index into the phone array.
  */
-function dateToIndex(dateStr: string): number {
-  const [y, m, d] = dateStr.split('-').map(Number);
-  const seed = y * 10000 + m * 100 + d;
-  return seed % MOCK_PHONES.length;
-}
-
 function getDailyIndex(): number {
   const today = new Date().toISOString().slice(0, 10);
-  return dateToIndex(today);
+  const [y, m, d] = today.split('-').map(Number);
+  const seed = y * 10000 + m * 100 + d;
+  return seed % MOCK_PHONES.length;
 }
 
 export function getMockPuzzle() {
@@ -57,48 +53,14 @@ export function getMockProfileStats() {
   };
 }
 
-export function getMockYesterdayPuzzle() {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const dateStr = yesterday.toISOString().slice(0, 10);
-  const index = dateToIndex(dateStr);
-  const phone = MOCK_PHONES[index];
-
+export function getMockStreak() {
+  const today = new Date().toISOString().slice(0, 10);
   return {
-    phone: {
-      brand: phone.brand,
-      model: phone.model,
-      releaseYear: 2024,
-    },
-    facts: [
-      `Released in 2024 as part of ${phone.brand}'s flagship lineup`,
-      'Features a ceramic back panel with enhanced durability',
-      'Supports satellite emergency messaging',
-    ],
-    stats: {
-      totalPlayers: 142,
-      avgGuesses: 3.4,
-      winRate: 68,
-    },
+    currentStreak: 3,
+    bestStreak: 8,
+    lastPlayedDate: today,
+    milestones: { '7day': true, '30day': false, '100day': false },
   };
-}
-
-export function getMockYesterdayImageData(): string | null {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const dateStr = yesterday.toISOString().slice(0, 10);
-  const index = dateToIndex(dateStr);
-  const phone = MOCK_PHONES[index];
-
-  const imagePath = path.resolve(
-    'config/public',
-    phone.imagePath.replace(/^\/public\//, ''),
-  );
-  if (!fs.existsSync(imagePath)) return null;
-  const buffer = fs.readFileSync(imagePath);
-  const ext = path.extname(imagePath).slice(1).toLowerCase();
-  const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
-  return `data:${mime};base64,${buffer.toString('base64')}`;
 }
 
 export function getMockFeedback(

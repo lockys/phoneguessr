@@ -2,10 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWebHaptics } from 'web-haptics/react';
 import { useAuth } from '../lib/auth-context';
+import { getLocalStreakData } from '../lib/streak';
 import { Confetti } from './Confetti';
 import { CropReveal } from './CropReveal';
 import { GuessHistory } from './GuessHistory';
-import { HintButtons } from './HintButtons';
 import { PhoneAutocomplete } from './PhoneAutocomplete';
 import { ResultModal } from './ResultModal';
 import { Timer } from './Timer';
@@ -45,6 +45,8 @@ export function Game() {
   const [timerRunning, setTimerRunning] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [imageData, setImageData] = useState<string>('');
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [streakAnimating, setStreakAnimating] = useState(false);
   const elapsedRef = useRef(0);
 
   // Check localStorage for already-played state
@@ -60,6 +62,8 @@ export function Game() {
       const imgRes = await fetch(puzzleData.imageUrl);
       const imgData = await imgRes.json();
       setImageData(imgData.imageData);
+
+      setCurrentStreak(getLocalStreakData().currentStreak);
 
       const saved = localStorage.getItem(
         `phoneguessr_${puzzleData.puzzleDate}`,
@@ -144,6 +148,13 @@ export function Game() {
       JSON.stringify({ guesses: finalGuesses, elapsed, won }),
     );
 
+    if (won) {
+      const updated = getLocalStreakData();
+      setCurrentStreak(updated.currentStreak);
+      setStreakAnimating(true);
+      setTimeout(() => setStreakAnimating(false), 600);
+    }
+
     if (user && !puzzle._mockAnswerId) {
       await fetch('/api/result', {
         method: 'POST',
@@ -171,6 +182,25 @@ export function Game() {
         <div className="game-meta">
           #{puzzle.puzzleNumber}
           <Timer running={timerRunning} onTick={handleTick} />
+          {currentStreak > 0 && (
+            <span
+              className={`streak-counter${streakAnimating ? ' streak-counter-animate' : ''}`}
+            >
+              <svg
+                className="streak-flame"
+                viewBox="0 0 16 20"
+                width="14"
+                height="18"
+                aria-hidden="true"
+              >
+                <path
+                  d="M8 0C8 0 2 6.5 2 12a6 6 0 0012 0c0-2-1-3.5-2-5-1 1.5-2 2-3 2 1-2 1.5-4 0-6-1 1-2.5 2.5-3 4C5 5 6 3 8 0z"
+                  fill="currentColor"
+                />
+              </svg>
+              {currentStreak}
+            </span>
+          )}
         </div>
       </div>
 
@@ -202,18 +232,11 @@ export function Game() {
       <GuessHistory guesses={guesses} maxGuesses={MAX_GUESSES} />
 
       {gameState === 'playing' && (
-        <>
-          <PhoneAutocomplete
-            phones={phoneList}
-            onSelect={handleGuess}
-            disabled={false}
-          />
-          <HintButtons
-            puzzleId={puzzle.puzzleId}
-            isMockMode={puzzle._mockAnswerId != null}
-            mockAnswerBrand={puzzle._mockAnswerBrand}
-          />
-        </>
+        <PhoneAutocomplete
+          phones={phoneList}
+          onSelect={handleGuess}
+          disabled={false}
+        />
       )}
 
       {showModal && isFinished && (

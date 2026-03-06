@@ -70,6 +70,15 @@
   "about.createdBy": "Created by Calvin Jeng",
   "about.imageSource": "Phone images sourced from manufacturer press kits",
 
+  "streak.title": "Streak",
+  "streak.current": "Current",
+  "streak.best": "Best",
+  "streak.broken": "Your streak was broken! Start a new one today.",
+  "streak.milestones": "Milestones",
+  "streak.milestone7": "7 Days",
+  "streak.milestone30": "30 Days",
+  "streak.milestone100": "100 Days",
+
   "nav.profile": "Profile",
   "nav.game": "Game",
   "nav.leaderboard": "Leaderboard",

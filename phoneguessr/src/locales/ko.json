@@ -70,6 +70,15 @@
   "about.createdBy": "Calvin Jeng 제작",
   "about.imageSource": "스마트폰 이미지는 제조사 프레스킷에서 제공",
 
+  "streak.title": "연속 플레이",
+  "streak.current": "현재",
+  "streak.best": "최고",
+  "streak.broken": "연속 기록이 끊어졌습니다! 오늘부터 다시 시작하세요.",
+  "streak.milestones": "마일스톤",
+  "streak.milestone7": "7일",
+  "streak.milestone30": "30일",
+  "streak.milestone100": "100일",
+
   "nav.profile": "프로필",
   "nav.game": "게임",
   "nav.leaderboard": "리더보드",

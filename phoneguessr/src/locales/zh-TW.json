@@ -70,6 +70,15 @@
   "about.createdBy": "由 Calvin Jeng 製作",
   "about.imageSource": "手機圖片來源於製造商媒體資源",
 
+  "streak.title": "連續天數",
+  "streak.current": "目前",
+  "streak.best": "最佳",
+  "streak.broken": "你的連續記錄中斷了！今天重新開始吧。",
+  "streak.milestones": "里程碑",
+  "streak.milestone7": "7天",
+  "streak.milestone30": "30天",
+  "streak.milestone100": "100天",
+
   "nav.profile": "個人檔案",
   "nav.game": "遊戲",
   "nav.leaderboard": "排行榜",

@@ -7,60 +7,90 @@ export interface StreakData {
     '30day': boolean;
     '100day': boolean;
   };
+  streakBroken: boolean;
 }
 
 /**
- * Calculate streak data from an array of winning puzzle dates (UTC, YYYY-MM-DD format).
- * Dates must be distinct and sorted descending (most recent first).
- * Current streak only counts if the most recent win is today or yesterday.
+ * Parse a YYYY-MM-DD string into a Date at midnight UTC.
  */
-export function calculateStreakFromDates(
-  winDates: string[],
-  todayUTC: string,
-): StreakData {
-  const empty: StreakData = {
-    currentStreak: 0,
-    bestStreak: 0,
-    lastPlayedDate: null,
-    milestones: { '7day': false, '30day': false, '100day': false },
-  };
+function parseDate(dateStr: string): Date {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d));
+}
 
-  if (winDates.length === 0) return empty;
+/**
+ * Get today's date as YYYY-MM-DD string.
+ */
+function getTodayStr(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
-  const lastPlayedDate = winDates[0];
+/**
+ * Compute streak data from localStorage game results.
+ * Streaks count consecutive days played (any result counts).
+ */
+export function getLocalStreakData(): StreakData {
+  const dates: string[] = [];
 
-  // Check if current streak is still active
-  const daysSinceLast = daysBetween(lastPlayedDate, todayUTC);
-  const isActive = daysSinceLast <= 1;
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key?.startsWith('phoneguessr_')) continue;
+    const date = key.replace('phoneguessr_', '');
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      dates.push(date);
+    }
+  }
 
+  dates.sort((a, b) => b.localeCompare(a));
+
+  if (dates.length === 0) {
+    return {
+      currentStreak: 0,
+      bestStreak: 0,
+      lastPlayedDate: null,
+      milestones: { '7day': false, '30day': false, '100day': false },
+      streakBroken: false,
+    };
+  }
+
+  const lastPlayedDate = dates[0];
+  const today = getTodayStr();
+  const todayMs = parseDate(today).getTime();
+  const lastMs = parseDate(lastPlayedDate).getTime();
+  const daysSinceLast = Math.round((todayMs - lastMs) / 86400000);
+
+  // Current streak: count consecutive days backwards from today (or yesterday)
   let currentStreak = 0;
+  if (daysSinceLast <= 1) {
+    // Started playing today or yesterday - count the run
+    const dateSet = new Set(dates);
+    let checkDate = daysSinceLast === 0 ? today : lastPlayedDate;
+    while (dateSet.has(checkDate)) {
+      currentStreak++;
+      const prev = parseDate(checkDate);
+      prev.setUTCDate(prev.getUTCDate() - 1);
+      checkDate = prev.toISOString().slice(0, 10);
+    }
+  }
+
+  // Best streak: longest consecutive day run across all dates
   let bestStreak = 0;
   let streak = 1;
-
-  // Walk through dates, counting consecutive days
-  for (let i = 1; i < winDates.length; i++) {
-    const gap = daysBetween(winDates[i], winDates[i - 1]);
-    if (gap === 1) {
+  for (let i = 1; i < dates.length; i++) {
+    const curr = parseDate(dates[i - 1]);
+    const prev = parseDate(dates[i]);
+    const diff = Math.round((curr.getTime() - prev.getTime()) / 86400000);
+    if (diff === 1) {
       streak++;
     } else {
       bestStreak = Math.max(bestStreak, streak);
       streak = 1;
     }
   }
-  bestStreak = Math.max(bestStreak, streak);
+  bestStreak = Math.max(bestStreak, streak, currentStreak);
 
-  // Current streak: the streak starting from the most recent date, only if active
-  if (isActive) {
-    currentStreak = 1;
-    for (let i = 1; i < winDates.length; i++) {
-      const gap = daysBetween(winDates[i], winDates[i - 1]);
-      if (gap === 1) {
-        currentStreak++;
-      } else {
-        break;
-      }
-    }
-  }
+  // Streak broken: had a streak but missed more than 1 day
+  const streakBroken = daysSinceLast > 1 && dates.length > 0;
 
   return {
     currentStreak,
@@ -71,17 +101,6 @@ export function calculateStreakFromDates(
       '30day': bestStreak >= 30,
       '100day': bestStreak >= 100,
     },
+    streakBroken,
   };
-}
-
-/** Number of days between two YYYY-MM-DD date strings. Always positive. */
-export function daysBetween(dateA: string, dateB: string): number {
-  const a = new Date(`${dateA}T00:00:00Z`);
-  const b = new Date(`${dateB}T00:00:00Z`);
-  return Math.round(Math.abs(b.getTime() - a.getTime()) / 86400000);
-}
-
-/** Get today's date in UTC as YYYY-MM-DD */
-export function getTodayUTC(): string {
-  return new Date().toISOString().slice(0, 10);
 }

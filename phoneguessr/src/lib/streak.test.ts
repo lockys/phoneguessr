@@ -1,119 +1,131 @@
-import { describe, expect, it } from 'vitest';
-import { calculateStreakFromDates, daysBetween } from './streak';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { getLocalStreakData } from './streak';
 
-describe('daysBetween', () => {
-  it('returns 0 for same date', () => {
-    expect(daysBetween('2026-03-01', '2026-03-01')).toBe(0);
+// Mock localStorage
+const storage: Record<string, string> = {};
+const localStorageMock = {
+  getItem: (key: string) => storage[key] ?? null,
+  setItem: (key: string, value: string) => {
+    storage[key] = value;
+  },
+  key: (index: number) => Object.keys(storage)[index] ?? null,
+  get length() {
+    return Object.keys(storage).length;
+  },
+  removeItem: (key: string) => {
+    delete storage[key];
+  },
+  clear: () => {
+    for (const k of Object.keys(storage)) delete storage[k];
+  },
+};
+
+Object.defineProperty(globalThis, 'localStorage', { value: localStorageMock });
+
+function setGame(date: string, won = true) {
+  storage[`phoneguessr_${date}`] = JSON.stringify({
+    guesses: [],
+    elapsed: 30,
+    won,
+  });
+}
+
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function daysAgo(n: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return d.toISOString().slice(0, 10);
+}
+
+describe('getLocalStreakData', () => {
+  beforeEach(() => {
+    localStorageMock.clear();
   });
 
-  it('returns 1 for adjacent dates', () => {
-    expect(daysBetween('2026-03-01', '2026-03-02')).toBe(1);
-  });
-
-  it('returns correct gap across months', () => {
-    expect(daysBetween('2026-02-28', '2026-03-01')).toBe(1);
-  });
-
-  it('is commutative', () => {
-    expect(daysBetween('2026-03-05', '2026-03-01')).toBe(4);
-    expect(daysBetween('2026-03-01', '2026-03-05')).toBe(4);
-  });
-});
-
-describe('calculateStreakFromDates', () => {
-  const today = '2026-03-06';
-
-  it('returns zeros for empty dates', () => {
-    const result = calculateStreakFromDates([], today);
-    expect(result).toEqual({
-      currentStreak: 0,
-      bestStreak: 0,
-      lastPlayedDate: null,
-      milestones: { '7day': false, '30day': false, '100day': false },
+  it('returns zeros when no games played', () => {
+    const data = getLocalStreakData();
+    expect(data.currentStreak).toBe(0);
+    expect(data.bestStreak).toBe(0);
+    expect(data.lastPlayedDate).toBeNull();
+    expect(data.streakBroken).toBe(false);
+    expect(data.milestones).toEqual({
+      '7day': false,
+      '30day': false,
+      '100day': false,
     });
   });
 
-  it('returns streak of 1 when only today', () => {
-    const result = calculateStreakFromDates(['2026-03-06'], today);
-    expect(result.currentStreak).toBe(1);
-    expect(result.bestStreak).toBe(1);
-    expect(result.lastPlayedDate).toBe('2026-03-06');
+  it('counts a single game today as streak of 1', () => {
+    setGame(today());
+    const data = getLocalStreakData();
+    expect(data.currentStreak).toBe(1);
+    expect(data.bestStreak).toBe(1);
+    expect(data.lastPlayedDate).toBe(today());
+    expect(data.streakBroken).toBe(false);
   });
 
-  it('returns streak of 1 when only yesterday', () => {
-    const result = calculateStreakFromDates(['2026-03-05'], today);
-    expect(result.currentStreak).toBe(1);
-    expect(result.bestStreak).toBe(1);
+  it('counts consecutive days as streak', () => {
+    setGame(today());
+    setGame(daysAgo(1));
+    setGame(daysAgo(2));
+    const data = getLocalStreakData();
+    expect(data.currentStreak).toBe(3);
+    expect(data.bestStreak).toBe(3);
   });
 
-  it('counts consecutive days from most recent', () => {
-    const dates = ['2026-03-06', '2026-03-05', '2026-03-04', '2026-03-03'];
-    const result = calculateStreakFromDates(dates, today);
-    expect(result.currentStreak).toBe(4);
-    expect(result.bestStreak).toBe(4);
+  it('breaks current streak with gap', () => {
+    setGame(today());
+    // skip daysAgo(1)
+    setGame(daysAgo(2));
+    setGame(daysAgo(3));
+    const data = getLocalStreakData();
+    expect(data.currentStreak).toBe(1);
+    expect(data.bestStreak).toBe(2);
   });
 
-  it('breaks current streak on gap but tracks best', () => {
-    // 3-day streak ending today, then gap, then 5-day old streak
-    const dates = [
-      '2026-03-06',
-      '2026-03-05',
-      '2026-03-04',
-      // gap on 03-03
-      '2026-03-02',
-      '2026-03-01',
-      '2026-02-28',
-      '2026-02-27',
-      '2026-02-26',
-    ];
-    const result = calculateStreakFromDates(dates, today);
-    expect(result.currentStreak).toBe(3);
-    expect(result.bestStreak).toBe(5);
+  it('detects streak broken when last played >1 day ago', () => {
+    setGame(daysAgo(3));
+    setGame(daysAgo(4));
+    const data = getLocalStreakData();
+    expect(data.currentStreak).toBe(0);
+    expect(data.streakBroken).toBe(true);
   });
 
-  it('current streak is 0 if last win was more than 1 day ago', () => {
-    const dates = ['2026-03-03', '2026-03-02', '2026-03-01'];
-    const result = calculateStreakFromDates(dates, today);
-    expect(result.currentStreak).toBe(0);
-    expect(result.bestStreak).toBe(3);
-    expect(result.lastPlayedDate).toBe('2026-03-03');
+  it('counts yesterday as current if no game today', () => {
+    setGame(daysAgo(1));
+    setGame(daysAgo(2));
+    const data = getLocalStreakData();
+    expect(data.currentStreak).toBe(2);
+    expect(data.streakBroken).toBe(false);
   });
 
-  it('sets 7day milestone when best streak >= 7', () => {
-    const dates = Array.from({ length: 7 }, (_, i) => {
-      const d = new Date('2026-03-06T00:00:00Z');
-      d.setUTCDate(d.getUTCDate() - i);
-      return d.toISOString().slice(0, 10);
-    });
-    const result = calculateStreakFromDates(dates, today);
-    expect(result.milestones['7day']).toBe(true);
-    expect(result.milestones['30day']).toBe(false);
-    expect(result.milestones['100day']).toBe(false);
+  it('computes milestones based on best streak', () => {
+    // Create a 7-day streak
+    for (let i = 0; i < 7; i++) {
+      setGame(daysAgo(i));
+    }
+    const data = getLocalStreakData();
+    expect(data.bestStreak).toBe(7);
+    expect(data.milestones['7day']).toBe(true);
+    expect(data.milestones['30day']).toBe(false);
+    expect(data.milestones['100day']).toBe(false);
   });
 
-  it('sets 30day milestone when best streak >= 30', () => {
-    const dates = Array.from({ length: 30 }, (_, i) => {
-      const d = new Date('2026-03-06T00:00:00Z');
-      d.setUTCDate(d.getUTCDate() - i);
-      return d.toISOString().slice(0, 10);
-    });
-    const result = calculateStreakFromDates(dates, today);
-    expect(result.milestones['7day']).toBe(true);
-    expect(result.milestones['30day']).toBe(true);
-    expect(result.milestones['100day']).toBe(false);
+  it('ignores non-phoneguessr keys in localStorage', () => {
+    storage.other_key = 'value';
+    setGame(today());
+    const data = getLocalStreakData();
+    expect(data.currentStreak).toBe(1);
   });
 
-  it('handles single old win correctly', () => {
-    const result = calculateStreakFromDates(['2026-01-15'], today);
-    expect(result.currentStreak).toBe(0);
-    expect(result.bestStreak).toBe(1);
-    expect(result.lastPlayedDate).toBe('2026-01-15');
-  });
-
-  it('handles yesterday start correctly', () => {
-    const dates = ['2026-03-05', '2026-03-04'];
-    const result = calculateStreakFromDates(dates, today);
-    expect(result.currentStreak).toBe(2);
-    expect(result.bestStreak).toBe(2);
+  it('includes losses in streak count (consecutive days played)', () => {
+    setGame(today(), false);
+    setGame(daysAgo(1), true);
+    setGame(daysAgo(2), false);
+    const data = getLocalStreakData();
+    expect(data.currentStreak).toBe(3);
   });
 });

@@ -1,14 +1,17 @@
 # Ralphy Progress Log
 
-## FE: Build yesterday's puzzle reveal UI
-- Created `YesterdayReveal` component showing yesterday's phone (image, brand, model, release year)
-- Added fun facts card list and community stats (players, win rate, avg guesses)
-- Animate-in on first view using IntersectionObserver + CSS transitions
-- Added to AboutPanel as the first section after the tagline
-- Created BFF endpoint `GET /api/puzzle/yesterday` with mock mode support
-- Added `getYesterdayPuzzle()` to puzzle lib for production mode
-- Created Vercel serverless endpoint `api/puzzle/yesterday.ts`
-- Added mock data functions (`getMockYesterdayPuzzle`, `getMockYesterdayImageData`) to state.ts
-- i18n translations added for all 5 locales (en, zh-TW, zh-CN, ja, ko)
-- Set up vitest with jsdom, @testing-library/react, wrote 9 tests (all passing)
-- CSS styles added to index.css using existing design tokens
+## FE: Build streak display and milestones UI
+
+### What was done:
+- Created `src/lib/streak.ts` — shared streak utility with `getLocalStreakData()` that computes currentStreak, bestStreak, lastPlayedDate, milestones (7/30/100 day), and streakBroken flag from localStorage game history
+- Added `getMockStreak()` to `src/mock/state.ts` for mock API development
+- Added streak counter (flame icon + number) to Game header in `game-meta` div with pulse animation on streak increment
+- Enhanced ProfilePanel with:
+  - Streak break notification banner (dismissible)
+  - Dedicated streak section with current/best streak cards and flame icon
+  - Milestone badges section (7-day, 30-day, 100-day) with earned/unearned visual states
+- Added CSS styles for all streak/milestone UI elements in `src/routes/index.css`
+- Added i18n keys to all 5 locales (en, ja, ko, zh-CN, zh-TW): streak.title, streak.current, streak.best, streak.broken, streak.milestones, streak.milestone7/30/100
+- Installed vitest, added test script, wrote 9 unit tests for streak computation logic
+- All tests pass, lint clean on changed files (2 pre-existing a11y warnings in ProfilePanel form)
+

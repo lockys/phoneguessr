@@ -70,6 +70,15 @@
   "about.createdBy": "Calvin Jeng 制作",
   "about.imageSource": "スマホ画像はメーカーのプレスキットから取得",
 
+  "streak.title": "連続プレイ",
+  "streak.current": "現在",
+  "streak.best": "最高",
+  "streak.broken": "連続記録が途切れました！今日から新たに始めましょう。",
+  "streak.milestones": "マイルストーン",
+  "streak.milestone7": "7日間",
+  "streak.milestone30": "30日間",
+  "streak.milestone100": "100日間",
+
   "nav.profile": "プロフィール",
   "nav.game": "ゲーム",
   "nav.leaderboard": "ランキング",
