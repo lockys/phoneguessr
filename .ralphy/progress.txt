@@ -1,12 +1,124 @@
 # Ralphy Progress Log
 
-## FE: Stats visualization with guess distribution
-- Created `GuessDistribution` component with Wordle-style horizontal bar histogram
-- Shows guess distribution (1-6) calculated from localStorage won games only
-- CSS-only bars with proportional widths, green highlight for current game
-- Zero-count bars show minimal 4px sliver for visual consistency
-- Empty state with "No data yet" message when no completed games
-- Added i18n translations (profile.guessDistribution, profile.noDataYet) in all 5 locales
-- Integrated component into ProfilePanel below stats grid
-- Set up Vitest test framework with jsdom and testing-library
-- Wrote 8 tests covering: empty state, lost games filtering, bar rendering, current game highlighting, localStorage key filtering, zero-count bars
+## Session: 2026-03-05/06
+
+### Group 1: Product Owner — Specs (3/3 complete)
+
+**PO: Define addictive game mechanics spec**
+- Created OpenSpec proposal at `openspec/changes/addictive-game-mechanics/`
+- Specs: hint-system, streak-tracking, proximity-feedback, difficulty-tiers, share-card, yesterday-reveal, scoring, game-play, phone-data
+- Built utility libraries: proximity.ts, scoring.ts, share.ts, streak.ts (with vitest tests)
+- Set up vitest + vitest.config.ts
+
+**PO: Define phone data expansion requirements**
+- Created OpenSpec proposal at `openspec/changes/phone-data-expansion/`
+- Specs: phone-catalog-targets, phone-metadata, phone-image-standards, phone-curation-pipeline, mock-api
+- Built validation scripts: validate-phone-data.ts, validate-phone-expansion-specs.ts
+
+**PO: Define UI polish and visual identity spec**
+- Created OpenSpec proposal at `openspec/changes/2026-03-05-ui-polish-visual-identity/`
+- Specs: stats-visualization, theme-system
+
+### Group 2: Tech Lead — Architecture (2/2 complete)
+
+**TL: Design API spec for new game mechanics**
+- Created OpenSpec at `openspec/changes/2026-03-05-new-game-mechanics-api/`
+- Specs: streak-tracking, yesterday-reveal
+- Validated with tests/validate-api-specs.sh
+
+**TL: Design phone data schema and pipeline**
+- Designed expanded schema: releaseYear, priceTier, formFactor, difficulty, region
+- Created seed data for 121 phones across 14 brands
+- Built difficulty.ts library with tests
+
+### Group 3: Backend (6/6 complete)
+
+**BE: Implement POST /api/profile/update**
+- Created api/profile/update.ts (Vercel) + phoneguessr/api/lambda/profile/update.ts (BFF)
+- Input validation: displayName 1-50 chars, HTML tag stripping
+- Auth check + mock mode support
+
+**BE: Implement hint system API**
+- Created api/hint.ts + phoneguessr/api/lambda/hint.ts
+- Supports brand/year/price_tier hints, max 2 per game, 15s penalty each
+- Added hints table to schema, mock hint state with resetMockHints()
+
+**BE: Implement yesterday's puzzle reveal API**
+- Created api/puzzle/yesterday.ts + phoneguessr/api/lambda/puzzle/yesterday.ts
+- Returns phone details + aggregate stats (totalPlayers, avgGuesses, winRate)
+- Mock mode uses getMockYesterdayPuzzle() with date-offset determinism
+
+**BE: Implement streak tracking API**
+- Created phoneguessr/api/lambda/streak.ts
+- Added streaks table to schema
+- Streak calculation on result submission
+
+**BE: Expand phone catalog to 120 phones**
+- Expanded from 20 to 120 phones across 14 brands
+- Added brands: Xiaomi, Sony, Motorola, Huawei, OPPO, vivo, Honor, ASUS
+- Generated SVG placeholder images for new phones (140 total image files)
+- Updated MOCK_PHONES with expanded catalog
+
+**BE: Add database migration**
+- Created Drizzle migration: phoneguessr/drizzle/0000_flaky_revanche.sql
+- Schema: phones table gains releaseYear, priceTier, formFactor, difficulty, region
+- New tables: hints, streaks
+
+### Group 3: Frontend (7/7 complete)
+
+**FE: Build hint system UI**
+- Created HintButtons.tsx component with pill buttons (Brand, Year, Price)
+- Disabled state after use, penalty warning, haptic feedback
+- i18n keys in all 5 locales + tests
+
+**FE: Build yesterday's puzzle reveal UI**
+- Created YesterdayReveal.tsx component in About panel
+- Shows yesterday's phone image, brand, model, community stats
+- i18n keys in all 5 locales + tests
+
+**FE: Build streak display and milestones UI**
+- Added streak counter to game header + Profile panel
+- Milestone badges: 7-day, 30-day, 100-day
+- Streak break notification, increment animation
+- i18n keys in all 5 locales
+
+**FE: Enhanced share card with emoji grid**
+- Wordle-style emoji grid (green/yellow/red squares)
+- Includes puzzle number, guess count, time, streak
+- Clipboard copy with haptic feedback
+
+**FE: Guess feedback animations**
+- Slide-in animation for new guess rows
+- Color reveal: neutral -> feedback color transition
+- Shake on wrong_brand, pulse on correct
+- prefers-reduced-motion respected
+
+**FE: First-time player onboarding**
+- Created Onboarding.tsx with 3-step overlay
+- localStorage flag: phoneguessr_onboarded
+- Skip/Next/Done buttons + tests
+
+**FE: Stats visualization with guess distribution**
+- Created GuessDistribution.tsx with horizontal bar histogram
+- CSS-only bars, green highlight for current game
+- Integrated into ProfilePanel + tests
+
+### Group 4: QA (0/3 remaining)
+- QA: Test all new API endpoints
+- QA: Test UI features across browsers and viewports
+- QA: Verify phone data completeness
+
+### Group 5: Code Review (0/3 remaining)
+- CR: Review all API endpoint implementations
+- CR: Review frontend components and UX
+- CR: Review schema changes and data integrity
+
+## Summary
+- Tasks completed: 18/24
+- Tasks remaining: 6 (QA + Code Review)
+- New components: 5 (HintButtons, YesterdayReveal, Onboarding, GuessDistribution, GuessHistory animations)
+- New API endpoints: 3 (hint, profile/update, puzzle/yesterday, streak)
+- New libs: 5 (proximity, scoring, share, streak, difficulty)
+- Phone catalog: 20 → 120 phones, 40 → 140 images, 5 → 14 brands
+- OpenSpec changes: 4 active proposals
+- Tests: vitest framework set up, ~30 test cases across libs and components

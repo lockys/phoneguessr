@@ -17,7 +17,7 @@ tasks:
   # ──────────────────────────────────────────────
   - title: "PO: Define addictive game mechanics spec"
     parallel_group: 1
-    completed: false
+    completed: true
     description: |
       Role: Product Owner (read prd/product-owner.md for context)
       Use: /opsx:explore to brainstorm, then /opsx:propose to formalize
@@ -42,7 +42,7 @@ tasks:
 
   - title: "PO: Define phone data expansion requirements"
     parallel_group: 1
-    completed: false
+    completed: true
     description: |
       Role: Product Owner (read prd/product-owner.md for context)
       Use: /opsx:explore then /opsx:propose
@@ -66,7 +66,7 @@ tasks:
 
   - title: "PO: Define UI polish and visual identity spec"
     parallel_group: 1
-    completed: false
+    completed: true
     description: |
       Role: Product Owner (read prd/product-owner.md for context)
       Use: /opsx:explore then /opsx:propose
@@ -94,7 +94,7 @@ tasks:
   # ──────────────────────────────────────────────
   - title: "TL: Design API spec for new game mechanics"
     parallel_group: 2
-    completed: false
+    completed: true
     description: |
       Role: Tech Lead (read prd/techlead.md for context)
       Use: /opsx:explore to investigate codebase, then create specs
@@ -134,7 +134,7 @@ tasks:
 
   - title: "TL: Design phone data schema and pipeline"
     parallel_group: 2
-    completed: false
+    completed: true
     description: |
       Role: Tech Lead (read prd/techlead.md for context)
       Use: /opsx:explore to review current schema
@@ -163,7 +163,7 @@ tasks:
   # ──────────────────────────────────────────────
   - title: "BE: Implement POST /api/profile/update endpoint"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Backend Engineer (read prd/backend.md for context)
       Use: superpowers:test-driven-development
@@ -182,7 +182,7 @@ tasks:
 
   - title: "BE: Implement hint system API"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Backend Engineer (read prd/backend.md for context)
       Use: /opsx:apply against the tech lead's specs
@@ -199,7 +199,7 @@ tasks:
 
   - title: "BE: Implement yesterday's puzzle reveal API"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Backend Engineer (read prd/backend.md for context)
 
@@ -214,7 +214,7 @@ tasks:
 
   - title: "BE: Implement streak tracking API"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Backend Engineer (read prd/backend.md for context)
 
@@ -230,7 +230,7 @@ tasks:
 
   - title: "BE: Expand phone catalog to 100+ phones"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Backend Engineer (read prd/backend.md for context)
 
@@ -257,7 +257,7 @@ tasks:
 
   - title: "BE: Add database migration for new features"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Backend Engineer (read prd/backend.md for context)
 
@@ -275,7 +275,7 @@ tasks:
   # ──────────────────────────────────────────────
   - title: "FE: Build hint system UI"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Frontend Engineer (read prd/frontend.md for context)
       Use: superpowers:brainstorming then implement
@@ -293,7 +293,7 @@ tasks:
 
   - title: "FE: Build yesterday's puzzle reveal UI"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Frontend Engineer (read prd/frontend.md for context)
 
@@ -308,7 +308,7 @@ tasks:
 
   - title: "FE: Build streak display and milestones UI"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Frontend Engineer (read prd/frontend.md for context)
 
@@ -323,7 +323,7 @@ tasks:
 
   - title: "FE: Enhanced share card with emoji grid"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Frontend Engineer (read prd/frontend.md for context)
 
@@ -341,7 +341,7 @@ tasks:
 
   - title: "FE: Guess feedback animations"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Frontend Engineer (read prd/frontend.md for context)
 
@@ -356,7 +356,7 @@ tasks:
 
   - title: "FE: First-time player onboarding"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Frontend Engineer (read prd/frontend.md for context)
 
@@ -372,7 +372,7 @@ tasks:
 
   - title: "FE: Stats visualization with guess distribution"
     parallel_group: 3
-    completed: false
+    completed: true
     description: |
       Role: Frontend Engineer (read prd/frontend.md for context)
 
