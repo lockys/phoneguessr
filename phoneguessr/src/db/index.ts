@@ -1,12 +1,7 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema.js';
 
-function getConnectionString() {
-  const url = process.env.DATABASE_URL || 'postgresql://localhost:5432/phoneguessr';
-  if (url.includes('sslmode=require') && !url.includes('uselibpqcompat')) {
-    return url.replace('sslmode=require', 'sslmode=verify-full');
-  }
-  return url;
-}
+const sql = neon(process.env.DATABASE_URL!);
 
-export const db = drizzle(getConnectionString(), { schema });
+export const db = drizzle(sql, { schema });
