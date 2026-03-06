@@ -8,18 +8,32 @@ project:
   description: "Daily phone guessing game - identify phones from cropped photos"
 
 commands:
-  dev: "cd phoneguessr && npm run dev:mock"
+  dev: "vercel dev"
   build: "cd phoneguessr && npm run build"
   lint: "cd phoneguessr && npx biome check"
   typecheck: "cd phoneguessr && npx tsc --noEmit"
 
 rules:
+  # Architecture
+  - "API endpoints live in api/*.ts at the repo root (Vercel serverless functions)"
+  - "API uses Web API Request/Response — no Hono, no BFF plugin"
+  - "Dynamic routes use flat files + Vercel rewrites in vercel.json (not [action].ts)"
+  - "Database: @neondatabase/serverless with drizzle-orm/neon-http"
+  - "All imports use .js extensions for ESM compatibility"
+  - "Frontend is in phoneguessr/src/, API imports from phoneguessr/src/ via relative paths"
+
+  # Frontend
   - "Use React 19 with functional components and hooks"
   - "Use i18next for all user-facing strings - support en, zh-TW, zh-CN, ja, ko"
-  - "API endpoints live in phoneguessr/api/lambda/ and use Hono context"
-  - "Check IS_MOCK before calling useHonoContext() in API endpoints"
   - "Use CSS classes in phoneguessr/src/routes/index.css - no CSS modules or styled-components"
   - "Use Biome for linting, not ESLint"
+
+  # OpenSpec integration (Model C — scoped Ralphy runs)
+  - "Before implementing, read openspec/changes/*/tasks.md for the task list"
+  - "Read proposal.md, design.md, and specs/*.md in the same change directory for context"
+  - "Only implement tasks marked - [ ] in tasks.md"
+  - "Do not create new files outside the scope defined in the change's design.md"
+  - "Read openspec/specs/ for current system requirements before generating code"
 
 boundaries:
   never_touch:
@@ -27,3 +41,4 @@ boundaries:
     - "phoneguessr/dist/**"
     - "phoneguessr/node_modules/**"
     - "phoneguessr/src/db/migrations/**"
+    - "openspec/specs/**"

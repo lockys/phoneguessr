@@ -32,3 +32,5 @@ coverage/
 .ralphy-worktrees/
 .ralphy/deferred.json
 .superset/
+.vercel
+.env*.local

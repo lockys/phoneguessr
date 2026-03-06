@@ -1,10 +1,10 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import { getTodayPuzzle, getYesterdayPuzzle } from '../../phoneguessr/src/lib/puzzle.js';
+import { getTodayPuzzle, getYesterdayPuzzle } from '../phoneguessr/src/lib/puzzle.js';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const action = url.pathname.split('/').pop();
+  const action = url.searchParams.get('action');
 
   switch (action) {
     case 'today': {

@@ -1,7 +1,11 @@
 {
   "buildCommand": "cd phoneguessr && npm install && npm run build && cp dist/html/index/index.html dist/index.html && cp -r dist/public/* dist/",
+  "devCommand": "cd phoneguessr && npm run dev",
   "outputDirectory": "phoneguessr/dist",
   "rewrites": [
+    { "source": "/api/puzzle/:action", "destination": "/api/puzzle?action=:action" },
+    { "source": "/api/leaderboard/:period", "destination": "/api/leaderboard?period=:period" },
+    { "source": "/api/profile/:path*", "destination": "/api/profile" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "functions": {

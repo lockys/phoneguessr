@@ -1,9 +1,9 @@
 import { eq, sql } from 'drizzle-orm';
-import { db } from '../../phoneguessr/src/db/index.js';
-import { results, users } from '../../phoneguessr/src/db/schema.js';
-import { COOKIE_NAME, verifySessionToken } from '../../phoneguessr/src/lib/auth.js';
-import { parseCookies } from '../../phoneguessr/src/lib/cookies.js';
-import { validateDisplayName } from '../../phoneguessr/src/lib/validation.js';
+import { db } from '../phoneguessr/src/db/index.js';
+import { results, users } from '../phoneguessr/src/db/schema.js';
+import { COOKIE_NAME, verifySessionToken } from '../phoneguessr/src/lib/auth.js';
+import { parseCookies } from '../phoneguessr/src/lib/cookies.js';
+import { validateDisplayName } from '../phoneguessr/src/lib/validation.js';
 
 async function getAuth(request: Request) {
   const token = parseCookies(request.headers.get('cookie'))[COOKIE_NAME];

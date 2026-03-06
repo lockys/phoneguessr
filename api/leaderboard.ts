@@ -1,10 +1,10 @@
 import { eq, and, sql, desc, gte, asc } from 'drizzle-orm';
-import { db } from '../../phoneguessr/src/db/index.js';
-import { results, users, dailyPuzzles } from '../../phoneguessr/src/db/schema.js';
+import { db } from '../phoneguessr/src/db/index.js';
+import { results, users, dailyPuzzles } from '../phoneguessr/src/db/schema.js';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const period = url.pathname.split('/').pop();
+  const period = url.searchParams.get('period');
 
   if (period === 'daily') {
     return getDailyLeaderboard();
@@ -55,7 +55,7 @@ async function getDailyLeaderboard() {
   });
 }
 
-function getStartDate(period: string | undefined): Date | null {
+function getStartDate(period: string | null): Date | null {
   const now = new Date();
 
   switch (period) {

@@ -13,10 +13,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx src/db/seed.ts",
-    "test": "vitest run"
+    "db:seed": "tsx src/db/seed.ts"
   },
-  "packageManager": "pnpm@10.28.2",
   "engines": {
     "node": ">=20"
   },
@@ -24,6 +22,7 @@
     "@modern-js/plugin-bff": "^3.0.4",
     "@modern-js/runtime": "3.0.4",
     "@modern-js/server-core": "^3.0.4",
+    "@neondatabase/serverless": "^1.0.2",
     "canvas-confetti": "^1.9.4",
     "drizzle-orm": "^0.45.1",
     "i18next": "^25.8.14",
