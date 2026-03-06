@@ -1,7 +1,6 @@
-<<<<<<< HEAD
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MOCK_PHONES } from './data';
-import { getMockPuzzle, getMockYesterdayPuzzle } from './state';
+import { getMockHint, getMockPuzzle, getMockYesterdayPuzzle, resetMockHints } from './state';
 
 describe('getMockYesterdayPuzzle', () => {
   afterEach(() => {
@@ -34,7 +33,6 @@ describe('getMockYesterdayPuzzle', () => {
     const today = getMockPuzzle();
     const yesterday = getMockYesterdayPuzzle();
 
-    // Verify yesterday returns a phone (may or may not differ from today)
     expect(yesterday.phone.brand).toBeTruthy();
     expect(yesterday.phone.model).toBeTruthy();
   });
@@ -48,10 +46,8 @@ describe('getMockYesterdayPuzzle', () => {
 
     expect(result1.phone.brand).toBe(result2.phone.brand);
     expect(result1.phone.model).toBe(result2.phone.model);
-=======
-import { beforeEach, describe, expect, it } from 'vitest';
-import { MOCK_PHONES } from './data';
-import { getMockHint, getMockPuzzle, resetMockHints } from './state';
+  });
+});
 
 describe('getMockHint', () => {
   beforeEach(() => {
@@ -138,6 +134,5 @@ describe('getMockHint', () => {
     if ('hint' in result) {
       expect(result.hintsUsed).toBe(1);
     }
->>>>>>> 3428b9a (feat: implement hint system API endpoint)
   });
 });
