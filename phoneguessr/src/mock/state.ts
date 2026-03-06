@@ -3,13 +3,20 @@ import path from 'node:path';
 import { MOCK_PHONES } from './data.ts';
 
 /**
+ * Get a date-based index into the phone array for a given date string.
+ */
+function getIndexForDate(dateStr: string): number {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const seed = y * 10000 + m * 100 + d;
+  return seed % MOCK_PHONES.length;
+}
+
+/**
  * Get today's mock puzzle. Uses date-based index into the phone array.
  */
 function getDailyIndex(): number {
   const today = new Date().toISOString().slice(0, 10);
-  const [y, m, d] = today.split('-').map(Number);
-  const seed = y * 10000 + m * 100 + d;
-  return seed % MOCK_PHONES.length;
+  return getIndexForDate(today);
 }
 
 export function getMockPuzzle() {
@@ -39,7 +46,12 @@ export function getMockImageData(): string | null {
   if (!fs.existsSync(imagePath)) return null;
   const buffer = fs.readFileSync(imagePath);
   const ext = path.extname(imagePath).slice(1).toLowerCase();
-  const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+  const mime =
+    ext === 'png'
+      ? 'image/png'
+      : ext === 'svg'
+        ? 'image/svg+xml'
+        : 'image/jpeg';
   return `data:${mime};base64,${buffer.toString('base64')}`;
 }
 
@@ -76,88 +88,114 @@ export function getMockFeedback(
   return 'wrong_brand';
 }
 
-function getYesterdayIndex(): number {
-  const now = new Date();
-  const yesterday = new Date(now);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const dateStr = yesterday.toISOString().slice(0, 10);
-  const [y, m, d] = dateStr.split('-').map(Number);
-  const seed = y * 10000 + m * 100 + d;
-  return seed % MOCK_PHONES.length;
-}
-
+/**
+ * Get yesterday's mock puzzle data for the yesterday endpoint.
+ */
 export function getMockYesterdayPuzzle() {
-  const index = getYesterdayIndex();
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - 1);
+  const yesterday = d.toISOString().slice(0, 10);
+  const index = getIndexForDate(yesterday);
   const phone = MOCK_PHONES[index];
   return {
     phone: {
       brand: phone.brand,
       model: phone.model,
       imagePath: phone.imagePath,
-      releaseYear: null,
+      releaseYear: null as number | null,
     },
-    facts: [],
-    stats: { totalPlayers: 42, avgGuesses: 3.2, winRate: 68 },
+    facts: [] as string[],
+    stats: {
+      totalPlayers: 42,
+      avgGuesses: 3.2,
+      winRate: 68,
+    },
   };
 }
 
+/**
+ * Get yesterday's mock image data as base64 data URL.
+ */
 export function getMockYesterdayImageData(): string | null {
-  const index = getYesterdayIndex();
-  const phone = MOCK_PHONES[index];
+  const data = getMockYesterdayPuzzle();
   const imagePath = path.resolve(
     'config/public',
-    phone.imagePath.replace(/^\/public\//, ''),
+    data.phone.imagePath.replace(/^\/public\//, ''),
   );
   if (!fs.existsSync(imagePath)) return null;
   const buffer = fs.readFileSync(imagePath);
   const ext = path.extname(imagePath).slice(1).toLowerCase();
-  const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+  const mime =
+    ext === 'png'
+      ? 'image/png'
+      : ext === 'svg'
+        ? 'image/svg+xml'
+        : 'image/jpeg';
   return `data:${mime};base64,${buffer.toString('base64')}`;
 }
 
-type HintType = 'brand' | 'year' | 'price_tier';
-const usedHints: Set<HintType> = new Set();
+/** Track mock hints used in the current session */
+let mockHintsUsed: string[] = [];
 
 export function resetMockHints(): void {
-  usedHints.clear();
+  mockHintsUsed = [];
 }
 
+type HintType = 'brand' | 'year' | 'price_tier';
+
+interface MockHintSuccess {
+  hint: string;
+  penalty: number;
+  hintsUsed: number;
+  hintsRemaining: number;
+}
+
+interface MockHintError {
+  error: string;
+  status: number;
+}
+
+/**
+ * Get a mock hint for the current puzzle.
+ */
 export function getMockHint(
   hintType: HintType,
-):
-  | { hint: string; penalty: number; hintsUsed: number; hintsRemaining: number }
-  | { error: string; status: number } {
-  if (usedHints.size >= 2) {
+): MockHintSuccess | MockHintError {
+  if (mockHintsUsed.length >= 2) {
     return { error: 'max_hints_reached', status: 409 };
   }
-  if (usedHints.has(hintType)) {
+
+  if (mockHintsUsed.includes(hintType)) {
     return { error: 'max_hints_reached', status: 409 };
   }
 
   const puzzle = getMockPuzzle();
   const phone = MOCK_PHONES.find(p => p.id === puzzle._answerId);
-  const phoneAny = phone as Record<string, unknown> | undefined;
+  if (!phone) {
+    return { error: 'phone_not_found', status: 404 };
+  }
 
   let hint: string;
   switch (hintType) {
     case 'brand':
-      hint = phone?.brand ?? 'Unknown';
+      hint = phone.brand;
       break;
     case 'year':
-      hint = String(phoneAny?.releaseYear);
+      hint = String(
+        (phone as Record<string, unknown>).releaseYear ?? 'Unknown',
+      );
       break;
     case 'price_tier':
-      hint = phoneAny?.priceTier as string;
+      hint = String((phone as Record<string, unknown>).priceTier ?? 'Unknown');
       break;
   }
 
-  usedHints.add(hintType);
-  const hintsUsed = usedHints.size;
+  mockHintsUsed.push(hintType);
 
   return {
     hint,
     penalty: 15,
-    hintsUsed,
-    hintsRemaining: 2 - hintsUsed,
+    hintsUsed: mockHintsUsed.length,
+    hintsRemaining: 2 - mockHintsUsed.length,
   };
 }

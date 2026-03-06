@@ -1,12 +1,12 @@
-import { IS_MOCK } from '../../../src/mock/index.ts';
 import { MOCK_LEADERBOARD_AGGREGATE } from '../../../src/mock/data.ts';
+import { IS_MOCK } from '../../../src/mock/index.ts';
 
 export const get = async () => {
   if (IS_MOCK) {
     return { entries: MOCK_LEADERBOARD_AGGREGATE };
   }
 
-  const { eq, sql, desc, gte } = await import('drizzle-orm');
+  const { and, eq, sql, desc, gte } = await import('drizzle-orm');
   const { db } = await import('../../../src/db');
   const { results, users } = await import('../../../src/db/schema');
 
@@ -25,8 +25,7 @@ export const get = async () => {
     })
     .from(results)
     .innerJoin(users, eq(results.userId, users.id))
-    .where(eq(results.isWin, true))
-    .where(gte(results.createdAt, monday))
+    .where(and(eq(results.isWin, true), gte(results.createdAt, monday)))
     .groupBy(users.id, users.displayName, users.avatarUrl)
     .orderBy(desc(sql`total_wins`))
     .limit(50);

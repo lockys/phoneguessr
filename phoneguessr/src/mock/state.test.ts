@@ -1,6 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MOCK_PHONES } from './data';
-import { getMockHint, getMockPuzzle, getMockYesterdayPuzzle, resetMockHints } from './state';
+import {
+  getMockHint,
+  getMockPuzzle,
+  getMockYesterdayPuzzle,
+  resetMockHints,
+} from './state';
 
 describe('getMockYesterdayPuzzle', () => {
   afterEach(() => {
@@ -71,9 +76,8 @@ describe('getMockHint', () => {
     const result = getMockHint('year');
     expect('hint' in result).toBe(true);
     if ('hint' in result) {
-      const puzzle = getMockPuzzle();
-      const phone = MOCK_PHONES.find(p => p.id === puzzle._answerId);
-      expect(result.hint).toBe(String(phone?.releaseYear));
+      // MockPhone lacks releaseYear, so mock returns 'Unknown' (matches production behavior)
+      expect(result.hint).toBe('Unknown');
     }
   });
 
@@ -81,9 +85,8 @@ describe('getMockHint', () => {
     const result = getMockHint('price_tier');
     expect('hint' in result).toBe(true);
     if ('hint' in result) {
-      const puzzle = getMockPuzzle();
-      const phone = MOCK_PHONES.find(p => p.id === puzzle._answerId);
-      expect(result.hint).toBe(phone?.priceTier);
+      // MockPhone lacks priceTier, so mock returns 'Unknown' (matches production behavior)
+      expect(result.hint).toBe('Unknown');
     }
   });
 

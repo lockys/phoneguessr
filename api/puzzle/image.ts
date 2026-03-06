@@ -16,7 +16,7 @@ export async function GET() {
 
   const buffer = fs.readFileSync(imagePath);
   const ext = path.extname(imagePath).slice(1).toLowerCase();
-  const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+  const mime = ext === 'png' ? 'image/png' : ext === 'svg' ? 'image/svg+xml' : 'image/jpeg';
   const base64 = buffer.toString('base64');
 
   return Response.json({ imageData: `data:${mime};base64,${base64}` });

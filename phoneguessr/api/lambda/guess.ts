@@ -1,9 +1,9 @@
 import { useHonoContext } from '@modern-js/server-core';
 import { IS_MOCK } from '../../src/mock/index.ts';
-import { getMockFeedback } from '../../src/mock/state.ts';
 
 export const post = async () => {
   if (IS_MOCK) {
+    // Can't parse request body without Hono context; return static feedback
     return Response.json({ feedback: 'wrong_brand' });
   }
 
@@ -18,7 +18,9 @@ export const post = async () => {
   const { db } = await import('../../src/db');
   const { phones, dailyPuzzles, guesses } = await import('../../src/db/schema');
   const { getCookie } = await import('hono/cookie');
-  const { COOKIE_NAME, verifySessionToken } = await import('../../src/lib/auth');
+  const { COOKIE_NAME, verifySessionToken } = await import(
+    '../../src/lib/auth'
+  );
 
   const [puzzle] = await db
     .select()
