@@ -1,4 +1,5 @@
 import { useHonoContext } from '@modern-js/server-core';
+import { validateResultInput } from '../../src/lib/validation.ts';
 import { IS_MOCK } from '../../src/mock/index.ts';
 
 export const post = async () => {
@@ -7,18 +8,21 @@ export const post = async () => {
   }
 
   const c = useHonoContext();
-  const body = await c.req.json<{
-    puzzleId: number;
-    guessCount: number;
-    isWin: boolean;
-    elapsedSeconds: number;
-  }>();
+  const rawBody = await c.req.json();
+
+  const validation = validateResultInput(rawBody);
+  if (!validation.valid) {
+    return c.json({ error: validation.error }, 400);
+  }
+  const body = validation.value;
 
   const { getCookie } = await import('hono/cookie');
   const { and, eq } = await import('drizzle-orm');
   const { db } = await import('../../src/db');
   const { results } = await import('../../src/db/schema');
-  const { COOKIE_NAME, verifySessionToken } = await import('../../src/lib/auth');
+  const { COOKIE_NAME, verifySessionToken } = await import(
+    '../../src/lib/auth'
+  );
 
   const token = getCookie(c, COOKIE_NAME);
   if (!token) {
@@ -34,7 +38,10 @@ export const post = async () => {
     .select()
     .from(results)
     .where(
-      and(eq(results.userId, session.userId), eq(results.puzzleId, body.puzzleId)),
+      and(
+        eq(results.userId, session.userId),
+        eq(results.puzzleId, body.puzzleId),
+      ),
     )
     .limit(1);
 
