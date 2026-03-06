@@ -12,7 +12,7 @@ The mock API SHALL return the full list of mock phones with brand, model, and id
 
 #### Scenario: Fetch phone list in mock mode
 - **WHEN** a request is made to `GET /api/phones` with `MOCK_API=true`
-- **THEN** the response includes an array of 20 phones with id, brand, and model fields
+- **THEN** the response includes an array of 120 phones across 14 brands with id, brand, and model fields
 
 ### Requirement: Mock guess endpoint
 The mock API SHALL evaluate guesses against the daily puzzle answer using in-memory state and return correct feedback (wrong_brand, right_brand, correct).
@@ -79,9 +79,34 @@ The system SHALL include SVG placeholder images for all phones in the mock datas
 - **WHEN** the game UI requests a phone image in mock mode
 - **THEN** an SVG placeholder with the phone's brand and model text is served
 
+### Requirement: Mock hint endpoint
+The mock API SHALL return hint data for the daily puzzle phone when `POST /api/hint` is called.
+
+#### Scenario: Request a brand hint in mock mode
+- **WHEN** a hint request with `hintType: 'brand'` is submitted with `MOCK_API=true`
+- **THEN** the response includes the puzzle phone's brand, a 15-second penalty, and remaining hint count
+
+#### Scenario: Max hints exceeded in mock mode
+- **WHEN** a player has already used 2 hints and requests another
+- **THEN** the response returns a 409 error with `error: 'max_hints_reached'`
+
+### Requirement: Mock yesterday puzzle endpoint
+The mock API SHALL return yesterday's puzzle phone with mock community stats when `GET /api/puzzle/yesterday` is called.
+
+#### Scenario: Fetch yesterday's puzzle in mock mode
+- **WHEN** a request is made to `GET /api/puzzle/yesterday` with `MOCK_API=true`
+- **THEN** the response includes the phone details (brand, model, imagePath) and mock stats (totalPlayers, avgGuesses, winRate)
+
+### Requirement: Mock profile update endpoint
+The mock API SHALL accept profile update requests and return success without persistence.
+
+#### Scenario: Update display name in mock mode
+- **WHEN** a `POST /api/profile/update` request with `{ displayName }` is submitted with `MOCK_API=true`
+- **THEN** the response returns `{ success: true }`
+
 ### Requirement: Dev script
-The project SHALL include a `pnpm dev:mock` script that starts the dev server with `MOCK_API=true`.
+The project SHALL include an `npm run dev:mock` script that starts the dev server with `MOCK_API=true`.
 
 #### Scenario: Starting mock dev server
-- **WHEN** a developer runs `pnpm dev:mock`
+- **WHEN** a developer runs `npm run dev:mock`
 - **THEN** the Modern.js dev server starts with all API endpoints returning mock data
