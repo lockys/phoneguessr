@@ -1,6 +1,6 @@
 import { eq, and, sql, desc, gte, asc } from 'drizzle-orm';
-import { db } from '../../phoneguessr/src/db';
-import { results, users, dailyPuzzles } from '../../phoneguessr/src/db/schema';
+import { db } from '../../phoneguessr/src/db/index.js';
+import { results, users, dailyPuzzles } from '../../phoneguessr/src/db/schema.js';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);

@@ -1,5 +1,5 @@
-import { COOKIE_NAME } from '../../phoneguessr/src/lib/auth';
-import { serializeCookie } from '../../phoneguessr/src/lib/cookies';
+import { COOKIE_NAME } from '../../phoneguessr/src/lib/auth.js';
+import { serializeCookie } from '../../phoneguessr/src/lib/cookies.js';
 
 export async function GET() {
   const clearCookie = serializeCookie(COOKIE_NAME, '', {

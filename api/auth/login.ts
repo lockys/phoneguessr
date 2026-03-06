@@ -1,4 +1,4 @@
-import { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI } from '../../phoneguessr/src/lib/auth';
+import { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI } from '../../phoneguessr/src/lib/auth.js';
 
 export async function GET() {
   const params = new URLSearchParams({

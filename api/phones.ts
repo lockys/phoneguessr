@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../phoneguessr/src/db';
-import { phones } from '../phoneguessr/src/db/schema';
+import { db } from '../phoneguessr/src/db/index.js';
+import { phones } from '../phoneguessr/src/db/schema.js';
 
 export async function GET() {
   const activePhones = await db

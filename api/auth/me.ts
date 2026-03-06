@@ -1,5 +1,5 @@
-import { COOKIE_NAME, verifySessionToken } from '../../phoneguessr/src/lib/auth';
-import { parseCookies } from '../../phoneguessr/src/lib/cookies';
+import { COOKIE_NAME, verifySessionToken } from '../../phoneguessr/src/lib/auth.js';
+import { parseCookies } from '../../phoneguessr/src/lib/cookies.js';
 
 export async function GET(request: Request) {
   const token = parseCookies(request.headers.get('cookie'))[COOKIE_NAME];

@@ -1,14 +1,14 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../../phoneguessr/src/db';
-import { users } from '../../phoneguessr/src/db/schema';
+import { db } from '../../phoneguessr/src/db/index.js';
+import { users } from '../../phoneguessr/src/db/schema.js';
 import {
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
   GOOGLE_REDIRECT_URI,
   createSessionToken,
   getSessionCookieOptions,
-} from '../../phoneguessr/src/lib/auth';
-import { serializeCookie } from '../../phoneguessr/src/lib/cookies';
+} from '../../phoneguessr/src/lib/auth.js';
+import { serializeCookie } from '../../phoneguessr/src/lib/cookies.js';
 
 interface GoogleTokenResponse {
   access_token: string;

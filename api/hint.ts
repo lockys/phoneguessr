@@ -1,16 +1,16 @@
 import { and, eq } from 'drizzle-orm';
-import { db } from '../phoneguessr/src/db';
+import { db } from '../phoneguessr/src/db/index.js';
 import {
   hints,
   dailyPuzzles,
   phones,
   results,
-} from '../phoneguessr/src/db/schema';
+} from '../phoneguessr/src/db/schema.js';
 import {
   COOKIE_NAME,
   verifySessionToken,
-} from '../phoneguessr/src/lib/auth';
-import { parseCookies } from '../phoneguessr/src/lib/cookies';
+} from '../phoneguessr/src/lib/auth.js';
+import { parseCookies } from '../phoneguessr/src/lib/cookies.js';
 
 const VALID_HINT_TYPES = ['brand', 'year', 'price_tier'] as const;
 type HintType = (typeof VALID_HINT_TYPES)[number];

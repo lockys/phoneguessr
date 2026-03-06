@@ -1,8 +1,8 @@
 import { and, eq } from 'drizzle-orm';
-import { db } from '../phoneguessr/src/db';
-import { results } from '../phoneguessr/src/db/schema';
-import { COOKIE_NAME, verifySessionToken } from '../phoneguessr/src/lib/auth';
-import { parseCookies } from '../phoneguessr/src/lib/cookies';
+import { db } from '../phoneguessr/src/db/index.js';
+import { results } from '../phoneguessr/src/db/schema.js';
+import { COOKIE_NAME, verifySessionToken } from '../phoneguessr/src/lib/auth.js';
+import { parseCookies } from '../phoneguessr/src/lib/cookies.js';
 
 export async function POST(request: Request) {
   const body: {
