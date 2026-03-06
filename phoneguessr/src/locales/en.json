@@ -22,12 +22,6 @@
   "guess.correct": "Correct!",
   "guess.remaining": "{{count}} guesses left",
 
-  "hint.brand": "Brand",
-  "hint.year": "Year",
-  "hint.price": "Price",
-  "hint.used": "{{used}}/{{max}} hints used",
-  "hint.penaltyWarning": "+15s penalty per hint",
-
   "input.placeholder": "Guess the phone...",
 
   "crop.alt": "Mystery phone",
@@ -70,24 +64,15 @@
   "about.createdBy": "Created by Calvin Jeng",
   "about.imageSource": "Phone images sourced from manufacturer press kits",
 
-  "streak.title": "Streak",
-  "streak.current": "Current",
-  "streak.best": "Best",
-  "streak.broken": "Your streak was broken! Start a new one today.",
-  "streak.milestones": "Milestones",
-  "streak.milestone7": "7 Days",
-  "streak.milestone30": "30 Days",
-  "streak.milestone100": "100 Days",
-
   "nav.profile": "Profile",
   "nav.game": "Game",
   "nav.leaderboard": "Leaderboard",
   "nav.about": "About",
 
-  "yesterday.title": "Yesterday's Answer",
-  "yesterday.funFacts": "Fun Facts",
-  "yesterday.communityStats": "Community Stats",
-  "yesterday.players": "Players",
-  "yesterday.winRate": "Win Rate",
-  "yesterday.avgGuesses": "Avg Guesses"
+  "onboarding.step1": "A phone is hidden behind blocks",
+  "onboarding.step2": "Type to guess — feedback guides you",
+  "onboarding.step3": "Fewer guesses = better score!",
+  "onboarding.skip": "Skip",
+  "onboarding.next": "Next",
+  "onboarding.done": "Got it!"
 }

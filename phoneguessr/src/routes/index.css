@@ -19,7 +19,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100dvh;
@@ -114,18 +114,10 @@ body {
 }
 
 @keyframes hint-fade {
-  0% {
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.7;
-  }
-  70% {
-    opacity: 0.7;
-  }
-  100% {
-    opacity: 0;
-  }
+  0% { opacity: 0; }
+  10% { opacity: 0.7; }
+  70% { opacity: 0.7; }
+  100% { opacity: 0; }
 }
 
 /* Result Modal */
@@ -170,23 +162,13 @@ body {
 }
 
 @keyframes modal-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes modal-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Language Selector */
@@ -366,23 +348,13 @@ body {
 }
 
 @keyframes block-pop-out {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.3);
-  }
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.3); }
 }
 
 @keyframes block-fade-out {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* Timer */
@@ -423,13 +395,8 @@ body {
 }
 
 @keyframes blink-cursor {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .autocomplete-input {
@@ -851,166 +818,104 @@ body {
   margin-top: 4px;
 }
 
-/* Streak Counter (Game Header) */
-.streak-counter {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: var(--yellow);
-  font-weight: 700;
-  font-size: 14px;
+/* Onboarding */
+.onboarding-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  animation: modal-fade-in 0.3s ease;
 }
 
-.streak-flame {
-  color: var(--yellow);
-}
-
-.streak-flame-lg {
-  color: var(--yellow);
-}
-
-.streak-counter-animate {
-  animation: streak-pulse 0.6s ease;
-}
-
-@keyframes streak-pulse {
-  0% {
-    transform: scale(1);
-  }
-  30% {
-    transform: scale(1.4);
-  }
-  60% {
-    transform: scale(0.95);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Streak Break Notification */
-.streak-break-notice {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  margin-bottom: 12px;
-  background: rgba(248, 113, 113, 0.15);
-  border: 1px solid var(--red);
+.onboarding-spotlight {
+  position: fixed;
   border-radius: var(--radius);
-  color: var(--red);
-  font-size: 13px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+  z-index: 91;
+  transition: top 0.3s ease, left 0.3s ease, width 0.3s ease, height 0.3s ease;
 }
 
-.streak-break-dismiss {
+.onboarding-tooltip {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 92;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 320px;
+  width: calc(100% - 32px);
+  animation: modal-slide-up 0.3s ease;
+}
+
+.onboarding-text {
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.onboarding-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.onboarding-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s ease;
+}
+
+.onboarding-dot-active {
+  background: var(--accent);
+}
+
+.onboarding-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.onboarding-skip {
   background: none;
   border: none;
-  color: var(--red);
-  font-size: 18px;
+  color: var(--text-muted);
+  font-size: 14px;
   cursor: pointer;
-  padding: 0 4px;
-  line-height: 1;
+  padding: 6px 12px;
 }
 
-/* Streak Section (Profile) */
-.streak-section {
-  margin-bottom: 16px;
-}
-
-.streak-section-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-}
-
-.streak-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.streak-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 14px 8px;
-  background: var(--surface);
-  border-radius: var(--radius);
-}
-
-.streak-card-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--yellow);
-}
-
-.streak-card-best {
+.onboarding-skip:hover {
   color: var(--text);
 }
 
-.streak-card-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 2px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Milestone Section */
-.milestone-section {
-  margin-bottom: 16px;
-}
-
-.milestone-section-title {
+.onboarding-next {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 8px 24px;
+  border-radius: var(--radius);
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
+  cursor: pointer;
 }
 
-.milestone-badges {
-  display: flex;
-  gap: 8px;
+.onboarding-next:hover {
+  opacity: 0.9;
 }
 
-.milestone-badge {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 12px 8px;
-  background: var(--surface);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  opacity: 0.5;
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-backdrop,
+  .onboarding-tooltip {
+    animation: none;
+  }
+
+  .onboarding-spotlight {
+    transition: none;
+  }
 }
 
-.milestone-badge-earned {
-  opacity: 1;
-  border-color: var(--yellow);
-}
-
-.milestone-badge-icon {
-  font-size: 20px;
-  color: var(--text-muted);
-}
-
-.milestone-badge-earned .milestone-badge-icon {
-  color: var(--yellow);
-}
-
-.milestone-badge-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-align: center;
-}
-
-.milestone-badge-earned .milestone-badge-label {
-  color: var(--text);
-}

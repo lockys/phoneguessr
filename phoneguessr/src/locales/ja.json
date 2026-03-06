@@ -22,12 +22,6 @@
   "guess.correct": "正解！",
   "guess.remaining": "残り {{count}} 回",
 
-  "hint.brand": "ブランド",
-  "hint.year": "発売年",
-  "hint.price": "価格帯",
-  "hint.used": "{{used}}/{{max}} ヒント使用",
-  "hint.penaltyWarning": "ヒント1回につき+15秒",
-
   "input.placeholder": "このスマホは何？",
 
   "crop.alt": "謎のスマホ",
@@ -70,24 +64,15 @@
   "about.createdBy": "Calvin Jeng 制作",
   "about.imageSource": "スマホ画像はメーカーのプレスキットから取得",
 
-  "streak.title": "連続プレイ",
-  "streak.current": "現在",
-  "streak.best": "最高",
-  "streak.broken": "連続記録が途切れました！今日から新たに始めましょう。",
-  "streak.milestones": "マイルストーン",
-  "streak.milestone7": "7日間",
-  "streak.milestone30": "30日間",
-  "streak.milestone100": "100日間",
-
   "nav.profile": "プロフィール",
   "nav.game": "ゲーム",
   "nav.leaderboard": "ランキング",
   "nav.about": "概要",
 
-  "yesterday.title": "昨日の答え",
-  "yesterday.funFacts": "豆知識",
-  "yesterday.communityStats": "コミュニティ統計",
-  "yesterday.players": "プレイヤー",
-  "yesterday.winRate": "勝率",
-  "yesterday.avgGuesses": "平均回数"
+  "onboarding.step1": "スマホがブロックの後ろに隠れています",
+  "onboarding.step2": "入力して推測 — フィードバックがガイドします",
+  "onboarding.step3": "推測回数が少ないほどスコアが良くなります！",
+  "onboarding.skip": "スキップ",
+  "onboarding.next": "次へ",
+  "onboarding.done": "わかった！"
 }

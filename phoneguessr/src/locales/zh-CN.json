@@ -22,12 +22,6 @@
   "guess.correct": "正确！",
   "guess.remaining": "还剩 {{count}} 次机会",
 
-  "hint.brand": "品牌",
-  "hint.year": "年份",
-  "hint.price": "价位",
-  "hint.used": "已使用 {{used}}/{{max}} 个提示",
-  "hint.penaltyWarning": "每个提示 +15 秒罚时",
-
   "input.placeholder": "猜猜这是什么手机",
 
   "crop.alt": "神秘手机",
@@ -70,24 +64,15 @@
   "about.createdBy": "由 Calvin Jeng 制作",
   "about.imageSource": "手机图片来源于制造商媒体资源",
 
-  "streak.title": "连续天数",
-  "streak.current": "当前",
-  "streak.best": "最佳",
-  "streak.broken": "你的连续记录中断了！今天重新开始吧。",
-  "streak.milestones": "里程碑",
-  "streak.milestone7": "7天",
-  "streak.milestone30": "30天",
-  "streak.milestone100": "100天",
-
   "nav.profile": "个人档案",
   "nav.game": "游戏",
   "nav.leaderboard": "排行榜",
   "nav.about": "关于",
 
-  "yesterday.title": "昨日答案",
-  "yesterday.funFacts": "趣味小知识",
-  "yesterday.communityStats": "社区统计",
-  "yesterday.players": "玩家数",
-  "yesterday.winRate": "胜率",
-  "yesterday.avgGuesses": "平均猜测"
+  "onboarding.step1": "手机照片隐藏在方块后面",
+  "onboarding.step2": "输入猜测 — 提示会引导你",
+  "onboarding.step3": "猜测次数越少，分数越好！",
+  "onboarding.skip": "跳过",
+  "onboarding.next": "下一步",
+  "onboarding.done": "了解！"
 }

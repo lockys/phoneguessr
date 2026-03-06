@@ -22,12 +22,6 @@
   "guess.correct": "정답!",
   "guess.remaining": "{{count}}번 남음",
 
-  "hint.brand": "브랜드",
-  "hint.year": "출시연도",
-  "hint.price": "가격대",
-  "hint.used": "{{used}}/{{max}} 힌트 사용",
-  "hint.penaltyWarning": "힌트당 +15초 페널티",
-
   "input.placeholder": "이 스마트폰은 뭘까요?",
 
   "crop.alt": "미스터리 스마트폰",
@@ -70,24 +64,15 @@
   "about.createdBy": "Calvin Jeng 제작",
   "about.imageSource": "스마트폰 이미지는 제조사 프레스킷에서 제공",
 
-  "streak.title": "연속 플레이",
-  "streak.current": "현재",
-  "streak.best": "최고",
-  "streak.broken": "연속 기록이 끊어졌습니다! 오늘부터 다시 시작하세요.",
-  "streak.milestones": "마일스톤",
-  "streak.milestone7": "7일",
-  "streak.milestone30": "30일",
-  "streak.milestone100": "100일",
-
   "nav.profile": "프로필",
   "nav.game": "게임",
   "nav.leaderboard": "리더보드",
   "nav.about": "소개",
 
-  "yesterday.title": "어제의 정답",
-  "yesterday.funFacts": "재미있는 사실",
-  "yesterday.communityStats": "커뮤니티 통계",
-  "yesterday.players": "플레이어",
-  "yesterday.winRate": "승률",
-  "yesterday.avgGuesses": "평균 횟수"
+  "onboarding.step1": "스마트폰이 블록 뒤에 숨겨져 있습니다",
+  "onboarding.step2": "입력해서 추측 — 피드백이 안내합니다",
+  "onboarding.step3": "추측 횟수가 적을수록 점수가 높아요!",
+  "onboarding.skip": "건너뛰기",
+  "onboarding.next": "다음",
+  "onboarding.done": "알겠어요!"
 }

@@ -1,17 +1,28 @@
 # Ralphy Progress Log
 
-## FE: Build streak display and milestones UI
+## FE: First-time player onboarding
 
-### What was done:
-- Created `src/lib/streak.ts` — shared streak utility with `getLocalStreakData()` that computes currentStreak, bestStreak, lastPlayedDate, milestones (7/30/100 day), and streakBroken flag from localStorage game history
-- Added `getMockStreak()` to `src/mock/state.ts` for mock API development
-- Added streak counter (flame icon + number) to Game header in `game-meta` div with pulse animation on streak increment
-- Enhanced ProfilePanel with:
-  - Streak break notification banner (dismissible)
-  - Dedicated streak section with current/best streak cards and flame icon
-  - Milestone badges section (7-day, 30-day, 100-day) with earned/unearned visual states
-- Added CSS styles for all streak/milestone UI elements in `src/routes/index.css`
-- Added i18n keys to all 5 locales (en, ja, ko, zh-CN, zh-TW): streak.title, streak.current, streak.best, streak.broken, streak.milestones, streak.milestone7/30/100
-- Installed vitest, added test script, wrote 9 unit tests for streak computation logic
-- All tests pass, lint clean on changed files (2 pre-existing a11y warnings in ProfilePanel form)
+### What was done
+- Created `Onboarding.tsx` component with 3-step overlay for new players
+  - Step 1: "A phone is hidden behind blocks" (spotlights crop-wrapper)
+  - Step 2: "Type to guess — feedback guides you" (spotlights guess-history)
+  - Step 3: "Fewer guesses = better score!" (spotlights guess-history)
+- Semi-transparent backdrop with spotlight cutout using box-shadow technique
+- Skip/Next/Done navigation buttons with step indicator dots
+- localStorage flag `phoneguessr_onboarded` to show only once
+- Tooltip auto-positions above or below spotlight based on available space
+- Added i18n keys to all 5 locale files (en, zh-TW, zh-CN, ja, ko)
+- Added CSS with animations and prefers-reduced-motion support
+- Integrated into Game.tsx — shows during 'ready' state for first-time players
+- Set up vitest + @testing-library/react test infrastructure
+- 12 passing tests covering step navigation, skip, done, localStorage, and rendering
 
+### Files changed
+- `phoneguessr/src/components/Onboarding.tsx` (new)
+- `phoneguessr/src/components/Onboarding.test.tsx` (new)
+- `phoneguessr/src/components/Game.tsx` (modified - integration)
+- `phoneguessr/src/routes/index.css` (modified - onboarding styles)
+- `phoneguessr/src/locales/{en,zh-TW,zh-CN,ja,ko}.json` (modified - i18n keys)
+- `phoneguessr/vitest.config.ts` (new - test config)
+- `phoneguessr/src/test-setup.ts` (new - test setup)
+- `phoneguessr/package.json` (modified - test script + dev deps)
