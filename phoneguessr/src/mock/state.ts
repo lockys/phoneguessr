@@ -1,5 +1,5 @@
-import fs from 'node:fs';
 import path from 'node:path';
+import fs from 'node:fs';
 import { MOCK_PHONES } from './data.ts';
 
 /**
@@ -32,10 +32,7 @@ export function getMockPuzzle() {
 
 export function getMockImageData(): string | null {
   const puzzle = getMockPuzzle();
-  const imagePath = path.resolve(
-    'config/public',
-    puzzle.imagePath.replace(/^\/public\//, ''),
-  );
+  const imagePath = path.resolve('config/public', puzzle.imagePath.replace(/^\/public\//, ''));
   if (!fs.existsSync(imagePath)) return null;
   const buffer = fs.readFileSync(imagePath);
   const ext = path.extname(imagePath).slice(1).toLowerCase();
@@ -53,90 +50,16 @@ export function getMockProfileStats() {
   };
 }
 
-<<<<<<< HEAD
-/**
- * Get yesterday's mock puzzle for the reveal endpoint.
- */
-export function getMockYesterdayPuzzle() {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const dateStr = yesterday.toISOString().slice(0, 10);
-  const [y, m, d] = dateStr.split('-').map(Number);
-  const seed = y * 10000 + m * 100 + d;
-  const index = seed % MOCK_PHONES.length;
-  const phone = MOCK_PHONES[index];
-
+export function getMockStreak() {
+  const today = new Date().toISOString().slice(0, 10);
   return {
-    phone: {
-      brand: phone.brand,
-      model: phone.model,
-      imagePath: phone.imagePath,
-      releaseYear: null,
-    },
-    facts: [],
-    stats: {
-      totalPlayers: 42,
-      avgGuesses: 3.2,
-      winRate: 68,
-    },
+    currentStreak: 5,
+    bestStreak: 12,
+    lastPlayedDate: today,
+    milestones: { '7day': true, '30day': false, '100day': false },
   };
 }
 
-=======
-// In-memory hint tracking for mock mode
-const mockHintsUsed: Map<string, string[]> = new Map();
-
-export function getMockHint(
-  hintType: 'brand' | 'year' | 'price_tier',
-):
-  | { hint: string; penalty: number; hintsUsed: number; hintsRemaining: number }
-  | { error: string; status: number } {
-  const puzzle = getMockPuzzle();
-  const phone = MOCK_PHONES.find(p => p.id === puzzle._answerId);
-  if (!phone) {
-    return { error: 'Puzzle phone not found', status: 404 };
-  }
-
-  const key = `mock_user_${puzzle.puzzleId}`;
-  const usedHints = mockHintsUsed.get(key) ?? [];
-
-  if (usedHints.length >= 2) {
-    return { error: 'max_hints_reached', status: 409 };
-  }
-
-  if (usedHints.includes(hintType)) {
-    return { error: 'max_hints_reached', status: 409 };
-  }
-
-  let hint: string;
-  switch (hintType) {
-    case 'brand':
-      hint = phone.brand;
-      break;
-    case 'year':
-      hint = String(phone.releaseYear);
-      break;
-    case 'price_tier':
-      hint = phone.priceTier;
-      break;
-  }
-
-  usedHints.push(hintType);
-  mockHintsUsed.set(key, usedHints);
-
-  return {
-    hint,
-    penalty: 15,
-    hintsUsed: usedHints.length,
-    hintsRemaining: 2 - usedHints.length,
-  };
-}
-
-export function resetMockHints(): void {
-  mockHintsUsed.clear();
-}
-
->>>>>>> 3428b9a (feat: implement hint system API endpoint)
 export function getMockFeedback(
   guessedPhoneId: number,
 ): 'correct' | 'right_brand' | 'wrong_brand' {

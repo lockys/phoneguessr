@@ -6,21 +6,14 @@
     "dev:mock": "MOCK_API=true modern dev",
     "build": "modern build",
     "serve": "modern serve",
-    "test": "vitest run",
     "lint": "biome check",
-    "test": "vitest run",
-    "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx src/db/seed.ts",
-<<<<<<< HEAD
-    "test": "vitest run"
-=======
     "test": "vitest run",
     "test:watch": "vitest"
->>>>>>> 3e4b354 (Design phone data schema and pipeline with 121 phones)
   },
   "packageManager": "pnpm@10.28.2",
   "engines": {
@@ -50,15 +43,12 @@
     "@biomejs/biome": "1.9.4",
     "@modern-js/app-tools": "3.0.4",
     "@modern-js/tsconfig": "3.0.4",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20",
     "@types/pg": "^8.18.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "drizzle-kit": "^0.31.9",
-    "jsdom": "^28.1.0",
     "tsx": "^4.21.0",
     "typescript": "~5.7.3",
     "vitest": "^4.0.18"

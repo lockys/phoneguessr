@@ -3,67 +3,85 @@ export interface StreakData {
   bestStreak: number;
   lastPlayedDate: string | null;
   milestones: {
-    day7: boolean;
-    day30: boolean;
-    day100: boolean;
+    '7day': boolean;
+    '30day': boolean;
+    '100day': boolean;
   };
 }
 
 /**
- * Calculate updated streak after a game result.
- * Streak increments on win if the player won yesterday (consecutive days).
- * Streak resets to 0 on DNF, or 1 on win after a gap.
+ * Calculate streak data from an array of winning puzzle dates (UTC, YYYY-MM-DD format).
+ * Dates must be distinct and sorted descending (most recent first).
+ * Current streak only counts if the most recent win is today or yesterday.
  */
-export function updateStreak(
-  current: StreakData,
-  todayDate: string,
-  won: boolean,
+export function calculateStreakFromDates(
+  winDates: string[],
+  todayUTC: string,
 ): StreakData {
-  if (!won) {
-    return {
-      currentStreak: 0,
-      bestStreak: current.bestStreak,
-      lastPlayedDate: todayDate,
-      milestones: current.milestones,
-    };
+  const empty: StreakData = {
+    currentStreak: 0,
+    bestStreak: 0,
+    lastPlayedDate: null,
+    milestones: { '7day': false, '30day': false, '100day': false },
+  };
+
+  if (winDates.length === 0) return empty;
+
+  const lastPlayedDate = winDates[0];
+
+  // Check if current streak is still active
+  const daysSinceLast = daysBetween(lastPlayedDate, todayUTC);
+  const isActive = daysSinceLast <= 1;
+
+  let currentStreak = 0;
+  let bestStreak = 0;
+  let streak = 1;
+
+  // Walk through dates, counting consecutive days
+  for (let i = 1; i < winDates.length; i++) {
+    const gap = daysBetween(winDates[i], winDates[i - 1]);
+    if (gap === 1) {
+      streak++;
+    } else {
+      bestStreak = Math.max(bestStreak, streak);
+      streak = 1;
+    }
+  }
+  bestStreak = Math.max(bestStreak, streak);
+
+  // Current streak: the streak starting from the most recent date, only if active
+  if (isActive) {
+    currentStreak = 1;
+    for (let i = 1; i < winDates.length; i++) {
+      const gap = daysBetween(winDates[i], winDates[i - 1]);
+      if (gap === 1) {
+        currentStreak++;
+      } else {
+        break;
+      }
+    }
   }
 
-  const isConsecutive =
-    current.lastPlayedDate !== null &&
-    isNextDay(current.lastPlayedDate, todayDate);
-
-  const newStreak = isConsecutive ? current.currentStreak + 1 : 1;
-  const newBest = Math.max(newStreak, current.bestStreak);
-
   return {
-    currentStreak: newStreak,
-    bestStreak: newBest,
-    lastPlayedDate: todayDate,
+    currentStreak,
+    bestStreak,
+    lastPlayedDate,
     milestones: {
-      day7: current.milestones.day7 || newStreak >= 7,
-      day30: current.milestones.day30 || newStreak >= 30,
-      day100: current.milestones.day100 || newStreak >= 100,
+      '7day': bestStreak >= 7,
+      '30day': bestStreak >= 30,
+      '100day': bestStreak >= 100,
     },
   };
 }
 
-/**
- * Check if dateB is exactly one day after dateA (UTC dates in YYYY-MM-DD format).
- */
-export function isNextDay(dateA: string, dateB: string): boolean {
+/** Number of days between two YYYY-MM-DD date strings. Always positive. */
+export function daysBetween(dateA: string, dateB: string): number {
   const a = new Date(`${dateA}T00:00:00Z`);
   const b = new Date(`${dateB}T00:00:00Z`);
-  const diffMs = b.getTime() - a.getTime();
-  return diffMs === 24 * 60 * 60 * 1000;
+  return Math.round(Math.abs(b.getTime() - a.getTime()) / 86400000);
 }
 
-/**
- * Check if a streak was broken (player missed at least one day).
- */
-export function isStreakBroken(
-  lastPlayedDate: string | null,
-  todayDate: string,
-): boolean {
-  if (lastPlayedDate === null) return false;
-  return !isNextDay(lastPlayedDate, todayDate) && lastPlayedDate !== todayDate;
+/** Get today's date in UTC as YYYY-MM-DD */
+export function getTodayUTC(): string {
+  return new Date().toISOString().slice(0, 10);
 }

@@ -1,30 +1,13 @@
 # Ralphy Progress Log
 
-## BE: Implement hint system API (agent-7)
-
-### What was done:
-- Added `hints` table to DB schema with unique constraint on (userId, puzzleId, hintType)
-- Added `releaseYear` and `priceTier` columns to `phones` table (nullable for backward compat)
-- Created `POST /api/hint` endpoint (root API layer) with full validation:
-  - Input validation (only brand/year/price_tier allowed)
-  - Auth required (401)
-  - Puzzle existence check (404)
-  - Puzzle completion check (409 puzzle_completed)
-  - Max 2 hints per puzzle (409 max_hints_reached)
-  - Duplicate hint type check (409 max_hints_reached)
-- Created `POST /api/lambda/hint` BFF endpoint following existing patterns
-- Extended MockPhone with releaseYear and priceTier fields
-- Added getMockHint() and resetMockHints() to mock state
-- Installed vitest, wrote 10 tests covering mock hint logic
-- All tests pass, lint passes on new/modified files
-
-### Files changed:
-- phoneguessr/src/db/schema.ts (added hints table, phone columns)
-- phoneguessr/src/mock/data.ts (extended MockPhone interface)
-- phoneguessr/src/mock/state.ts (added getMockHint, resetMockHints)
-- phoneguessr/api/lambda/hint.ts (new BFF endpoint)
-- api/hint.ts (new root API endpoint)
-- phoneguessr/src/mock/state.test.ts (new tests)
-- phoneguessr/src/mock/data.test.ts (new tests)
-- phoneguessr/package.json (added vitest, test script)
+## BE: Implement streak tracking API
+- Created `phoneguessr/src/lib/streak.ts` - streak calculation utility with `calculateStreakFromDates()`, `daysBetween()`, and `getTodayUTC()` functions
+- Created `phoneguessr/api/lambda/streak.ts` - GET /api/streak endpoint that returns currentStreak, bestStreak, lastPlayedDate, and milestones (7day, 30day, 100day)
+  - Calculates streaks from results table joined with dailyPuzzles for UTC dates
+  - Returns zeroed data for unauthenticated users
+  - Mock mode returns hardcoded streak data
+- Added `getMockStreak()` to `phoneguessr/src/mock/state.ts`
+- Added vitest as dev dependency with test scripts
+- Created `phoneguessr/src/lib/streak.test.ts` with 14 tests covering edge cases
+- All tests pass, new files pass Biome lint
 
