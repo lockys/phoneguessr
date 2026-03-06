@@ -38,6 +38,8 @@
   "profile.language": "Language",
   "profile.save": "Save",
   "profile.saved": "Saved!",
+  "profile.guessDistribution": "Guess Distribution",
+  "profile.noDataYet": "No data yet",
   "profile.signInPrompt": "Sign in to sync your stats across devices",
 
   "leaderboard.title": "Leaderboard",

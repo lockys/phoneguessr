@@ -38,6 +38,8 @@
   "profile.language": "语言",
   "profile.save": "保存",
   "profile.saved": "已保存！",
+  "profile.guessDistribution": "猜测分布",
+  "profile.noDataYet": "暂无数据",
   "profile.signInPrompt": "登录以跨设备同步你的统计数据",
 
   "leaderboard.title": "排行榜",
