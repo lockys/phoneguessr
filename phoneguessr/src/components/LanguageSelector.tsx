@@ -8,7 +8,7 @@ const LANGUAGES = [
   { code: 'ko', label: '한국어' },
 ];
 
-export function LanguageSelector() {
+export function LanguageSelector({ id }: { id?: string }) {
   const { i18n } = useTranslation();
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -17,6 +17,7 @@ export function LanguageSelector() {
 
   return (
     <select
+      id={id}
       className="lang-selector"
       value={i18n.language}
       onChange={handleChange}

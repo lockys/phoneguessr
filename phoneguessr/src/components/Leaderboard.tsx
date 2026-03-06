@@ -34,10 +34,13 @@ export function Leaderboard() {
     fetch(`/api/leaderboard/${tab}`)
       .then(r => r.json())
       .then(data => {
-        setEntries(data.entries);
+        setEntries(data.entries || []);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setEntries([]);
+        setLoading(false);
+      });
   }, [tab]);
 
   return (
@@ -59,13 +62,11 @@ export function Leaderboard() {
       {loading ? (
         <p className="leaderboard-empty">{t('leaderboard.loading')}</p>
       ) : entries.length === 0 ? (
-        <p className="leaderboard-empty">
-          {t('leaderboard.empty')}
-        </p>
+        <p className="leaderboard-empty">{t('leaderboard.empty')}</p>
       ) : (
         <div className="leaderboard-list">
-          {entries.map((entry, i) => (
-            <div key={i} className="leaderboard-row">
+          {entries.map(entry => (
+            <div key={entry.rank} className="leaderboard-row">
               <span className="lb-rank">#{entry.rank}</span>
               <span className="lb-name">{entry.displayName}</span>
               {'score' in entry ? (
@@ -75,7 +76,9 @@ export function Leaderboard() {
                 </>
               ) : (
                 <span className="lb-wins">
-                  {t('leaderboard.wins', { count: (entry as AggregateEntry).totalWins })}
+                  {t('leaderboard.wins', {
+                    count: (entry as AggregateEntry).totalWins,
+                  })}
                 </span>
               )}
             </div>

@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
+import { useEffect, useRef } from 'react';
 
 interface ConfettiProps {
   show: boolean;
@@ -14,6 +14,7 @@ export function Confetti({ show }: ConfettiProps) {
 
     const duration = 600;
     const end = Date.now() + duration;
+    let rafId: number;
 
     const frame = () => {
       confetti({
@@ -21,22 +22,37 @@ export function Confetti({ show }: ConfettiProps) {
         angle: 60,
         spread: 55,
         origin: { x: 0, y: 0.6 },
-        colors: ['#e94560', '#4ade80', '#fbbf24', '#60a5fa', '#f472b6', '#a78bfa'],
+        colors: [
+          '#e94560',
+          '#4ade80',
+          '#fbbf24',
+          '#60a5fa',
+          '#f472b6',
+          '#a78bfa',
+        ],
       });
       confetti({
         particleCount: 2,
         angle: 120,
         spread: 55,
         origin: { x: 1, y: 0.6 },
-        colors: ['#e94560', '#4ade80', '#fbbf24', '#60a5fa', '#f472b6', '#a78bfa'],
+        colors: [
+          '#e94560',
+          '#4ade80',
+          '#fbbf24',
+          '#60a5fa',
+          '#f472b6',
+          '#a78bfa',
+        ],
       });
 
       if (Date.now() < end) {
-        requestAnimationFrame(frame);
+        rafId = requestAnimationFrame(frame);
       }
     };
 
-    frame();
+    rafId = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(rafId);
   }, [show]);
 
   return null;
