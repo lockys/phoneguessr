@@ -164,3 +164,9 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
 - [✓] 2026-03-06 15:06 - QA: Verify mock mode still works
 - [✓] 2026-03-06 15:12 - QA: Verify frontend game flow
 - [✓] 2026-03-06 15:16 - Deploy: Push and verify Vercel production
+- [✓] 2026-03-07 20:51 - Security: No sensitive data leaked in API responses
+  - Removed OAuth token logging (access_token, id_token) from callback.ts console.error
+  - Removed Google error response body from token exchange failure logs
+  - Sanitized catch block to log only error message, not full error objects
+  - Added SESSION_SECRET production requirement (throws if missing in production)
+  - Added auth security tests (6 tests: token handling, cookie options, error suppression)

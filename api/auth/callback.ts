@@ -47,8 +47,7 @@ export async function GET(request: Request) {
     });
 
     if (!tokenRes.ok) {
-      const err = await tokenRes.text();
-      console.error('Google token exchange failed:', tokenRes.status, err);
+      console.error('Google token exchange failed:', tokenRes.status);
       return new Response(null, {
         status: 302,
         headers: { Location: '/?error=token_exchange' },
@@ -58,7 +57,7 @@ export async function GET(request: Request) {
     const tokens: GoogleTokenResponse = await tokenRes.json();
 
     if (!tokens.access_token) {
-      console.error('No access_token in Google response:', JSON.stringify(tokens));
+      console.error('No access_token in Google response');
       return new Response(null, {
         status: 302,
         headers: { Location: '/?error=no_token' },
@@ -116,7 +115,8 @@ export async function GET(request: Request) {
       email: user.email ?? undefined,
     });
 
-    const proto = request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
+    const proto =
+      request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
     const isHttps = proto === 'https';
     const cookieOpts = getSessionCookieOptions();
     const setCookieHeader = serializeCookie(cookieOpts.name, token, {
@@ -135,7 +135,10 @@ export async function GET(request: Request) {
       },
     });
   } catch (err) {
-    console.error('Auth callback error:', err);
+    console.error(
+      'Auth callback error:',
+      err instanceof Error ? err.message : 'Unknown error',
+    );
     return new Response(null, {
       status: 302,
       headers: { Location: '/?error=auth_failed' },
