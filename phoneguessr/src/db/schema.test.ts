@@ -5,6 +5,7 @@ import {
   dailyPuzzles,
   guesses,
   hints,
+  passkeyCredentials,
   phoneFacts,
   phones,
   results,
@@ -21,7 +22,7 @@ function getColumnNames(table: {
 }
 
 describe('Schema exports', () => {
-  it('exports all 8 tables', () => {
+  it('exports all 9 tables', () => {
     expect(phones).toBeDefined();
     expect(dailyPuzzles).toBeDefined();
     expect(users).toBeDefined();
@@ -30,6 +31,7 @@ describe('Schema exports', () => {
     expect(phoneFacts).toBeDefined();
     expect(streaks).toBeDefined();
     expect(hints).toBeDefined();
+    expect(passkeyCredentials).toBeDefined();
   });
 });
 
@@ -94,6 +96,22 @@ describe('Hints table', () => {
     expect(cols).toContain('user_id');
     expect(cols).toContain('puzzle_id');
     expect(cols).toContain('hint_type');
+    expect(cols).toContain('created_at');
+  });
+});
+
+describe('Passkey Credentials table', () => {
+  const cols = getColumnNames(
+    passkeyCredentials as unknown as Record<string, { name?: string }>,
+  );
+
+  it('has all required columns', () => {
+    expect(cols).toContain('id');
+    expect(cols).toContain('user_id');
+    expect(cols).toContain('credential_id');
+    expect(cols).toContain('public_key');
+    expect(cols).toContain('counter');
+    expect(cols).toContain('transports');
     expect(cols).toContain('created_at');
   });
 });

@@ -122,3 +122,15 @@ export const hints = pgTable('hints', {
   hintType: varchar('hint_type', { length: 20 }).notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+export const passkeyCredentials = pgTable('passkey_credentials', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id),
+  credentialId: text('credential_id').notNull().unique(),
+  publicKey: text('public_key').notNull(),
+  counter: integer('counter').notNull().default(0),
+  transports: text('transports').array(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
