@@ -81,13 +81,10 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
       if (!start) return;
 
       const dx = e.changedTouches[0].clientX - start.x;
-      const dt = Date.now() - start.time;
-      const velocity = Math.abs(dx) / dt; // px/ms
-      const threshold = el.clientWidth * 0.35;
+      const threshold = el.clientWidth * 0.5;
 
-      // Allow panel switch if: deliberate swipe (>35% width) OR fast flick (>0.5 px/ms and >50px)
-      const shouldSwitch =
-        Math.abs(dx) > threshold || (velocity > 0.5 && Math.abs(dx) > 50);
+      // Allow panel switch only if swipe exceeds 50% of page width
+      const shouldSwitch = Math.abs(dx) > threshold;
 
       if (shouldSwitch) {
         const dir = dx < 0 ? 1 : -1;
