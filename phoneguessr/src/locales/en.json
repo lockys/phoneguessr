@@ -42,6 +42,12 @@
   "profile.guessDistribution": "Guess Distribution",
   "profile.noDataYet": "No data yet",
   "profile.signInPrompt": "Sign in to sync your stats across devices",
+  "profile.email": "Email",
+  "profile.emailNotAvailable": "Not available",
+  "profile.gameHistory": "Game History",
+  "profile.noGamesYet": "No games played yet",
+  "profile.loadMore": "Load more",
+  "profile.puzzleNum": "#{{num}}",
 
   "leaderboard.title": "Leaderboard",
   "leaderboard.daily": "Daily",

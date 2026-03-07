@@ -1,6 +1,11 @@
 import { eq, sql } from 'drizzle-orm';
 import { db } from '../phoneguessr/src/db/index.js';
-import { results, users } from '../phoneguessr/src/db/schema.js';
+import {
+  dailyPuzzles,
+  phones,
+  results,
+  users,
+} from '../phoneguessr/src/db/schema.js';
 import { COOKIE_NAME, verifySessionToken } from '../phoneguessr/src/lib/auth.js';
 import { parseCookies } from '../phoneguessr/src/lib/cookies.js';
 import { validateDisplayName } from '../phoneguessr/src/lib/validation.js';
@@ -17,20 +22,31 @@ export async function GET(request: Request) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const url = new URL(request.url);
+  const path = url.pathname;
+
+  if (path.includes('/history')) {
+    return getHistory(request, session.userId);
+  }
+
+  return getStats(session.userId);
+}
+
+async function getStats(userId: number) {
   const rows = await db
     .select({
       gamesPlayed: sql<number>`count(*)`,
       wins: sql<number>`count(*) filter (where ${results.isWin} = true)`,
     })
     .from(results)
-    .where(eq(results.userId, session.userId));
+    .where(eq(results.userId, userId));
 
   const { gamesPlayed, wins } = rows[0] || { gamesPlayed: 0, wins: 0 };
 
   const allResults = await db
     .select({ isWin: results.isWin })
     .from(results)
-    .where(eq(results.userId, session.userId))
+    .where(eq(results.userId, userId))
     .orderBy(sql`${results.createdAt} desc`);
 
   let currentStreak = 0;
@@ -56,6 +72,39 @@ export async function GET(request: Request) {
     currentStreak,
     bestStreak,
   });
+}
+
+async function getHistory(request: Request, userId: number) {
+  const url = new URL(request.url);
+  const limit = Math.min(Number(url.searchParams.get('limit')) || 20, 100);
+  const offset = Number(url.searchParams.get('offset')) || 0;
+
+  const [countRow] = await db
+    .select({ total: sql<number>`count(*)` })
+    .from(results)
+    .where(eq(results.userId, userId));
+
+  const total = countRow?.total ?? 0;
+
+  const rows = await db
+    .select({
+      puzzleDate: dailyPuzzles.puzzleDate,
+      puzzleNumber: dailyPuzzles.puzzleNumber,
+      isWin: results.isWin,
+      guessCount: results.guessCount,
+      score: results.score,
+      phoneBrand: phones.brand,
+      phoneModel: phones.model,
+    })
+    .from(results)
+    .innerJoin(dailyPuzzles, eq(results.puzzleId, dailyPuzzles.id))
+    .innerJoin(phones, eq(dailyPuzzles.phoneId, phones.id))
+    .where(eq(results.userId, userId))
+    .orderBy(sql`${dailyPuzzles.puzzleDate} desc`)
+    .limit(limit)
+    .offset(offset);
+
+  return Response.json({ results: rows, total });
 }
 
 export async function POST(request: Request) {

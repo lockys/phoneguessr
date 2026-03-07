@@ -4,6 +4,7 @@ interface User {
   id: number;
   displayName: string;
   avatarUrl?: string;
+  email?: string | null;
 }
 
 interface AuthContextValue {

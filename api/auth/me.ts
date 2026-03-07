@@ -17,6 +17,7 @@ export async function GET(request: Request) {
       id: session.userId,
       displayName: session.displayName,
       avatarUrl: session.avatarUrl,
+      email: session.email ?? null,
     },
   });
 }

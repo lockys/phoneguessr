@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../lib/auth-context';
 import { GuessDistribution } from './GuessDistribution';
@@ -12,13 +12,22 @@ interface Stats {
   bestStreak: number;
 }
 
+interface HistoryEntry {
+  puzzleDate: string;
+  puzzleNumber: number;
+  isWin: boolean;
+  guessCount: number;
+  score: number | null;
+  phoneBrand: string;
+  phoneModel: string;
+}
+
 function getLocalStats(): Stats {
   let gamesPlayed = 0;
   let wins = 0;
   let currentStreak = 0;
   let bestStreak = 0;
 
-  // Collect all game dates and results
   const results: { date: string; won: boolean }[] = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
@@ -37,13 +46,11 @@ function getLocalStats(): Stats {
   gamesPlayed = results.length;
   wins = results.filter(r => r.won).length;
 
-  // Current streak (consecutive wins from most recent)
   for (const r of results) {
     if (r.won) currentStreak++;
     else break;
   }
 
-  // Best streak
   let streak = 0;
   for (const r of results) {
     if (r.won) {
@@ -69,6 +76,9 @@ export function ProfilePanel() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [displayName, setDisplayName] = useState('');
   const [saved, setSaved] = useState(false);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [historyTotal, setHistoryTotal] = useState(0);
+  const [historyLoading, setHistoryLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -77,10 +87,31 @@ export function ProfilePanel() {
         .then(r => r.json())
         .then(setStats)
         .catch(() => setStats(getLocalStats()));
+
+      fetch('/api/profile/history?limit=10')
+        .then(r => r.json())
+        .then(data => {
+          setHistory(data.results || []);
+          setHistoryTotal(data.total || 0);
+        })
+        .catch(() => {});
     } else {
       setStats(getLocalStats());
     }
   }, [user]);
+
+  const loadMore = useCallback(() => {
+    if (historyLoading || history.length >= historyTotal) return;
+    setHistoryLoading(true);
+    fetch(`/api/profile/history?limit=10&offset=${history.length}`)
+      .then(r => r.json())
+      .then(data => {
+        setHistory(prev => [...prev, ...(data.results || [])]);
+        setHistoryTotal(data.total || 0);
+      })
+      .catch(() => {})
+      .finally(() => setHistoryLoading(false));
+  }, [history.length, historyTotal, historyLoading]);
 
   const handleSave = async () => {
     try {
@@ -98,9 +129,26 @@ export function ProfilePanel() {
 
   return (
     <div className="profile-panel">
-      <h2 className="profile-title">
-        {user ? user.displayName : t('profile.yourStats')}
-      </h2>
+      {user ? (
+        <div className="profile-user-card">
+          {user.avatarUrl && (
+            <img
+              src={user.avatarUrl}
+              alt=""
+              className="profile-avatar"
+              referrerPolicy="no-referrer"
+            />
+          )}
+          <div className="profile-user-info">
+            <h2 className="profile-title">{user.displayName}</h2>
+            <span className="profile-email">
+              {user.email || t('profile.emailNotAvailable')}
+            </span>
+          </div>
+        </div>
+      ) : (
+        <h2 className="profile-title">{t('profile.yourStats')}</h2>
+      )}
 
       {stats ? (
         <div className="profile-stats">
@@ -159,6 +207,58 @@ export function ProfilePanel() {
           >
             {saved ? t('profile.saved') : t('profile.save')}
           </button>
+        </div>
+      )}
+
+      {user && (
+        <div className="profile-history">
+          <h3 className="profile-history-title">{t('profile.gameHistory')}</h3>
+          {history.length === 0 ? (
+            <p className="profile-history-empty">{t('profile.noGamesYet')}</p>
+          ) : (
+            <>
+              <div className="profile-history-list">
+                {history.map(entry => (
+                  <div
+                    key={`${entry.puzzleDate}-${entry.puzzleNumber}`}
+                    className="profile-history-row"
+                  >
+                    <div className="profile-history-date">
+                      <span className="profile-history-puzzle-num">
+                        {t('profile.puzzleNum', { num: entry.puzzleNumber })}
+                      </span>
+                      <span className="profile-history-puzzle-date">
+                        {entry.puzzleDate}
+                      </span>
+                    </div>
+                    <span
+                      className={`profile-history-result ${entry.isWin ? 'win' : 'loss'}`}
+                    >
+                      {entry.isWin ? '✓' : '✗'}
+                    </span>
+                    <span className="profile-history-guesses">
+                      {entry.guessCount}/6
+                    </span>
+                    <span className="profile-history-phone">
+                      {entry.phoneBrand} {entry.phoneModel}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              {history.length < historyTotal && (
+                <button
+                  type="button"
+                  className="profile-history-load-more"
+                  onClick={loadMore}
+                  disabled={historyLoading}
+                >
+                  {historyLoading
+                    ? t('profile.loading')
+                    : t('profile.loadMore')}
+                </button>
+              )}
+            </>
+          )}
         </div>
       )}
 

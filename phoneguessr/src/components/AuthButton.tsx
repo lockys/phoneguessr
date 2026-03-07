@@ -26,6 +26,14 @@ export function AuthButton() {
   if (user) {
     return (
       <div className="auth-user">
+        {user.avatarUrl && (
+          <img
+            src={user.avatarUrl}
+            alt=""
+            className="auth-avatar"
+            referrerPolicy="no-referrer"
+          />
+        )}
         <span className="auth-name">{user.displayName}</span>
         <button type="button" className="auth-btn" onClick={logout}>
           {t('auth.signOut')}

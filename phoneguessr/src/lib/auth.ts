@@ -5,6 +5,7 @@ export interface SessionData {
   googleId: string;
   displayName: string;
   avatarUrl?: string;
+  email?: string;
 }
 
 const SECRET = new TextEncoder().encode(

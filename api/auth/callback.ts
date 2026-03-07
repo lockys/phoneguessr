@@ -19,6 +19,7 @@ interface GoogleUserInfo {
   sub: string;
   name: string;
   picture?: string;
+  email?: string;
 }
 
 export async function GET(request: Request) {
@@ -85,13 +86,24 @@ export async function GET(request: Request) {
       .where(eq(users.googleId, googleUser.sub))
       .limit(1);
 
-    if (!user) {
+    if (user) {
+      [user] = await db
+        .update(users)
+        .set({
+          displayName: googleUser.name,
+          avatarUrl: googleUser.picture,
+          email: googleUser.email,
+        })
+        .where(eq(users.googleId, googleUser.sub))
+        .returning();
+    } else {
       [user] = await db
         .insert(users)
         .values({
           googleId: googleUser.sub,
           displayName: googleUser.name,
           avatarUrl: googleUser.picture,
+          email: googleUser.email,
         })
         .returning();
     }
@@ -101,6 +113,7 @@ export async function GET(request: Request) {
       googleId: user.googleId,
       displayName: user.displayName,
       avatarUrl: user.avatarUrl ?? undefined,
+      email: user.email ?? undefined,
     });
 
     const isHttps = url.protocol === 'https:';

@@ -46,6 +46,7 @@ export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   googleId: varchar('google_id', { length: 255 }).notNull().unique(),
   displayName: varchar('display_name', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).unique(),
   avatarUrl: text('avatar_url'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
