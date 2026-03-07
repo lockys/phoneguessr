@@ -116,7 +116,8 @@ export async function GET(request: Request) {
       email: user.email ?? undefined,
     });
 
-    const isHttps = url.protocol === 'https:';
+    const proto = request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
+    const isHttps = proto === 'https';
     const cookieOpts = getSessionCookieOptions();
     const setCookieHeader = serializeCookie(cookieOpts.name, token, {
       httpOnly: cookieOpts.httpOnly,
