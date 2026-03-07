@@ -60,6 +60,7 @@ body {
 .swipe-panel {
   flex: 0 0 100%;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
   min-height: 0;
   overflow-y: auto;
   padding: 0 16px 16px;

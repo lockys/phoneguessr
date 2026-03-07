@@ -27,7 +27,11 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
   const [activeIndex, setActiveIndex] = useState(DEFAULT_INDEX);
   const [swipeCount, setSwipeCount] = useState(0);
   const isInitialRef = useRef(true);
-  const touchStartRef = useRef<{ x: number; index: number } | null>(null);
+  const touchStartRef = useRef<{
+    x: number;
+    time: number;
+    index: number;
+  } | null>(null);
 
   // Scroll to default panel on mount
   useEffect(() => {
@@ -67,6 +71,7 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
     const onTouchStart = (e: TouchEvent) => {
       touchStartRef.current = {
         x: e.touches[0].clientX,
+        time: Date.now(),
         index: Math.round(el.scrollLeft / el.clientWidth),
       };
     };
@@ -76,10 +81,26 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
       if (!start) return;
 
       const dx = e.changedTouches[0].clientX - start.x;
-      const threshold = el.clientWidth / 3;
+      const dt = Date.now() - start.time;
+      const velocity = Math.abs(dx) / dt; // px/ms
+      const threshold = el.clientWidth * 0.35;
 
-      // If swipe distance is less than 1/3 of page width, snap back
-      if (Math.abs(dx) < threshold) {
+      // Allow panel switch if: deliberate swipe (>35% width) OR fast flick (>0.5 px/ms and >50px)
+      const shouldSwitch =
+        Math.abs(dx) > threshold || (velocity > 0.5 && Math.abs(dx) > 50);
+
+      if (shouldSwitch) {
+        const dir = dx < 0 ? 1 : -1;
+        const target = Math.max(
+          0,
+          Math.min(children.length - 1, start.index + dir),
+        );
+        el.scrollTo({
+          left: target * el.clientWidth,
+          behavior: 'smooth',
+        });
+      } else {
+        // Snap back to original panel
         el.scrollTo({
           left: start.index * el.clientWidth,
           behavior: 'smooth',
