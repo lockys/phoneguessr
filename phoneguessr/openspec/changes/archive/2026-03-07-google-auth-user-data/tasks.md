@@ -2,7 +2,7 @@
 
 - [x] 1.1 Add `email` column (varchar 255, nullable, unique) to users table in `phoneguessr/src/db/schema.ts`
 - [x] 1.2 Run `npm run db:generate` to create the migration
-- [ ] 1.3 Run `npm run db:push` to apply the migration to the database (requires DATABASE_URL — run manually or via Vercel)
+- [x] 1.3 Run `npm run db:push` to apply the migration to the database
 
 ## 2. Auth: Capture and expose email
 
