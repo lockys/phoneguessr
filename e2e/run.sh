@@ -13,7 +13,7 @@ errors=()
 # Start mock server
 echo "==> Starting mock dev server on port $PORT..."
 cd "$ROOT_DIR/phoneguessr"
-PORT=$PORT MOCK_API=true npx modern dev --port "$PORT" &
+PORT=$PORT MOCK_API=true npx modern dev &
 SERVER_PID=$!
 
 cleanup() {
