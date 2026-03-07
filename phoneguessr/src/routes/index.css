@@ -1048,6 +1048,7 @@ body {
 /* Yesterday's Answer */
 .yesterday {
   margin-top: 24px;
+  margin-bottom: 24px;
   padding: 20px;
   background: var(--surface);
   border: 1px solid var(--border);
