@@ -10,8 +10,8 @@ The project SHALL NOT exceed 12 serverless functions in the `api/` directory, as
 #### Guideline: Consolidate related endpoints using flat files with rewrites
 - **WHEN** a new API endpoint is needed and the function count is at or near 12
 - **THEN** related endpoints SHOULD be consolidated into a single flat `.ts` file with Vercel rewrites
-- **Example:** `api/puzzle/today.ts`, `api/puzzle/image.ts`, `api/puzzle/yesterday.ts` → `api/puzzle.ts` (action via query param + rewrite)
-- **Example:** `api/profile/stats.ts`, `api/profile/update.ts` → `api/profile.ts` (routed via rewrite)
+- **Example:** `api/puzzle/today`, `api/puzzle/image`, `api/puzzle/yesterday` → `api/puzzle.ts` (action via query param + rewrite)
+- **Example:** `api/profile/stats`, `api/profile/update` → `api/profile.ts` (routed via rewrite)
 
 #### Pattern: Flat file with rewrite handler
 - **WHEN** multiple endpoints share a URL prefix (e.g., `/api/puzzle/*`)
@@ -80,3 +80,19 @@ All non-API routes SHALL be rewritten to `index.html` for client-side routing.
 - **GIVEN** the Vercel rewrites config includes `{ "source": "/(.*)", "destination": "/index.html" }`
 - **WHEN** a user navigates to any non-API path
 - **THEN** the SPA handles routing client-side
+
+### Requirement: Vercel rewrite ordering
+The `vercel.json` rewrites array SHALL list API rewrites before the SPA catch-all.
+
+#### Scenario: API rewrites take precedence
+- **WHEN** a request matches both an API rewrite and the SPA catch-all
+- **THEN** the API rewrite SHALL be matched first because it appears earlier in the array
+- **AND** the SPA catch-all `/(.*) → /index.html` SHALL be the last entry
+
+### Requirement: Production deployment verification
+After pushing changes, the Vercel production deployment SHALL succeed without ESM or driver errors.
+
+#### Scenario: Successful deployment
+- **WHEN** changes are pushed to the main branch
+- **THEN** the Vercel build completes without errors
+- **AND** all API endpoints return correct responses in production

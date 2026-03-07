@@ -159,3 +159,8 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
 - [✓] 2026-03-06 02:04 - CR: Review all API endpoint implementations
 - [✓] 2026-03-06 02:04 - CR: Review frontend components and UX
 - [✓] 2026-03-06 02:04 - CR: Review schema changes and data integrity
+- [✓] 2026-03-06 14:44 - Setup: Add root dev script
+- [✓] 2026-03-06 14:52 - QA: Test all API endpoints locally
+- [✓] 2026-03-06 15:06 - QA: Verify mock mode still works
+- [✓] 2026-03-06 15:12 - QA: Verify frontend game flow
+- [✓] 2026-03-06 15:16 - Deploy: Push and verify Vercel production

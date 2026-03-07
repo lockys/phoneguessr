@@ -1,465 +1,147 @@
 tasks:
-  - title: "PO: Define addictive game mechanics spec"
+  - title: "Setup: Add root dev script"
     parallel_group: 1
+    completed: true
+    description: |
+      Change: openspec/changes/local-dev-setup/
+      Read: proposal.md, design.md, specs/local-dev-workflow/spec.md
+
+      Add a dev script to the root package.json:
+      1. Add `"dev": "vercel dev"` to the scripts section of root `package.json`
+      2. Verify `npm run dev` starts vercel dev at http://localhost:3000
+      3. Confirm the Modern.js frontend loads and API routes are accessible
+
+      Constraints:
+      - Root package.json already has `"type": "module"` and dependencies
+      - vercel.json already has `devCommand: "cd phoneguessr && npm run dev"`
+      - Do NOT add other scripts — previous attempt caused recursive invocation
+  - title: "QA: Test all API endpoints locally"
+    parallel_group: 2
     completed: true
     description: >
-      Role: Product Owner (read prd/product-owner.md for context)
+      Change: openspec/changes/local-dev-setup/
 
-      Use: /opsx:explore to brainstorm, then /opsx:propose to formalize
-
-
-      Design fun, addictive game mechanics for PhoneGuessr. Research what makes
-
-      daily puzzle games (Wordle, Connections, Contexto) sticky. Propose
-      mechanics:
+      Read: specs/local-dev-workflow/spec.md, specs/deployment/spec.md
 
 
-      1. **Hint system** — Let players buy hints (reveal brand, year, price
-      range)
-         at the cost of score penalty. Adds strategic depth.
-      2. **Streak rewards** — Visual streak counter with milestones (7-day,
-      30-day).
-         Losing a streak should feel consequential. Add streak-based titles/badges.
-      3. **Difficulty tiers** — Easy (flagship phones), Medium (mid-range), Hard
-         (obscure/regional phones). Daily puzzle rotates difficulty.
-      4. **"Almost" feedback** — Show how close the guess was (same year, same
-         price tier, same form factor) instead of just wrong_brand/right_brand.
-      5. **Yesterday's answer reveal** — Show what yesterday's phone was with
-         fun facts (release date, price, specs). Creates a "learn something" loop.
-      6. **Share card** — Emoji grid showing guess history (like Wordle) for
-         social sharing. Make it feel worth sharing.
+      With `vercel dev` running, test every API endpoint via curl:
 
-      Output: OpenSpec proposal with user stories and acceptance criteria.
-  - title: "PO: Define phone data expansion requirements"
-    parallel_group: 1
-    completed: true
-    description: |
-      Role: Product Owner (read prd/product-owner.md for context)
-      Use: /opsx:explore then /opsx:propose
 
-      Currently only 20 phones from 5 brands. Define the phone catalog target:
+      GET endpoints:
 
-      1. **Brand coverage** — Add: Xiaomi, Sony, Motorola, Huawei, OPPO, vivo,
-         Realme, ASUS ROG, Honor, ZTE/Nubia. Target 15+ brands.
-      2. **Phone count target** — 100+ phones minimum for 3+ months of unique
-         daily puzzles without repeats.
-      3. **Image requirements** — Define standard: resolution, aspect ratio,
-         background color, angle. Press kit photos preferred.
-      4. **Metadata per phone** — Beyond brand/model: release year, price tier
-         (budget/mid/flagship), form factor (bar/flip/fold), OS version.
-      5. **Data pipeline** — How to add new phones: manual curation vs scraping
-         vs community submission. Define the process.
-      6. **Mock data update** — MOCK_PHONES array must grow with the catalog
-         for local development to remain useful.
+      1. GET /api/phones — returns 120 phones with id, brand, model
 
-      Output: OpenSpec proposal with data schema changes and sourcing plan.
-  - title: "PO: Define UI polish and visual identity spec"
-    parallel_group: 1
-    completed: true
-    description: |
-      Role: Product Owner (read prd/product-owner.md for context)
-      Use: /opsx:explore then /opsx:propose
+      2. GET /api/puzzle/today — returns puzzleId, puzzleNumber, puzzleDate,
+      imageUrl
 
-      Define UI improvements for a polished v1:
+      3. GET /api/puzzle/image — returns base64 image data (imageData field)
 
-      1. **Guess feedback animation** — Animate guess rows sliding in with
-         color reveal. Current rows just appear statically.
-      2. **Image reveal celebration** — When all blocks clear (win), add a
-         subtle zoom + glow effect on the revealed phone.
-      3. **Stats visualization** — Replace plain numbers with mini bar charts
-         or guess distribution histogram (like Wordle stats).
-      4. **Onboarding** — First-time player tutorial overlay explaining the
-         game in 3 steps. Show once, remember in localStorage.
-      5. **Dark/light theme** — Currently dark-only. Add light theme option.
-      6. **Sound effects** — Optional SFX: block reveal, correct guess chime,
-         wrong guess buzz, confetti pop. Muted by default.
-      7. **PWA manifest** — Add to home screen support with proper icons,
-         splash screen, and offline fallback page.
+      4. GET /api/puzzle/yesterday — returns puzzle data or null/404
 
-      Output: OpenSpec proposal with mockups/descriptions and priority order.
-  - title: "TL: Design API spec for new game mechanics"
+      5. GET /api/leaderboard/daily — returns entries array
+
+      6. GET /api/auth/me — returns {user: null} when unauthenticated
+
+
+      POST endpoints (need request body):
+
+      7. POST /api/guess — body: {puzzleId, phoneId, guessNumber} → returns
+      feedback
+
+      8. POST /api/result — body: {puzzleId, guessCount, isWin, elapsedSeconds}
+      → returns score
+
+      9. POST /api/hint — body: {puzzleId, hintType: "brand"} → returns hint
+      data
+
+
+      Auth-protected endpoints (expect 401 without session):
+
+      10. GET /api/profile/stats — returns stats or 401
+
+      11. POST /api/profile/update — body: {displayName} → returns success or
+      401
+
+
+      Constraints:
+
+      - API routes use flat files + Vercel rewrites (not dynamic [action].ts)
+
+      - puzzle/leaderboard/profile routes are rewritten via vercel.json
+
+      - All imports use .js extensions for ESM
+  - title: "QA: Verify mock mode still works"
     parallel_group: 2
     completed: true
     description: |
-      Role: Tech Lead (read prd/techlead.md for context)
-      Use: /opsx:explore to investigate codebase, then create specs
+      Change: openspec/changes/local-dev-setup/
+      Read: specs/mock-api/spec.md
 
-      Based on PO's game mechanics proposal, design the API surface:
+      Verify the mock development mode works after BFF removal:
 
-      Current API endpoints (root /api for Vercel serverless):
-        GET  /api/auth/me           — session check
-        GET  /api/auth/login        — OAuth redirect
-        GET  /api/auth/callback     — OAuth callback
-        GET  /api/auth/logout       — clear session
-        GET  /api/puzzle/today      — daily puzzle data
-        GET  /api/puzzle/image      — base64 phone image
-        GET  /api/phones            — phone catalog
-        POST /api/guess             — submit guess
-        POST /api/result            — submit game result
-        GET  /api/profile/stats     — player stats
-        GET  /api/leaderboard/:period — leaderboard data
+      1. Run `cd phoneguessr && npm run dev:mock` — server should start
+      2. Open in browser — game should load with mock puzzle data
+      3. Submit a guess — should get feedback response
+      4. Complete a game — result should show score
 
-      Missing endpoint:
-        POST /api/profile/update    — update display name (frontend calls it)
-
-      New endpoints needed for game mechanics:
-        POST /api/hint              — request a hint (deducts score)
-        GET  /api/puzzle/yesterday  — yesterday's answer + fun facts
-        GET  /api/streak            — current streak data + milestones
-
-      Design decisions:
-      1. Schema changes for hints, streaks, phone metadata
-      2. How hints interact with scoring (penalty amount)
-      3. Streak calculation: server-side vs client-side
-      4. Caching strategy for phone catalog (it rarely changes)
-      5. Rate limiting on guess/hint endpoints
-
-      Output: OpenSpec specs for each new API capability.
-      Write to openspec/changes/<change-name>/specs/
-  - title: "TL: Design phone data schema and pipeline"
+      Note: Mock mode runs Modern.js ONLY (no Vercel, no database).
+      The BFF plugin was removed from modern.config.ts — mock handlers
+      in phoneguessr/src/ must still intercept API calls.
+      If mock mode is broken, document what fails.
+  - title: "QA: Verify frontend game flow"
     parallel_group: 2
     completed: true
-    description: |
-      Role: Tech Lead (read prd/techlead.md for context)
-      Use: /opsx:explore to review current schema
-
-      Design the expanded phone data architecture:
-
-      Current schema (phoneguessr/src/db/schema.ts):
-        phones: id, brand, model, imagePath, active, createdAt
-
-      Proposed additions:
-        phones: + releaseYear, priceTier, formFactor, region, difficulty
-        phone_facts: id, phoneId, factText, factType (for yesterday's reveal)
-        streaks: id, userId, currentStreak, bestStreak, lastPlayedDate
-
-      Decisions:
-      1. Add columns to existing phones table vs new metadata table
-      2. How to handle difficulty assignment (manual tag vs algorithm)
-      3. Seed script updates for 100+ phones
-      4. Image storage: keep in git (config/public/phones) or move to CDN/S3
-      5. Migration strategy for existing data
-
-      Output: OpenSpec design doc with ERD and migration plan.
-  - title: "BE: Implement POST /api/profile/update endpoint"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Backend Engineer (read prd/backend.md for context)
-      Use: superpowers:test-driven-development
-
-      The frontend already calls POST /api/profile/update but no backend exists.
-      Create it in BOTH api layers:
-
-      1. api/profile/update.ts (Vercel serverless)
-      2. phoneguessr/api/lambda/profile/update.ts (BFF)
-
-      Request: { displayName: string }
-      Response: { success: true }
-
-      Must: verify auth, validate displayName (1-50 chars, no XSS),
-      update users table. Mock mode returns static success.
-  - title: "BE: Implement hint system API"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Backend Engineer (read prd/backend.md for context)
-      Use: /opsx:apply against the tech lead's specs
-
-      Implement the hint system:
-
-      1. Add hint tracking to schema (hints used per puzzle per user)
-      2. POST /api/hint endpoint:
-         - Input: { puzzleId, hintType: 'brand' | 'year' | 'price_tier' }
-         - Output: { hint: string, penalty: number }
-         - Max 2 hints per game, each adds 15s penalty to score
-      3. Mock mode: return realistic hint data from MOCK_PHONES
-      4. Both API layers (root /api + BFF /api/lambda)
-  - title: "BE: Implement yesterday's puzzle reveal API"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Backend Engineer (read prd/backend.md for context)
-
-      Implement GET /api/puzzle/yesterday:
-
-      1. Return yesterday's puzzle answer with phone details
-      2. Include fun facts if phone_facts table exists
-      3. Response: { phone: { brand, model, imagePath, releaseYear },
-         facts: string[], stats: { totalPlayers, avgGuesses, winRate } }
-      4. Cache response (same for all users for 24h)
-      5. Mock mode: return data from MOCK_PHONES
-  - title: "BE: Implement streak tracking API"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Backend Engineer (read prd/backend.md for context)
-
-      Implement streak system:
-
-      1. Add streaks table or columns to users table
-      2. Update streak on result submission (POST /api/result)
-      3. GET /api/streak endpoint:
-         - Response: { currentStreak, bestStreak, lastPlayedDate,
-           milestones: { '7day': bool, '30day': bool, '100day': bool } }
-      4. Streak breaks if user misses a day
-      5. Mock mode: return mock streak data
-  - title: "BE: Expand phone catalog to 100+ phones"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Backend Engineer (read prd/backend.md for context)
-
-      Expand the phone database:
-
-      1. Update phones schema with new fields (releaseYear, priceTier,
-         formFactor, difficulty) per tech lead's design
-      2. Create migration: npx drizzle-kit generate
-      3. Update seed script (phoneguessr/src/db/seed.ts) with 100+ phones:
-         - Apple: iPhone 11-16 series (all variants)
-         - Samsung: Galaxy S21-S25, Z Fold/Flip 3-6, A series
-         - Google: Pixel 6-9 (all variants)
-         - OnePlus: 10-13
-         - Nothing: Phone 1, 2, 2a
-         - Xiaomi: 13, 14, Mix Fold
-         - Sony: Xperia 1 IV-VI, 5 IV-VI
-         - Motorola: Edge 40/50, Razr 40/50
-         - OPPO: Find X6/X7, Reno 11/12
-         - Others: ASUS ROG Phone 7/8, Honor Magic 6/7
-      4. Update MOCK_PHONES in phoneguessr/src/mock/data.ts to include
-         at least 50 phones for meaningful local testing
-      5. Source and add phone images to config/public/phones/
-         (press kit photos, consistent style)
-  - title: "BE: Add database migration for new features"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Backend Engineer (read prd/backend.md for context)
-
-      Create Drizzle migrations for all schema changes:
-
-      1. Alter phones table: add releaseYear, priceTier, formFactor, difficulty
-      2. Create phone_facts table
-      3. Create streaks table or add streak columns to users
-      4. Create hints table (userId, puzzleId, hintType, createdAt)
-      5. Run: cd phoneguessr && npx drizzle-kit generate
-      6. Test: cd phoneguessr && npx drizzle-kit push (against local DB)
-  - title: "FE: Build hint system UI"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Frontend Engineer (read prd/frontend.md for context)
-      Use: superpowers:brainstorming then implement
-
-      Add hint buttons to the game UI:
-
-      1. Add hint button row below the autocomplete input (during gameplay)
-      2. Show available hint types as pill buttons: "Brand", "Year", "Price"
-      3. Used hints show the revealed info inline, disabled state
-      4. Max 2 hints — counter showing "1/2 hints used"
-      5. Score penalty warning before using hint
-      6. Haptic feedback on hint use (web-haptics)
-      7. Add i18n keys to all 5 locale files
-      8. CSS in index.css using existing design tokens
-  - title: "FE: Build yesterday's puzzle reveal UI"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Frontend Engineer (read prd/frontend.md for context)
-
-      Add yesterday's answer section:
-
-      1. Add to the About panel or as a new section in Game panel
-      2. Show yesterday's phone: image thumbnail, brand, model
-      3. Display fun facts as a card list
-      4. Show community stats: "X players, Y% solved, avg Z guesses"
-      5. Animate in on first view
-      6. i18n keys in all 5 locales
-  - title: "FE: Build streak display and milestones UI"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Frontend Engineer (read prd/frontend.md for context)
-
-      Add streak visualization:
-
-      1. Streak counter in game header (flame icon + number)
-      2. Streak section in Profile panel with current/best
-      3. Milestone badges: 7-day, 30-day, 100-day with visual indicators
-      4. Streak break notification when returning after missing a day
-      5. Animation on streak increment
-      6. i18n keys in all 5 locales
-  - title: "FE: Enhanced share card with emoji grid"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Frontend Engineer (read prd/frontend.md for context)
-
-      Improve the share/result card:
-
-      1. Generate Wordle-style emoji grid from guess history:
-         - correct = green square
-         - right_brand = yellow square
-         - wrong_brand = red square
-      2. Include: puzzle number, guess count, time, streak
-      3. Format for clipboard copy (plain text for Twitter/Discord)
-      4. Preview in the ResultModal before copying
-      5. Add "Share" button with clipboard API + haptic
-      6. i18n: localize the share text template
-  - title: "FE: Guess feedback animations"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Frontend Engineer (read prd/frontend.md for context)
-
-      Polish guess row animations:
-
-      1. Slide-in animation for new guess rows (from right)
-      2. Color reveal: row starts neutral, then flashes to red/yellow/green
-      3. Correct guess: celebratory pulse animation
-      4. Wrong guess: subtle shake animation
-      5. Use CSS keyframes, keep it performant (transform/opacity only)
-      6. Respect prefers-reduced-motion
-  - title: "FE: First-time player onboarding"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Frontend Engineer (read prd/frontend.md for context)
-
-      Build a 3-step onboarding overlay for new players:
-
-      1. Step 1: "A phone is hidden behind blocks" (point to image area)
-      2. Step 2: "Type to guess — feedback guides you" (point to input)
-      3. Step 3: "Fewer guesses = better score!" (point to guess history)
-      4. Show only once (localStorage flag: phoneguessr_onboarded)
-      5. Skip button + Next/Done buttons
-      6. Semi-transparent backdrop with spotlight on target area
-      7. i18n keys in all 5 locales
-  - title: "FE: Stats visualization with guess distribution"
-    parallel_group: 3
-    completed: true
-    description: |
-      Role: Frontend Engineer (read prd/frontend.md for context)
-
-      Enhance the Profile panel stats:
-
-      1. Add guess distribution histogram (1-6 guesses bar chart)
-      2. Horizontal bars, green for the current game's count
-      3. Calculate from localStorage game history
-      4. Keep it minimal — CSS-only bars, no charting library
-      5. i18n keys for labels
-  - title: "QA: Test all new API endpoints"
-    parallel_group: 4
-    completed: true
     description: >
-      Role: QA Engineer (read prd/qa.md for context)
+      Change: openspec/changes/local-dev-setup/
 
-      Use: superpowers:verification-before-completion
-
-
-      Test every API endpoint in mock mode (npm run dev:mock):
+      Read: specs/local-dev-workflow/spec.md
 
 
-      1. POST /api/profile/update — valid name, empty name, XSS attempt,
-      unauthenticated
-
-      2. POST /api/hint — valid request, max hints exceeded, invalid hint type
-
-      3. GET /api/puzzle/yesterday — returns data, handles no yesterday puzzle
-
-      4. GET /api/streak — authenticated, unauthenticated, streak calculation
-
-      5. GET /api/phones — verify expanded catalog returns all phones
-
-      6. POST /api/guess — all feedback types with new phone data
-
-      7. Cross-check: frontend fetch calls match API response shapes
-
-      8. Verify all existing endpoints still work (regression)
+      With `vercel dev` running (real Neon database), verify the full frontend:
 
 
-      Document results with pass/fail per endpoint.
-  - title: "QA: Test UI features across browsers and viewports"
-    parallel_group: 4
+      1. Open http://localhost:3000 in browser
+
+      2. Check browser console for errors — should be clean
+
+      3. Daily puzzle image renders (fetched from /api/puzzle/image)
+
+      4. Phone autocomplete input populates with phone names (from /api/phones)
+
+      5. Type a phone name and select from dropdown
+
+      6. Submit guess — feedback appears in guess history
+
+      7. Game completes — result modal shows score
+
+
+      Constraints:
+
+      - The frontend fetches from /api/* which Vercel routes to serverless
+      functions
+
+      - Images are served as base64 data URLs from the puzzle endpoint
+
+      - No authentication required for basic game flow
+  - title: "Deploy: Push and verify Vercel production"
+    parallel_group: 3
     completed: true
     description: |
-      Role: QA Engineer (read prd/qa.md for context)
+      Change: openspec/changes/local-dev-setup/
+      Read: specs/deployment/spec.md
 
-      Run through the QA checklist in prd/qa.md plus new features:
+      After all verification passes:
 
-      1. Hint system: buttons appear, disable after use, penalty shown
-      2. Yesterday's reveal: displays correctly, image loads
-      3. Streak counter: increments, resets, milestones trigger
-      4. Share card: emoji grid generates correctly, clipboard works
-      5. Guess animations: slide-in, color reveal, shake on wrong
-      6. Onboarding: shows for new user, remembers dismissal
-      7. Stats histogram: bars render, correct distribution
-      8. All i18n: switch all 5 languages, verify no missing keys
-      9. Mobile: test on 375px width, touch interactions, virtual keyboard
-  - title: "QA: Verify phone data completeness"
-    parallel_group: 4
-    completed: true
-    description: |
-      Role: QA Engineer (read prd/qa.md for context)
+      1. Commit any remaining changes from verification fixes
+      2. Push to GitHub — Vercel auto-deploys from main branch
+      3. Wait for Vercel build to succeed (check deployment status)
+      4. Test production API endpoints:
+         - GET https://<domain>/api/phones — returns phone list
+         - GET https://<domain>/api/puzzle/today — returns puzzle data
+         - GET https://<domain>/api/leaderboard/daily — returns entries
+      5. Load the production URL in browser — game should be playable
 
-      Validate the expanded phone catalog:
-
-      1. Every phone in DB/mock has a corresponding image file
-      2. No broken image paths
-      3. All images render correctly in the crop reveal component
-      4. Phone metadata complete: no null releaseYear/priceTier/formFactor
-      5. Difficulty distribution: roughly equal easy/medium/hard
-      6. No duplicate entries (same brand + model)
-      7. MOCK_PHONES array matches a subset of the full catalog
-  - title: "CR: Review all API endpoint implementations"
-    parallel_group: 5
-    completed: true
-    description: |
-      Role: Code Reviewer (read prd/code-reviewer.md for context)
-      Use: superpowers:requesting-code-review
-
-      Review all backend changes:
-
-      1. TypeScript compiles: npx tsc --noEmit
-      2. Biome passes: npx biome check
-      3. IS_MOCK checked before useHonoContext() in all BFF endpoints
-      4. Both API layers (root + BFF) have matching endpoints
-      5. Input validation on all POST endpoints
-      6. No SQL injection vectors
-      7. Auth checks on protected endpoints
-      8. Error responses use appropriate HTTP status codes
-      9. Mock handlers return same shapes as production
-  - title: "CR: Review frontend components and UX"
-    parallel_group: 5
-    completed: true
-    description: |
-      Role: Code Reviewer (read prd/code-reviewer.md for context)
-      Use: superpowers:requesting-code-review
-
-      Review all frontend changes:
-
-      1. All strings use i18n (no hardcoded text)
-      2. All 5 locale files have every new key
-      3. CSS uses :root custom properties, no hardcoded colors
-      4. No inline styles
-      5. useEffect cleanup functions present (no memory leaks)
-      6. Stable refs in dependency arrays
-      7. Animations use transform/opacity only (GPU composited)
-      8. prefers-reduced-motion respected
-      9. Accessibility: keyboard nav, aria labels where needed
-      10. No console.log or debug code left in
-  - title: "CR: Review schema changes and data integrity"
-    parallel_group: 5
-    completed: true
-    description: |
-      Role: Code Reviewer (read prd/code-reviewer.md for context)
-
-      Review database and data changes:
-
-      1. Migration files are clean and reversible
-      2. New columns have sensible defaults (won't break existing data)
-      3. Foreign keys and indexes are correct
-      4. Seed data is realistic and complete
-      5. Phone image files are optimized (not oversized)
-      6. No sensitive data in seed/mock files
-      7. MOCK_PHONES stays in sync with schema changes
+      Constraints:
+      - Most changes already committed and pushed (0c5c736)
+      - Check Vercel dashboard for build errors
+      - Function count must stay at 11 or fewer (Hobby plan limit: 12)
