@@ -170,3 +170,7 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
   - Sanitized catch block to log only error message, not full error objects
   - Added SESSION_SECRET production requirement (throws if missing in production)
   - Added auth security tests (6 tests: token handling, cookie options, error suppression)
+
+- [✓] 2026-03-07 23:05 - DB: Run drizzle-kit generate and push migration
+  - drizzle-kit generate: No schema changes, nothing to migrate
+  - drizzle-kit push: No changes detected - DB already in sync with schema.ts
