@@ -1,4 +1,6 @@
-export function parseCookies(cookieHeader: string | null): Record<string, string> {
+export function parseCookies(
+  cookieHeader: string | null,
+): Record<string, string> {
   if (!cookieHeader) return {};
   const cookies: Record<string, string> = {};
   for (const pair of cookieHeader.split(';')) {

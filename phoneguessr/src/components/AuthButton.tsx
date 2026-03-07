@@ -36,9 +36,7 @@ export function AuthButton() {
 
   return (
     <>
-      {authError && (
-        <span className="auth-error">{t('auth.error')}</span>
-      )}
+      {authError && <span className="auth-error">{t('auth.error')}</span>}
       <button type="button" className="auth-btn auth-btn-login" onClick={login}>
         {t('auth.signIn')}
       </button>

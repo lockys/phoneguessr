@@ -531,10 +531,10 @@ describe('GuessHistory – guess row layout structure', () => {
     expect(names[0].textContent).toBe('Apple iPhone 15');
   });
 
-  it('empty slots render with minimum height class', () => {
+  it('renders remaining text when no guesses made', () => {
     const { container } = render(<GuessHistory guesses={[]} maxGuesses={6} />);
-    const emptyRows = container.querySelectorAll('.guess-empty');
-    expect(emptyRows).toHaveLength(6);
+    const remainingText = container.querySelector('.guess-remaining-text');
+    expect(remainingText).toBeInTheDocument();
   });
 
   it('applies distinct border color classes per feedback type', () => {
@@ -604,11 +604,10 @@ describe('Cross-browser CSS class coverage', () => {
     expect(container.querySelector('.swipe-container')).toBeInTheDocument();
   });
 
-  it('guess-empty has backdrop-filter classes for iOS blur', () => {
+  it('guess-remaining-text renders for remaining guesses display', () => {
     const { container } = render(<GuessHistory guesses={[]} maxGuesses={6} />);
-    // .guess-empty CSS includes both backdrop-filter and -webkit-backdrop-filter
-    const empty = container.querySelector('.guess-empty');
-    expect(empty).toBeInTheDocument();
+    const remaining = container.querySelector('.guess-remaining-text');
+    expect(remaining).toBeInTheDocument();
   });
 
   it('modal-backdrop has backdrop-filter class for cross-browser blur', () => {
@@ -665,7 +664,7 @@ describe('Cross-browser CSS class coverage', () => {
     expect(
       container.querySelector('.onboarding-spotlight'),
     ).toBeInTheDocument();
-    expect(container.querySelector('.onboarding-tooltip')).toBeInTheDocument();
+    expect(container.querySelector('.onboarding-card')).toBeInTheDocument();
 
     document.body.innerHTML = '';
   });
@@ -679,7 +678,7 @@ describe('Viewport-specific behavior', () => {
     setViewportHeight(768);
   });
 
-  it('onboarding tooltip positioning adapts to small viewport height', () => {
+  it('onboarding card renders at small viewport height', () => {
     setViewportHeight(500);
     localStorage.clear();
 
@@ -699,16 +698,13 @@ describe('Viewport-specific behavior', () => {
     document.body.appendChild(cropWrapper);
 
     const { container } = render(<Onboarding onDone={vi.fn()} />);
-    const tooltip = container.querySelector(
-      '.onboarding-tooltip',
-    ) as HTMLElement;
-    // rect.top (300) > 500/2 (250) → tooltip above with translateY(-100%)
-    expect(tooltip.style.transform).toContain('translateY(-100%)');
+    const card = container.querySelector('.onboarding-card') as HTMLElement;
+    expect(card).toBeInTheDocument();
 
     document.body.innerHTML = '';
   });
 
-  it('onboarding tooltip goes below when target is in upper viewport', () => {
+  it('onboarding card renders at large viewport height', () => {
     setViewportHeight(800);
     localStorage.clear();
 
@@ -728,11 +724,8 @@ describe('Viewport-specific behavior', () => {
     document.body.appendChild(cropWrapper);
 
     const { container } = render(<Onboarding onDone={vi.fn()} />);
-    const tooltip = container.querySelector(
-      '.onboarding-tooltip',
-    ) as HTMLElement;
-    // rect.top (100) < 800/2 (400) → tooltip below, no translateY(-100%)
-    expect(tooltip.style.transform).not.toContain('translateY(-100%)');
+    const card = container.querySelector('.onboarding-card') as HTMLElement;
+    expect(card).toBeInTheDocument();
 
     document.body.innerHTML = '';
   });

@@ -6,7 +6,11 @@ interface SwipeHintsProps {
   trigger: number; // changes on each panel switch to re-trigger fade
 }
 
-export function SwipeHints({ leftLabel, rightLabel, trigger }: SwipeHintsProps) {
+export function SwipeHints({
+  leftLabel,
+  rightLabel,
+  trigger,
+}: SwipeHintsProps) {
   const [visible, setVisible] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -23,12 +27,16 @@ export function SwipeHints({ leftLabel, rightLabel, trigger }: SwipeHintsProps) 
   return (
     <>
       {leftLabel && (
-        <div className={`swipe-hint swipe-hint-left ${visible ? 'swipe-hint-visible' : ''}`}>
+        <div
+          className={`swipe-hint swipe-hint-left ${visible ? 'swipe-hint-visible' : ''}`}
+        >
           &larr; {leftLabel}
         </div>
       )}
       {rightLabel && (
-        <div className={`swipe-hint swipe-hint-right ${visible ? 'swipe-hint-visible' : ''}`}>
+        <div
+          className={`swipe-hint swipe-hint-right ${visible ? 'swipe-hint-visible' : ''}`}
+        >
           {rightLabel} &rarr;
         </div>
       )}

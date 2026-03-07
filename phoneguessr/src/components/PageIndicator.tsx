@@ -25,7 +25,9 @@ export function PageIndicator({ name, show }: PageIndicatorProps) {
   if (!show) return null;
 
   return (
-    <div className={`page-indicator ${visible ? 'page-indicator-visible' : ''}`}>
+    <div
+      className={`page-indicator ${visible ? 'page-indicator-visible' : ''}`}
+    >
       {displayName}
     </div>
   );

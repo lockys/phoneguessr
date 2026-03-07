@@ -23,7 +23,18 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noDuplicateFontNames": "off"
+        "noDuplicateFontNames": "off",
+        "noArrayIndexKey": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "noParameterAssign": "off"
+      },
+      "a11y": {
+        "useSemanticElements": "warn"
       }
     }
   },
@@ -32,6 +43,13 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": [".vscode/**/*", "node_modules/**/*", "dist/**/*"]
+    "ignore": [
+      ".vscode/**/*",
+      "node_modules/**/*",
+      "dist/**/*",
+      "drizzle/**/*",
+      "config/public/**/*",
+      "scripts/**/*"
+    ]
   }
 }

@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import { Outlet } from '@modern-js/runtime/router';
+import { useEffect } from 'react';
 import { AuthProvider } from '../lib/auth-context';
 import '../i18n';
 

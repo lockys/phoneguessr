@@ -1,9 +1,20 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageIndicator } from './PageIndicator';
 import { SwipeHints } from './SwipeHints';
 
-const PANEL_KEYS = ['nav.profile', 'nav.game', 'nav.leaderboard', 'nav.about'] as const;
+const PANEL_KEYS = [
+  'nav.profile',
+  'nav.game',
+  'nav.leaderboard',
+  'nav.about',
+] as const;
 const DEFAULT_INDEX = 1; // Game panel
 
 interface SwipeContainerProps {
@@ -100,8 +111,16 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
         show={!isInitialRef.current}
       />
       <SwipeHints
-        leftLabel={PANEL_KEYS[activeIndex - 1] ? t(PANEL_KEYS[activeIndex - 1]) : undefined}
-        rightLabel={PANEL_KEYS[activeIndex + 1] ? t(PANEL_KEYS[activeIndex + 1]) : undefined}
+        leftLabel={
+          PANEL_KEYS[activeIndex - 1]
+            ? t(PANEL_KEYS[activeIndex - 1])
+            : undefined
+        }
+        rightLabel={
+          PANEL_KEYS[activeIndex + 1]
+            ? t(PANEL_KEYS[activeIndex + 1])
+            : undefined
+        }
         trigger={swipeCount}
       />
     </>

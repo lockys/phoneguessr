@@ -186,7 +186,9 @@ export function getMockHint(
       );
       break;
     case 'price_tier':
-      hint = String((phone as unknown as Record<string, unknown>).priceTier ?? 'Unknown');
+      hint = String(
+        (phone as unknown as Record<string, unknown>).priceTier ?? 'Unknown',
+      );
       break;
   }
 

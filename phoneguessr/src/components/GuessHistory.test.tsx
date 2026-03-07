@@ -26,6 +26,8 @@ function makeGuess(feedback: Feedback, name = 'Samsung Galaxy S24') {
 describe('GuessHistory', () => {
   beforeEach(() => {
     vi.useFakeTimers();
+    // jsdom doesn't implement Element.scrollTo or requestAnimationFrame properly
+    Element.prototype.scrollTo = vi.fn();
   });
 
   it('renders guess rows with correct feedback classes', () => {
@@ -43,14 +45,13 @@ describe('GuessHistory', () => {
     expect(rows[2]).toHaveClass('guess-correct');
   });
 
-  it('renders empty slots for remaining guesses', () => {
+  it('renders remaining guesses text', () => {
     render(
       <GuessHistory guesses={[makeGuess('wrong_brand')]} maxGuesses={6} />,
     );
 
-    const emptyRows = document.querySelectorAll('.guess-empty');
-    expect(emptyRows).toHaveLength(5);
     expect(screen.getByText('5 guesses left')).toBeInTheDocument();
+    expect(document.querySelector('.guess-remaining-text')).toBeInTheDocument();
   });
 
   it('does not animate on initial bulk load', () => {

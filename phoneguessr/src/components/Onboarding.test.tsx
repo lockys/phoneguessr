@@ -121,7 +121,9 @@ describe('Onboarding', () => {
   it('renders bottom card layout', () => {
     const { container } = render(<Onboarding onDone={onDone} />);
     expect(container.querySelector('.onboarding-card')).toBeInTheDocument();
-    expect(container.querySelector('.onboarding-step-indicator')).toBeInTheDocument();
+    expect(
+      container.querySelector('.onboarding-step-indicator'),
+    ).toBeInTheDocument();
   });
 });
 

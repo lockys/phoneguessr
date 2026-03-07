@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BlockGrid } from './BlockGrid';
 
@@ -17,11 +17,11 @@ interface CropRevealProps {
  */
 const ZOOM_LEVELS = [
   4.17, // level 0: ~24% visible area
-  2.5,  // level 1: ~40% visible
+  2.5, // level 1: ~40% visible
   1.79, // level 2: ~56% visible
   1.39, // level 3: ~72% visible
   1.14, // level 4: ~88% visible
-  1.0,  // level 5: full
+  1.0, // level 5: full
 ];
 
 function easeOutCubic(t: number) {

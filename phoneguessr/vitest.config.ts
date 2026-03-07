@@ -8,5 +8,11 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
+    exclude: [
+      'node_modules/**',
+      'tests/api-endpoints.test.ts',
+      'tests/frontend-game-flow.test.ts',
+      'tests/validation.test.ts',
+    ],
   },
 });

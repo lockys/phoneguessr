@@ -113,26 +113,32 @@ describe('Frontend Game Flow', () => {
     expect(['correct', 'right_brand', 'wrong_brand']).toContain(data.feedback);
   });
 
-  it('Step 5: can submit multiple guesses sequentially', { timeout: 15000 }, async () => {
-    // Simulate the game loop — submit up to 3 guesses with different phones
-    const usedPhones = phones.slice(1, 4);
+  it(
+    'Step 5: can submit multiple guesses sequentially',
+    { timeout: 15000 },
+    async () => {
+      // Simulate the game loop — submit up to 3 guesses with different phones
+      const usedPhones = phones.slice(1, 4);
 
-    for (let i = 0; i < usedPhones.length; i++) {
-      const res = await api('/api/guess', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          puzzleId: puzzle.puzzleId,
-          phoneId: usedPhones[i].id,
-          guessNumber: i + 2, // starts at 2 since Step 4 used guessNumber 1
-        }),
-      });
-      expect(res.status).toBe(200);
+      for (let i = 0; i < usedPhones.length; i++) {
+        const res = await api('/api/guess', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            puzzleId: puzzle.puzzleId,
+            phoneId: usedPhones[i].id,
+            guessNumber: i + 2, // starts at 2 since Step 4 used guessNumber 1
+          }),
+        });
+        expect(res.status).toBe(200);
 
-      const data = await res.json();
-      expect(['correct', 'right_brand', 'wrong_brand']).toContain(data.feedback);
-    }
-  });
+        const data = await res.json();
+        expect(['correct', 'right_brand', 'wrong_brand']).toContain(
+          data.feedback,
+        );
+      }
+    },
+  );
 
   it('Step 6: leaderboard loads for result modal (GET /api/leaderboard/daily)', async () => {
     const res = await api('/api/leaderboard/daily');

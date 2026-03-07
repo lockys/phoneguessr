@@ -23,8 +23,40 @@ const mockData = {
   },
 };
 
+// Mock IntersectionObserver (not available in jsdom)
+class MockIntersectionObserver {
+  private callback: IntersectionObserverCallback;
+  constructor(callback: IntersectionObserverCallback) {
+    this.callback = callback;
+  }
+  observe(target: Element) {
+    // Fire callback asynchronously to avoid issues during React commit phase
+    Promise.resolve().then(() => {
+      this.callback(
+        [{ isIntersecting: true, target } as IntersectionObserverEntry],
+        this as unknown as IntersectionObserver,
+      );
+    });
+  }
+  unobserve() {}
+  disconnect() {}
+  get root() {
+    return null;
+  }
+  get rootMargin() {
+    return '';
+  }
+  get thresholds() {
+    return [];
+  }
+  takeRecords() {
+    return [];
+  }
+}
+
 beforeEach(() => {
   vi.restoreAllMocks();
+  vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
 });
 
 describe('YesterdayReveal', () => {
