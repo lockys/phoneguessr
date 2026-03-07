@@ -7,6 +7,7 @@
 
   "auth.signIn": "使用 Google 登录",
   "auth.signOut": "退出登录",
+  "auth.error": "登录失败",
 
   "result.win": "答对了！",
   "result.loss": "明天再接再厉！",

@@ -7,6 +7,7 @@
 
   "auth.signIn": "Sign in with Google",
   "auth.signOut": "Sign out",
+  "auth.error": "Login failed",
 
   "result.win": "You got it!",
   "result.loss": "Better luck tomorrow!",

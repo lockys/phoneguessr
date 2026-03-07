@@ -45,12 +45,37 @@ export async function GET(request: Request) {
       }),
     });
 
+    if (!tokenRes.ok) {
+      const err = await tokenRes.text();
+      console.error('Google token exchange failed:', tokenRes.status, err);
+      return new Response(null, {
+        status: 302,
+        headers: { Location: '/?error=token_exchange' },
+      });
+    }
+
     const tokens: GoogleTokenResponse = await tokenRes.json();
+
+    if (!tokens.access_token) {
+      console.error('No access_token in Google response:', JSON.stringify(tokens));
+      return new Response(null, {
+        status: 302,
+        headers: { Location: '/?error=no_token' },
+      });
+    }
 
     const userRes = await fetch(
       'https://www.googleapis.com/oauth2/v3/userinfo',
       { headers: { Authorization: `Bearer ${tokens.access_token}` } },
     );
+
+    if (!userRes.ok) {
+      console.error('Google userinfo failed:', userRes.status);
+      return new Response(null, {
+        status: 302,
+        headers: { Location: '/?error=userinfo' },
+      });
+    }
 
     const googleUser: GoogleUserInfo = await userRes.json();
 
@@ -78,10 +103,11 @@ export async function GET(request: Request) {
       avatarUrl: user.avatarUrl ?? undefined,
     });
 
+    const isHttps = url.protocol === 'https:';
     const cookieOpts = getSessionCookieOptions();
     const setCookieHeader = serializeCookie(cookieOpts.name, token, {
       httpOnly: cookieOpts.httpOnly,
-      secure: cookieOpts.secure,
+      secure: isHttps,
       sameSite: cookieOpts.sameSite,
       path: cookieOpts.path,
       maxAge: cookieOpts.maxAge,
@@ -94,7 +120,8 @@ export async function GET(request: Request) {
         'Set-Cookie': setCookieHeader,
       },
     });
-  } catch {
+  } catch (err) {
+    console.error('Auth callback error:', err);
     return new Response(null, {
       status: 302,
       headers: { Location: '/?error=auth_failed' },

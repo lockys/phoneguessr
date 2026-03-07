@@ -13,6 +13,7 @@ interface GuessHistoryProps {
 
 export function GuessHistory({ guesses, maxGuesses }: GuessHistoryProps) {
   const { t } = useTranslation();
+  const containerRef = useRef<HTMLDivElement>(null);
   const prevCountRef = useRef(guesses.length);
   const [animIndex, setAnimIndex] = useState(-1);
   const [animClasses, setAnimClasses] = useState('');
@@ -26,6 +27,14 @@ export function GuessHistory({ guesses, maxGuesses }: GuessHistoryProps) {
 
     const idx = guesses.length - 1;
     const feedback = guesses[idx].feedback;
+
+    // Auto-scroll to show latest guess
+    requestAnimationFrame(() => {
+      containerRef.current?.scrollTo({
+        top: containerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    });
 
     // Phase 1: slide-in with neutral border
     setAnimIndex(idx);
@@ -67,7 +76,7 @@ export function GuessHistory({ guesses, maxGuesses }: GuessHistoryProps) {
   };
 
   return (
-    <div className="guess-history">
+    <div className="guess-history" ref={containerRef}>
       {guesses.map((guess, i) => {
         const config =
           FEEDBACK_CONFIG[guess.feedback] ?? FEEDBACK_CONFIG.wrong_brand;
@@ -83,21 +92,9 @@ export function GuessHistory({ guesses, maxGuesses }: GuessHistoryProps) {
         );
       })}
       {maxGuesses - guesses.length > 0 && (
-        <>
-          <div
-            key="empty-0"
-            className="guess-row guess-empty guess-empty-label"
-          >
-            <span className="guess-remaining">
-              {t('guess.remaining', { count: maxGuesses - guesses.length })}
-            </span>
-          </div>
-          {Array.from({ length: maxGuesses - guesses.length - 1 }).map(
-            (_, i) => (
-              <div key={`empty-${i + 1}`} className="guess-row guess-empty" />
-            ),
-          )}
-        </>
+        <div className="guess-remaining-text">
+          {t('guess.remaining', { count: maxGuesses - guesses.length })}
+        </div>
       )}
     </div>
   );

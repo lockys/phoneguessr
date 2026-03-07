@@ -16,6 +16,7 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
   const [activeIndex, setActiveIndex] = useState(DEFAULT_INDEX);
   const [swipeCount, setSwipeCount] = useState(0);
   const isInitialRef = useRef(true);
+  const touchStartRef = useRef<{ x: number; index: number } | null>(null);
 
   // Scroll to default panel on mount
   useEffect(() => {
@@ -46,6 +47,44 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  // Require 1/3 page swipe before switching panels
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartRef.current = {
+        x: e.touches[0].clientX,
+        index: Math.round(el.scrollLeft / el.clientWidth),
+      };
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      const start = touchStartRef.current;
+      if (!start) return;
+
+      const dx = e.changedTouches[0].clientX - start.x;
+      const threshold = el.clientWidth / 3;
+
+      // If swipe distance is less than 1/3 of page width, snap back
+      if (Math.abs(dx) < threshold) {
+        el.scrollTo({
+          left: start.index * el.clientWidth,
+          behavior: 'smooth',
+        });
+      }
+
+      touchStartRef.current = null;
+    };
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchend', onTouchEnd);
+    };
+  }, []);
 
   return (
     <>

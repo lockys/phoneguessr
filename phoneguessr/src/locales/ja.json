@@ -7,6 +7,7 @@
 
   "auth.signIn": "Googleでログイン",
   "auth.signOut": "ログアウト",
+  "auth.error": "ログインに失敗しました",
 
   "result.win": "正解！",
   "result.loss": "また明日挑戦しよう！",
