@@ -5,6 +5,7 @@
   "rewrites": [
     { "source": "/api/puzzle/:action", "destination": "/api/puzzle?action=:action" },
     { "source": "/api/leaderboard/:period", "destination": "/api/leaderboard?period=:period" },
+    { "source": "/api/auth/passkey/:action", "destination": "/api/auth/passkey?action=:action" },
     { "source": "/api/profile/:path*", "destination": "/api/profile" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
