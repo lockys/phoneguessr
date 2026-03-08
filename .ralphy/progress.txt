@@ -235,3 +235,7 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
 - [✓] 2026-03-08 05:31 - WebAuthn feature detection prevents UI on unsupported browsers
 - [✓] 2026-03-08 05:39 - Registration requires prior Google OAuth authentication
 - [✓] 2026-03-08 12:38 - Image processing produces consistent dimensions and quality
+- [✓] 2026-03-08 12:47 - No duplicate brand+model entries in phone-data.json
+- [✓] 2026-03-08 12:54 - Existing 20 phones unmodified after merge
+- [✓] 2026-03-08 13:01 - Scraping respects rate limits and User-Agent
+- [✓] 2026-03-08 21:05 - Mock-db factory accurately simulates drizzle query chains
