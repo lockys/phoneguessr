@@ -8,37 +8,68 @@
 - Resolve technical disagreements and unblock the team
 
 ## Architecture Overview
-- **Framework:** Modern.js with BFF plugin for unified frontend + API
+- **Framework:** Modern.js (frontend) + Vercel serverless functions (API)
 - **Frontend:** React 19, vanilla CSS, i18next
-- **Backend:** Hono-based serverless functions deployed as Vercel Lambda
-- **Database:** PostgreSQL via Drizzle ORM
-- **Auth:** Google OAuth with JWT sessions (jose)
-- **Dev mode:** Mock system (`IS_MOCK`) for local development without database
+- **Backend:** Web API Request/Response handlers in `api/` at repo root
+- **Database:** Neon PostgreSQL via Drizzle ORM (`drizzle-orm/neon-http`)
+- **Auth:** Google OAuth + WebAuthn passkeys with JWT sessions (jose)
+- **Image processing:** sharp for server-side crop generation
+- **Dev mode:** Mock system for local development without database
 
 ## Key Decisions
 - Single CSS file (`index.css`) over CSS modules to keep the project simple
-- Mock-first API pattern: check `IS_MOCK` before any Hono context access
-- LocalStorage for anonymous game state, server sync when authenticated
+- API endpoints use flat files + Vercel rewrites (not dynamic routing)
+- LocalStorage for anonymous game state, database for authenticated users
 - Swipeable panel layout (Profile | Game | Leaderboard | About)
-- Vercel Hobby plan constrains serverless function count - consolidate where possible
+- Vercel Hobby plan constrains serverless function count — consolidate where possible
+- Progressive server-side crops for anti-cheat (not client-side encryption)
+- Passkeys as convenience login alongside Google OAuth (not replacement)
 
 ## Principles
-- Simplicity over abstraction - this is a small game, not an enterprise app
+- Simplicity over abstraction — this is a small game, not an enterprise app
 - Ship working features over perfect architecture
 - Every API endpoint must work in both mock and production mode
-- TypeScript strict mode - no `any` escape hatches
+- TypeScript strict mode — no `any` escape hatches
 - Biome for linting/formatting, not ESLint/Prettier
 
 ## Git & Deployment Discipline
-- **Commit per feature or fix** — consolidate related changes into one focused commit. Don't leave uncommitted work across tasks.
-- **Push after each commit** — every commit goes to GitHub immediately so Vercel deploys and validates it. No batching multiple features into one push.
-- **Commit message format** — short imperative subject line, body explains the "why". Include `Co-Authored-By` when AI-assisted.
-- **No big commits** — if a feature touches 10+ files, consider splitting into logical sub-commits (e.g., schema change, API endpoint, frontend UI).
-- **Verify before pushing** — run `npx tsc --noEmit` and `npx biome check` before every push. Don't push broken builds.
-- **Never amend published commits** — create new commits to fix issues.
+- **Commit per feature or fix** — consolidate related changes into one focused commit
+- **Push after each commit** — every commit goes to GitHub for Vercel to deploy
+- **Commit message format** — short imperative subject, body explains "why"
+- **No big commits** — split 10+ file changes into logical sub-commits
+- **Verify before pushing** — run `npm run build` and `npx biome check`
+- **Never amend published commits** — create new commits to fix issues
 
 ## When to Escalate
 - Adding a new external dependency
 - Changing the database schema
 - Modifying the auth flow
 - Restructuring the file/folder layout
+
+---
+
+## Current Architecture Oversight
+
+### Change: image-anti-cheat
+- Verify sharp works in Vercel serverless environment (cold start time, memory)
+- Review JWT token approach for anonymous level validation
+- Ensure crop dimensions exactly match existing CropReveal zoom levels
+- Validate that the full image is truly never transmitted before game end
+
+### Change: passkey-auth
+- Review SimpleWebAuthn integration for serverless compatibility
+- Validate in-memory challenge store works across Vercel function invocations (60s TTL acceptable)
+- Ensure passkey sessions are identical to Google OAuth sessions
+- Review vercel.json rewrite rules for /api/auth/passkey/* routes
+- Verify function count stays within Hobby plan limit after adding 4 new endpoints
+
+### Change: phone-image-collection
+- Review scraping approach for legal/ToS compliance
+- Validate image storage won't exceed Vercel deployment size limits
+- Ensure seed script handles 400-650 phone records performantly
+- Review difficulty distribution algorithm
+
+### Change: test-coverage
+- Validate mock-db factory accurately simulates drizzle query chains
+- Review API test approach (direct handler calls vs HTTP)
+- Ensure coverage thresholds are realistic (80% critical paths, 60% overall)

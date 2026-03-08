@@ -183,3 +183,55 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
   - Extracted drawImageOnCanvas (no internal clearRect) to enable alpha compositing
   - Added 7 tests in CropReveal.test.tsx covering: first-load, crossfade alpha, completion callback, globalAlpha reset, zoom suppression, canvas resize optimization
   - All 276 tests pass, biome lint clean
+- [✓] 2026-03-07 11:43 - list
+- [✓] 2026-03-07 12:15 - Endpoint returns correct status codes (200, 400, 401, 403, 404, 500)
+- [✓] 2026-03-07 12:52 - No sensitive data (tokens, secrets) leaked in responses
+- [✓] 2026-03-07 12:59 - Database queries are parameterized (no SQL injection)
+- [✓] 2026-03-07 13:08 - Mock mode handler returns same shape as production
+- [✓] 2026-03-07 13:19 - Vercel rewrites configured for new routes
+- [✓] 2026-03-07 13:23 - Add `sharp` as production dependency
+- [✓] 2026-03-07 13:28 - Create `phoneguessr/src/lib/image-crop.ts` — `generateCrop(imagePath, level)` returns cropped base64 using centered crop from ZOOM_LEVELS `[4.17, 2.5, 1.79, 1.39, 1.14, 1.0]`
+- [✓] 2026-03-07 13:33 - Define shared ZOOM_LEVELS constants file importable by server and client
+- [✓] 2026-03-07 13:38 - Create `phoneguessr/src/lib/image-token.ts` — `signImageToken`/`verifyImageToken` using jose with `IMAGE_TOKEN_SECRET` env var, expires at midnight UTC
+- [✓] 2026-03-07 13:44 - Modify `image` case in `api/puzzle.ts` to accept `level` query parameter (default: 0)
+- [✓] 2026-03-07 13:51 - Authenticated users: query guesses table to validate level ≤ guessCount; check results table to allow any level after game end
+- [✓] 2026-03-07 14:01 - Unauthenticated users: validate JWT token param; first request (no token) gets level 0
+- [✓] 2026-03-07 14:15 - Call `generateCrop(imagePath, level)` to produce cropped base64
+- [✓] 2026-03-07 14:23 - Include signed token in response for unauthenticated users
+- [✓] 2026-03-07 14:29 - Update mock API to support `level` parameter (skip validation in mock mode)
+- [✓] 2026-03-07 14:31 - Install `@simplewebauthn/server` (v11+) in project root
+- [✓] 2026-03-07 14:37 - Add env vars: `WEBAUTHN_RP_ID`, `WEBAUTHN_RP_NAME`, `WEBAUTHN_ORIGIN` with dev defaults
+- [✓] 2026-03-07 14:42 - Create `phoneguessr/src/lib/webauthn.ts` — RP config helpers reading from env vars
+- [✓] 2026-03-07 15:05 - Add `passkey_credentials` table to schema.ts (id, userId FK, credentialId text unique, publicKey text, counter integer, transports text, createdAt)
+- [✓] 2026-03-07 15:08 - Run drizzle-kit generate and push migration
+- [✓] 2026-03-07 15:10 - Create `phoneguessr/src/lib/challenge-store.ts` — in-memory Map with 60s TTL
+- [✓] 2026-03-07 15:20 - Create `api/auth/passkey/register-options.ts` — GET, requires session, generates registration options, stores challenge
+- [✓] 2026-03-07 15:29 - Create `api/auth/passkey/register.ts` — POST, requires session, verifies registration, upserts credential
+- [✓] 2026-03-07 15:42 - Create `api/auth/passkey/login-options.ts` — POST, no auth, accepts optional email, generates auth options
+- [✓] 2026-03-07 15:55 - Create `api/auth/passkey/login.ts` — POST, no auth, verifies assertion, updates counter, creates session via `createSessionToken()`
+- [✓] 2026-03-07 15:57 - Add Vercel rewrites in vercel.json for `/api/auth/passkey/*` routes
+- [✓] 2026-03-07 16:03 - Add mock routes for all 4 passkey endpoints in mock/middleware.ts
+- [✓] 2026-03-07 16:04 - Install `cheerio` and `sharp` as dev dependencies
+- [✓] 2026-03-08 01:26 - Create `phoneguessr/scripts/collect-images.ts` with CLI structure
+- [✓] 2026-03-08 01:41 - Define brand config array mapping 130+ brands to GSMArena URL slugs
+- [✓] 2026-03-08 01:47 - Implement HTTP fetch wrapper with 1-2s delay, User-Agent, retry logic
+- [✓] 2026-03-08 01:55 - Implement brand listing page parser using cheerio (with pagination)
+- [✓] 2026-03-08 02:05 - Implement phone detail page parser (image URL, release date, form factor)
+- [✓] 2026-03-08 02:15 - Implement image download to staging directory with resumability
+- [✓] 2026-03-08 02:23 - Implement sharp image processing: max 800px width, JPEG, <200KB, skip <200x200
+- [✓] 2026-03-08 02:28 - File naming: lowercase kebab-case (+ → -plus, strip parens, collapse hyphens)
+- [✓] 2026-03-08 02:45 - Per-brand model selection: top 2-5 by popularity, brand tier config
+- [✓] 2026-03-08 02:56 - Extract metadata: releaseYear, priceTier, formFactor, difficulty
+- [✓] 2026-03-08 03:03 - Generate phone-data.json entries, merge with existing 20 phones
+- [✓] 2026-03-08 03:05 - Add `collect-images` npm script, `.staging/` to .gitignore
+- [✓] 2026-03-08 04:19 - sharp crop dimensions exactly match ZOOM_LEVELS array
+- [✓] 2026-03-08 04:36 - Level validation cannot be bypassed (auth + token paths)
+- [✓] 2026-03-08 04:44 - Full image never transmitted before game end
+- [✓] 2026-03-08 04:59 - CropReveal crossfade transition is smooth (no flicker)
+- [✓] 2026-03-08 05:03 - JWT token expiry aligned with puzzle day boundary
+- [✓] 2026-03-08 05:09 - Challenge store TTL prevents replay attacks
+- [✓] 2026-03-08 05:18 - Counter increment prevents credential cloning
+- [✓] 2026-03-08 05:26 - Passkey sessions identical to OAuth sessions
+- [✓] 2026-03-08 05:31 - WebAuthn feature detection prevents UI on unsupported browsers
+- [✓] 2026-03-08 05:39 - Registration requires prior Google OAuth authentication
+- [✓] 2026-03-08 12:38 - Image processing produces consistent dimensions and quality

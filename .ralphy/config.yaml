@@ -28,12 +28,20 @@ rules:
   - "Use CSS classes in phoneguessr/src/routes/index.css - no CSS modules or styled-components"
   - "Use Biome for linting, not ESLint"
 
+  # Merge conflict handling
+  - "When merging branches, .ralphy/progress.txt conflicts must use union strategy — keep ALL lines from both current and incoming (never discard either side)"
+  - "For .ralphy/progress.txt merge conflicts: accept both current and incoming changes (git checkout --merge then keep all content)"
+
   # OpenSpec integration (Model C — scoped Ralphy runs)
   - "Before implementing, read openspec/changes/*/tasks.md for the task list"
   - "Read proposal.md, design.md, and specs/*.md in the same change directory for context"
   - "Only implement tasks marked - [ ] in tasks.md"
   - "Do not create new files outside the scope defined in the change's design.md"
   - "Read openspec/specs/ for current system requirements before generating code"
+
+merge:
+  conflict_resolution:
+    ".ralphy/progress.txt": "union"  # Accept both incoming and current changes (append all entries)
 
 boundaries:
   never_touch:

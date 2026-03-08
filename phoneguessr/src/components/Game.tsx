@@ -62,16 +62,49 @@ export function Game() {
       const imgData = await imgRes.json();
       setImageData(imgData.imageData);
 
-      const saved = localStorage.getItem(
-        `phoneguessr_${puzzleData.puzzleDate}`,
-      );
-      if (saved) {
-        const state = JSON.parse(saved);
-        setGuesses(state.guesses);
-        elapsedRef.current = state.elapsed;
-        setGameState(state.won ? 'won' : 'lost');
-        setShowModal(true);
-      } else {
+      let restored = false;
+
+      // Authenticated users: load state from database
+      if (user && !puzzleData._mockAnswerId) {
+        try {
+          const stateRes = await fetch('/api/puzzle/state');
+          if (stateRes.ok) {
+            const state = await stateRes.json();
+            if (state && state.guesses?.length > 0) {
+              setGuesses(state.guesses);
+              if (state.elapsed != null) elapsedRef.current = state.elapsed;
+              if (state.won != null) {
+                setGameState(state.won ? 'won' : 'lost');
+                setShowModal(true);
+              } else {
+                // Mid-game: guesses exist but no result yet
+                setGameState('playing');
+                setTimerRunning(true);
+              }
+              restored = true;
+            }
+          }
+        } catch {
+          // Fall through to localStorage
+        }
+      }
+
+      // Anonymous users (or DB fetch failed): check localStorage
+      if (!restored) {
+        const saved = localStorage.getItem(
+          `phoneguessr_${puzzleData.puzzleDate}`,
+        );
+        if (saved) {
+          const state = JSON.parse(saved);
+          setGuesses(state.guesses);
+          elapsedRef.current = state.elapsed;
+          setGameState(state.won ? 'won' : 'lost');
+          setShowModal(true);
+          restored = true;
+        }
+      }
+
+      if (!restored) {
         setGameState('ready');
         if (!isOnboarded()) {
           setShowOnboarding(true);
@@ -148,12 +181,8 @@ export function Game() {
 
     const elapsed = elapsedRef.current;
 
-    localStorage.setItem(
-      `phoneguessr_${puzzle.puzzleDate}`,
-      JSON.stringify({ guesses: finalGuesses, elapsed, won }),
-    );
-
     if (user && !puzzle._mockAnswerId) {
+      // Authenticated: save to database only
       await fetch('/api/result', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -164,6 +193,12 @@ export function Game() {
           elapsedSeconds: elapsed,
         }),
       });
+    } else {
+      // Anonymous or mock mode: save to localStorage
+      localStorage.setItem(
+        `phoneguessr_${puzzle.puzzleDate}`,
+        JSON.stringify({ guesses: finalGuesses, elapsed, won }),
+      );
     }
   };
 
