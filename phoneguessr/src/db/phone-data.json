@@ -2,101 +2,301 @@
   {
     "brand": "Apple",
     "model": "iPhone 16 Pro Max",
-    "imagePath": "/public/phones/apple-iphone-16-pro-max.jpg"
+    "imagePath": "/public/phones/apple-iphone-16-pro-max.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First iPhone with A18 Pro chip featuring hardware ray tracing"
+      }
+    ]
   },
   {
     "brand": "Apple",
     "model": "iPhone 16 Pro",
-    "imagePath": "/public/phones/apple-iphone-16-pro.jpg"
+    "imagePath": "/public/phones/apple-iphone-16-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Introduces Camera Control button and 5x telephoto with A18 Pro chip"
+      }
+    ]
   },
   {
     "brand": "Apple",
     "model": "iPhone 16",
-    "imagePath": "/public/phones/apple-iphone-16.jpg"
+    "imagePath": "/public/phones/apple-iphone-16.jpg",
+    "releaseYear": 2024,
+    "priceTier": "mid",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First standard iPhone with Camera Control button and Action button"
+      }
+    ]
   },
   {
     "brand": "Apple",
     "model": "iPhone 15 Pro Max",
-    "imagePath": "/public/phones/apple-iphone-15-pro-max.jpg"
+    "imagePath": "/public/phones/apple-iphone-15-pro-max.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First iPhone with a titanium frame and 5x periscope telephoto camera"
+      }
+    ]
   },
   {
     "brand": "Apple",
     "model": "iPhone 15 Pro",
-    "imagePath": "/public/phones/apple-iphone-15-pro.jpg"
+    "imagePath": "/public/phones/apple-iphone-15-pro.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First iPhone with USB-C at USB 3 speeds and a titanium chassis"
+      }
+    ]
   },
   {
     "brand": "Apple",
     "model": "iPhone 15",
-    "imagePath": "/public/phones/apple-iphone-15.jpg"
+    "imagePath": "/public/phones/apple-iphone-15.jpg",
+    "releaseYear": 2023,
+    "priceTier": "mid",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First standard iPhone to replace Lightning with USB-C"
+      }
+    ]
   },
   {
     "brand": "Apple",
     "model": "iPhone 14 Pro",
-    "imagePath": "/public/phones/apple-iphone-14-pro.jpg"
+    "imagePath": "/public/phones/apple-iphone-14-pro.jpg",
+    "releaseYear": 2022,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First iPhone with Dynamic Island, replacing the traditional notch"
+      }
+    ]
   },
   {
     "brand": "Samsung",
     "model": "Galaxy S25 Ultra",
-    "imagePath": "/public/phones/samsung-galaxy-s25-ultra.jpg"
+    "imagePath": "/public/phones/samsung-galaxy-s25-ultra.jpg",
+    "releaseYear": 2025,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Powered by Snapdragon 8 Elite with integrated S Pen and Galaxy AI"
+      }
+    ]
   },
   {
     "brand": "Samsung",
     "model": "Galaxy S24 Ultra",
-    "imagePath": "/public/phones/samsung-galaxy-s24-ultra.jpg"
+    "imagePath": "/public/phones/samsung-galaxy-s24-ultra.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First Galaxy Ultra with flat display and titanium frame with S Pen"
+      }
+    ]
   },
   {
     "brand": "Samsung",
     "model": "Galaxy S24",
-    "imagePath": "/public/phones/samsung-galaxy-s24.jpg"
+    "imagePath": "/public/phones/samsung-galaxy-s24.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Introduced Galaxy AI features including Circle to Search and Live Translate"
+      }
+    ]
   },
   {
     "brand": "Samsung",
     "model": "Galaxy Z Fold 6",
-    "imagePath": "/public/phones/samsung-galaxy-z-fold-6.jpg"
+    "imagePath": "/public/phones/samsung-galaxy-z-fold-6.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "fold",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Thinner and lighter foldable with Galaxy AI and Corning Gorilla Glass Armor"
+      }
+    ]
   },
   {
     "brand": "Samsung",
     "model": "Galaxy Z Flip 6",
-    "imagePath": "/public/phones/samsung-galaxy-z-flip-6.jpg"
+    "imagePath": "/public/phones/samsung-galaxy-z-flip-6.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "flip",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Largest FlexWindow on a flip phone with Galaxy AI photography features"
+      }
+    ]
   },
   {
     "brand": "Google",
     "model": "Pixel 9 Pro",
-    "imagePath": "/public/phones/google-pixel-9-pro.jpg"
+    "imagePath": "/public/phones/google-pixel-9-pro.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Features Gemini AI with triple camera system and 5x telephoto lens"
+      }
+    ]
   },
   {
     "brand": "Google",
     "model": "Pixel 9",
-    "imagePath": "/public/phones/google-pixel-9.jpg"
+    "imagePath": "/public/phones/google-pixel-9.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Powered by Google Tensor G4 with on-device Gemini Nano AI models"
+      }
+    ]
   },
   {
     "brand": "Google",
     "model": "Pixel 8 Pro",
-    "imagePath": "/public/phones/google-pixel-8-pro.jpg"
+    "imagePath": "/public/phones/google-pixel-8-pro.jpg",
+    "releaseYear": 2023,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First smartphone to run Gemini Nano AI models fully on-device"
+      }
+    ]
   },
   {
     "brand": "Google",
     "model": "Pixel 8",
-    "imagePath": "/public/phones/google-pixel-8.jpg"
+    "imagePath": "/public/phones/google-pixel-8.jpg",
+    "releaseYear": 2023,
+    "priceTier": "mid",
+    "formFactor": "bar",
+    "difficulty": "easy",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Introduces temperature sensor and seven years of Android OS updates"
+      }
+    ]
   },
   {
     "brand": "OnePlus",
     "model": "13",
-    "imagePath": "/public/phones/oneplus-13.png"
+    "imagePath": "/public/phones/oneplus-13.png",
+    "releaseYear": 2025,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "medium",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Features Hasselblad triple camera system with 50MP primary sensor"
+      }
+    ]
   },
   {
     "brand": "OnePlus",
     "model": "12",
-    "imagePath": "/public/phones/oneplus-12.jpg"
+    "imagePath": "/public/phones/oneplus-12.jpg",
+    "releaseYear": 2024,
+    "priceTier": "flagship",
+    "formFactor": "bar",
+    "difficulty": "medium",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "First OnePlus with 100W SUPERVOOC wired and 50W wireless charging"
+      }
+    ]
   },
   {
     "brand": "Nothing",
     "model": "Phone 2",
-    "imagePath": "/public/phones/nothing-phone-2.png"
+    "imagePath": "/public/phones/nothing-phone-2.png",
+    "releaseYear": 2023,
+    "priceTier": "mid",
+    "formFactor": "bar",
+    "difficulty": "medium",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Features second-generation Glyph Interface with interactive LED notification patterns"
+      }
+    ]
   },
   {
     "brand": "Nothing",
     "model": "Phone 1",
-    "imagePath": "/public/phones/nothing-phone-1.png"
+    "imagePath": "/public/phones/nothing-phone-1.png",
+    "releaseYear": 2022,
+    "priceTier": "mid",
+    "formFactor": "bar",
+    "difficulty": "medium",
+    "facts": [
+      {
+        "type": "feature",
+        "text": "Introduced the iconic transparent back with Glyph LED notification system"
+      }
+    ]
   }
 ]
