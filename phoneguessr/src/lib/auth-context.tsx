@@ -1,3 +1,4 @@
+import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 interface User {
@@ -10,6 +11,7 @@ interface User {
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
+  webAuthnSupported: boolean;
   login: () => void;
   logout: () => void;
 }
@@ -17,6 +19,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue>({
   user: null,
   loading: true,
+  webAuthnSupported: false,
   login: () => {},
   logout: () => {},
 });
@@ -24,6 +27,7 @@ const AuthContext = createContext<AuthContextValue>({
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [webAuthnSupported] = useState(() => browserSupportsWebAuthn());
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -44,7 +48,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, webAuthnSupported, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
