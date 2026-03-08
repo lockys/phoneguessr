@@ -24,3 +24,15 @@ export function getChallenge(key: string): string | null {
 export function deleteChallenge(key: string): void {
   store.delete(key);
 }
+
+/**
+ * Atomically retrieves and deletes a challenge, preventing replay attacks.
+ * Returns the challenge value if valid and not expired, null otherwise.
+ */
+export function consumeChallenge(key: string): string | null {
+  const challenge = getChallenge(key);
+  if (challenge !== null) {
+    store.delete(key);
+  }
+  return challenge;
+}
