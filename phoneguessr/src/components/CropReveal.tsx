@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ZOOM_LEVELS } from '../lib/zoom-levels.js';
 import { BlockGrid } from './BlockGrid';
 
 interface CropRevealProps {
@@ -10,19 +11,6 @@ interface CropRevealProps {
   onRevealComplete?: () => void;
   onImageDrawn?: () => void;
 }
-
-/**
- * Scale factors for each guess level.
- * Each wrong guess zooms out slightly, revealing more of the phone.
- */
-const ZOOM_LEVELS = [
-  4.17, // level 0: ~24% visible area
-  2.5, // level 1: ~40% visible
-  1.79, // level 2: ~56% visible
-  1.39, // level 3: ~72% visible
-  1.14, // level 4: ~88% visible
-  1.0, // level 5: full
-];
 
 function easeOutCubic(t: number) {
   return 1 - (1 - t) ** 3;
