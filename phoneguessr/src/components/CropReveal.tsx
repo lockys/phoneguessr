@@ -38,7 +38,8 @@ function easeOutBouncy(t: number) {
   return 1 + 0.05 * Math.sin(settle * Math.PI);
 }
 
-function drawImageScaled(
+// Draw image centered and scaled on canvas. Does NOT clear — caller is responsible.
+function drawImageOnCanvas(
   ctx: CanvasRenderingContext2D,
   img: HTMLImageElement,
   canvasWidth: number,
@@ -48,7 +49,6 @@ function drawImageScaled(
 ) {
   const w = canvasWidth * dpr;
   const h = canvasHeight * dpr;
-  ctx.clearRect(0, 0, w, h);
   ctx.save();
   ctx.translate(w / 2, h / 2);
   ctx.scale(scale, scale);
@@ -84,46 +84,125 @@ export function CropReveal({
   const prevRevealedRef = useRef(revealed);
   const [revealAnimating, setRevealAnimating] = useState(false);
   const fromScaleRef = useRef(1);
+  // True while a crossfade is running — prevents zoom animation from conflicting
+  const crossfadeActiveRef = useRef(false);
 
-  // Load image into offscreen Image object (never attached to DOM)
+  // Resize canvas only when dimensions change. Setting canvas.width/height clears the canvas,
+  // so skipping unnecessary resizes prevents micro-flickers during animation.
+  const ensureCanvasSize = useCallback(
+    (canvas: HTMLCanvasElement, dpr: number) => {
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.round(rect.width * dpr);
+      const h = Math.round(rect.height * dpr);
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
+      return rect;
+    },
+    [],
+  );
+
+  // Redraw current image at given scale (clears first)
+  const drawAtScale = useCallback(
+    (scale: number) => {
+      const canvas = canvasRef.current;
+      const img = imgObjRef.current;
+      if (!canvas || !img) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = ensureCanvasSize(canvas, dpr);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawImageOnCanvas(ctx, img, rect.width, rect.height, scale, dpr);
+    },
+    [ensureCanvasSize],
+  );
+
+  // Load image and crossfade from previous to new when src changes
+  // level and revealed are captured intentionally at src-change time — not stale bugs
+  // biome-ignore lint/correctness/useExhaustiveDependencies: level/revealed/ensureCanvasSize/onImageDrawn captured at src-change time
   useEffect(() => {
     if (!imageSrc) return;
     const img = new Image();
     img.onload = () => {
+      const prevImg = imgObjRef.current;
       imgObjRef.current = img;
-      // Initial draw at current zoom level
+
       const canvas = canvasRef.current;
       if (!canvas) return;
       const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      const rect = ensureCanvasSize(canvas, dpr);
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
-      const scale = revealed ? 1 : ZOOM_LEVELS[Math.min(level, 5)];
-      drawImageScaled(ctx, img, rect.width, rect.height, scale, dpr);
-      onImageDrawn?.();
+
+      if (!prevImg) {
+        // First load: draw immediately at current zoom level
+        const scale = revealed ? 1 : ZOOM_LEVELS[Math.min(level, 5)];
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawImageOnCanvas(ctx, img, rect.width, rect.height, scale, dpr);
+        fromScaleRef.current = scale;
+        onImageDrawn?.();
+        return;
+      }
+
+      // Subsequent load: crossfade from old to new image over 400ms
+      cancelAnimationFrame(animFrameRef.current);
+      crossfadeActiveRef.current = true;
+
+      const startScale = fromScaleRef.current;
+      const endScale = revealed ? 1 : ZOOM_LEVELS[Math.min(level, 5)];
+      const duration = 400;
+      const startTime = performance.now();
+
+      const animate = (now: number) => {
+        const elapsed = now - startTime;
+        const t = Math.min(elapsed / duration, 1);
+        const eased = easeOutCubic(t);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Old image fades out
+        ctx.globalAlpha = 1 - eased;
+        drawImageOnCanvas(
+          ctx,
+          prevImg,
+          rect.width,
+          rect.height,
+          startScale,
+          dpr,
+        );
+
+        // New image fades in
+        ctx.globalAlpha = eased;
+        drawImageOnCanvas(ctx, img, rect.width, rect.height, endScale, dpr);
+
+        ctx.globalAlpha = 1;
+
+        if (t < 1) {
+          animFrameRef.current = requestAnimationFrame(animate);
+        } else {
+          crossfadeActiveRef.current = false;
+          fromScaleRef.current = endScale;
+          onImageDrawn?.();
+        }
+      };
+
+      animFrameRef.current = requestAnimationFrame(animate);
     };
     img.src = imageSrc;
   }, [imageSrc]);
 
-  // Redraw on level change (gameplay zoom transitions)
-  const drawAtScale = useCallback((scale: number) => {
-    const canvas = canvasRef.current;
-    const img = imgObjRef.current;
-    if (!canvas || !img) return;
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    drawImageScaled(ctx, img, rect.width, rect.height, scale, dpr);
-  }, []);
-
-  // Smooth transition between zoom levels during gameplay
+  // Smooth zoom transition between levels during gameplay
   useEffect(() => {
-    if (revealed || revealAnimating || !imgObjRef.current) return;
+    // Skip if crossfade is active — it already handles the scale transition
+    if (
+      revealed ||
+      revealAnimating ||
+      !imgObjRef.current ||
+      crossfadeActiveRef.current
+    )
+      return;
     const targetScale = ZOOM_LEVELS[Math.min(level, 5)];
 
     // Animate from current visual scale to target over 400ms

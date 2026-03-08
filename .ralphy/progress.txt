@@ -174,3 +174,12 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
 - [✓] 2026-03-07 23:05 - DB: Run drizzle-kit generate and push migration
   - drizzle-kit generate: No schema changes, nothing to migrate
   - drizzle-kit push: No changes detected - DB already in sync with schema.ts
+
+- [✓] 2026-03-08 12:58 - Frontend: CropReveal crossfade transition is smooth (no flicker)
+  - Added smooth 400ms crossfade when imageSrc prop changes (new server crop arrives)
+  - Old image fades out while new image fades in using ctx.globalAlpha per-frame blending
+  - crossfadeActiveRef prevents zoom animation from conflicting during crossfade
+  - Fixed drawAtScale to not reset canvas dimensions on every frame (prevents micro-flicker)
+  - Extracted drawImageOnCanvas (no internal clearRect) to enable alpha compositing
+  - Added 7 tests in CropReveal.test.tsx covering: first-load, crossfade alpha, completion callback, globalAlpha reset, zoom suppression, canvas resize optimization
+  - All 276 tests pass, biome lint clean
