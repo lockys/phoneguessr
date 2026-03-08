@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  consumeChallenge,
   deleteChallenge,
   getChallenge,
   setChallenge,
@@ -46,5 +47,30 @@ describe('challenge-store', () => {
     setChallenge('user-5', 'first');
     setChallenge('user-5', 'second');
     expect(getChallenge('user-5')).toBe('second');
+  });
+
+  describe('consumeChallenge — replay attack prevention', () => {
+    it('returns challenge value and deletes it atomically', () => {
+      setChallenge('user-6', 'one-time');
+      expect(consumeChallenge('user-6')).toBe('one-time');
+      // Second call returns null — replay attack prevented
+      expect(consumeChallenge('user-6')).toBeNull();
+    });
+
+    it('returns null for unknown key', () => {
+      expect(consumeChallenge('no-such-key')).toBeNull();
+    });
+
+    it('returns null for expired challenge', () => {
+      setChallenge('user-7', 'expired');
+      vi.advanceTimersByTime(60_001);
+      expect(consumeChallenge('user-7')).toBeNull();
+    });
+
+    it('challenge unavailable via getChallenge after consume', () => {
+      setChallenge('user-8', 'secret');
+      consumeChallenge('user-8');
+      expect(getChallenge('user-8')).toBeNull();
+    });
   });
 });
