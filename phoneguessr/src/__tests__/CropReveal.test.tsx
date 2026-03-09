@@ -294,7 +294,7 @@ describe('CropReveal', () => {
     expect(mockCtx.globalAlpha).toBe(1);
   });
 
-  it('suppresses conflicting zoom animation while crossfade runs', async () => {
+  it('only crossfade RAF is active when imageSrc and level change together', async () => {
     const { rerender } = render(
       <CropReveal
         imageSrc="data:image/png;base64,src1"
@@ -323,7 +323,7 @@ describe('CropReveal', () => {
       triggerImageLoad();
     });
 
-    // Only the crossfade RAF should be active — zoom animation must be cancelled
+    // Only the crossfade RAF should be active
     expect(pendingRafs.size).toBe(1);
   });
 
