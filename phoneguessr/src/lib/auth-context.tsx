@@ -1,4 +1,7 @@
-import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
+import {
+  browserSupportsWebAuthn,
+  startAuthentication,
+} from '@simplewebauthn/browser';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 interface User {
@@ -14,6 +17,7 @@ interface AuthContextValue {
   webAuthnSupported: boolean;
   login: () => void;
   logout: () => void;
+  loginWithPasskey: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -22,6 +26,7 @@ const AuthContext = createContext<AuthContextValue>({
   webAuthnSupported: false,
   login: () => {},
   logout: () => {},
+  loginWithPasskey: async () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -47,9 +52,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     window.location.href = '/api/auth/logout';
   };
 
+  const loginWithPasskey = async () => {
+    const optionsRes = await fetch('/api/auth/passkey/login-options', {
+      method: 'POST',
+    });
+    if (!optionsRes.ok) throw new Error('Failed to get passkey login options');
+    const options = await optionsRes.json();
+
+    const authResponse = await startAuthentication({ optionsJSON: options });
+
+    const loginRes = await fetch('/api/auth/passkey/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(authResponse),
+    });
+    if (!loginRes.ok) throw new Error('Passkey login failed');
+    const data = await loginRes.json();
+    if (!data.verified) throw new Error('Passkey verification failed');
+    setUser(data.user);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, webAuthnSupported, login, logout }}
+      value={{
+        user,
+        loading,
+        webAuthnSupported,
+        login,
+        logout,
+        loginWithPasskey,
+      }}
     >
       {children}
     </AuthContext.Provider>
