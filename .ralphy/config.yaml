@@ -7,11 +7,19 @@ project:
   framework: "Modern.js"
   description: "Daily phone guessing game - identify phones from cropped photos"
 
+models:
+  # Model assignment by task complexity
+  # opus:   Multi-file refactors, security-critical flows, complex state management, architectural decisions
+  # sonnet: Standard feature implementation, API endpoints, utility libraries, moderate test suites
+  # haiku:  Mock data, validation scripts, verification steps, config changes, straightforward tests
+  default: "sonnet"
+
 commands:
   dev: "vercel dev"
   build: "cd phoneguessr && npm run build"
   lint: "cd phoneguessr && npx biome check"
   typecheck: "cd phoneguessr && npx tsc --noEmit"
+  pre_commit: "claude --dangerously-skip-permissions -p '/simplify'"
 
 rules:
   # Architecture
@@ -27,6 +35,9 @@ rules:
   - "Use i18next for all user-facing strings - support en, zh-TW, zh-CN, ja, ko"
   - "Use CSS classes in phoneguessr/src/routes/index.css - no CSS modules or styled-components"
   - "Use Biome for linting, not ESLint"
+
+  # Code quality
+  - "Before committing, run /simplify on all changed files to review for reuse, quality, and efficiency — fix any issues found before the commit"
 
   # Merge conflict handling
   - "When merging branches, .ralphy/progress.txt conflicts must use union strategy — keep ALL lines from both current and incoming (never discard either side)"

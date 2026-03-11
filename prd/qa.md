@@ -29,20 +29,20 @@
 > Read: proposal.md, design.md, specs/test-coverage/spec.md
 
 Test infrastructure:
-- [ ] Create `phoneguessr/src/test/mock-db.ts` — reusable drizzle db mock factory with chainable `.select().from().where().innerJoin().orderBy().limit()`
-- [ ] Create `phoneguessr/src/test/mock-fetch.ts` — URL pattern → JSON response mapper for `vi.stubGlobal('fetch')`
-- [ ] Create `phoneguessr/src/test/mock-auth.ts` — helper to create test session tokens and build Request objects with cookies
+- [x] Create `phoneguessr/src/test/mock-db.ts` — reusable drizzle db mock factory with chainable `.select().from().where().innerJoin().orderBy().limit()`
+- [x] Create `phoneguessr/src/test/mock-fetch.ts` — URL pattern → JSON response mapper for `vi.stubGlobal('fetch')`
+- [x] Create `phoneguessr/src/test/mock-auth.ts` — helper to create test session tokens and build Request objects with cookies
 
 Game.tsx tests (HIGHEST PRIORITY):
-- [ ] Create `phoneguessr/src/components/Game.test.tsx` — loading state, ready state, start → playing, correct guess → won, 6 wrong → lost, localStorage restoration, DB restoration for authed user, DB fallback to localStorage, onboarding for first-time users
+- [x] Create `phoneguessr/src/components/Game.test.tsx` — loading state, ready state, start → playing, correct guess → won, 6 wrong → lost, localStorage restoration, DB restoration for authed user, DB fallback to localStorage, onboarding for first-time users
 
 API endpoint tests:
-- [ ] `phoneguessr/tests/puzzle-handler.test.ts` — all 5 puzzle actions (today, image, yesterday, state, invalid). Use `// @vitest-environment node`
-- [ ] `phoneguessr/tests/guess-handler.test.ts` — correct/right_brand/wrong_brand feedback, auth saving, 404s
-- [ ] `phoneguessr/tests/result-handler.test.ts` — 401, 409 duplicate, score calculation, successful save
-- [ ] `phoneguessr/tests/phones-handler.test.ts` — returns active phones with correct shape
-- [ ] `phoneguessr/tests/leaderboard-handler.test.ts` — daily by score, weekly/monthly/all-time by wins, 400 invalid
-- [ ] `phoneguessr/tests/profile-handler.test.ts` — 401, stats calculation, display name validation
+- [x] `phoneguessr/tests/puzzle-handler.test.ts` — all 5 puzzle actions (today, image, yesterday, state, invalid). Use `// @vitest-environment node`
+- [x] `phoneguessr/tests/guess-handler.test.ts` — correct/right_brand/wrong_brand feedback, auth saving, 404s
+- [x] `phoneguessr/tests/result-handler.test.ts` — 401, 409 duplicate, score calculation, successful save
+- [x] `phoneguessr/tests/phones-handler.test.ts` — returns active phones with correct shape
+- [x] `phoneguessr/tests/leaderboard-handler.test.ts` — daily by score, weekly/monthly/all-time by wins, 400 invalid
+- [x] `phoneguessr/tests/profile-handler.test.ts` — 401, stats calculation, display name validation
 - [ ] `phoneguessr/tests/hint-handler.test.ts` — 401, 400 invalid type, 409 completed, 409 max hints, success
 
 Auth tests:

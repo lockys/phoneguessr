@@ -1,4 +1,5 @@
-import { avg, count, eq, notInArray, sql } from 'drizzle-orm';
+import { avg, count, eq, sql } from 'drizzle-orm';
+import type { Difficulty } from './difficulty.js';
 import { db } from '../db/index.js';
 import { dailyPuzzles, phones, results } from '../db/schema.js';
 
@@ -73,9 +74,24 @@ export async function getTodayPuzzle() {
   return { puzzle, phone: selectedPhone };
 }
 
+// Difficulty weights: easy 20%, medium 25%, hard 55% (meets ≥30% hard requirement).
+export const DIFFICULTY_WEIGHTS = { easy: 0.2, medium: 0.25, hard: 0.55 } as const;
+
+/**
+ * Pick a difficulty tier based on a random roll in [0, 1).
+ * Exported for testing.
+ */
+export function pickDifficulty(roll: number): Difficulty {
+  if (roll < DIFFICULTY_WEIGHTS.easy) return 'easy';
+  if (roll < DIFFICULTY_WEIGHTS.easy + DIFFICULTY_WEIGHTS.medium) return 'medium';
+  return 'hard';
+}
+
 /**
  * Select a phone for a given date using seeded randomness.
- * Cycles through all active phones before repeating.
+ * Applies difficulty weighting (20% easy, 25% medium, 55% hard) with
+ * fallback to any tier if the target tier has no available phones.
+ * Cycles through phones within each tier before repeating.
  */
 async function selectPhoneForDate(dateStr: string) {
   const activePhones = await db
@@ -87,17 +103,30 @@ async function selectPhoneForDate(dateStr: string) {
     throw new Error('No active phones in database');
   }
 
-  // Get phones already used in the current cycle
-  const usedPhoneIds = await getUsedPhoneIdsInCurrentCycle(activePhones.length);
+  const rng = seededRandom(dateSeed(dateStr));
+  const targetDifficulty = pickDifficulty(rng());
 
-  // Filter to unused phones, or reset if all used
-  let available = activePhones.filter(p => !usedPhoneIds.includes(p.id));
-  if (available.length === 0) {
-    available = activePhones;
+  // Group phones by difficulty
+  const byDifficulty: Record<Difficulty, typeof activePhones> = {
+    easy: activePhones.filter(p => p.difficulty === 'easy'),
+    medium: activePhones.filter(p => p.difficulty === 'medium'),
+    hard: activePhones.filter(p => p.difficulty === 'hard'),
+  };
+
+  // Get available phones for the target tier (unused in current tier cycle).
+  // Fallback to all phones if the tier is empty.
+  const tierPool = byDifficulty[targetDifficulty];
+  let available: typeof activePhones;
+  if (tierPool.length > 0) {
+    const usedInTier = await getUsedPhoneIdsInCurrentCycle(tierPool.length);
+    available = tierPool.filter(p => !usedInTier.includes(p.id));
+    if (available.length === 0) available = tierPool;
+  } else {
+    const usedAll = await getUsedPhoneIdsInCurrentCycle(activePhones.length);
+    available = activePhones.filter(p => !usedAll.includes(p.id));
+    if (available.length === 0) available = activePhones;
   }
 
-  // Use seeded random to pick from available phones
-  const rng = seededRandom(dateSeed(dateStr));
   const index = Math.floor(rng() * available.length);
   return available[index];
 }

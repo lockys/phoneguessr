@@ -203,7 +203,7 @@ export const MOCK_PHONES: MockPhone[] = [
     releaseYear: 2023,
     priceTier: 'mid',
     formFactor: 'bar',
-    difficulty: 'medium',
+    difficulty: 'hard',
   },
   {
     id: 20,
@@ -213,7 +213,7 @@ export const MOCK_PHONES: MockPhone[] = [
     releaseYear: 2022,
     priceTier: 'mid',
     formFactor: 'bar',
-    difficulty: 'medium',
+    difficulty: 'hard',
   },
 ];
 

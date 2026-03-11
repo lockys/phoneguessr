@@ -6,6 +6,7 @@ tasks:
   - title: "Anti-Cheat: Sharp crop utility and JWT token"
     parallel_group: 1
     completed: false
+    model: sonnet  # Standard library integration (Sharp + jose), unit tests
     description: |
       Change: openspec/changes/image-anti-cheat/
       Read: proposal.md, design.md, specs/progressive-image-serving/spec.md
@@ -28,6 +29,7 @@ tasks:
   - title: "Anti-Cheat: Progressive image API endpoint"
     parallel_group: 2
     completed: false
+    model: sonnet  # API endpoint with auth branching, follows established patterns
     description: |
       Change: openspec/changes/image-anti-cheat/
       Read: design.md, specs/progressive-image-serving/spec.md, specs/image-protection/spec.md
@@ -49,6 +51,7 @@ tasks:
   - title: "Anti-Cheat: Client-side progressive fetch and CropReveal"
     parallel_group: 3
     completed: false
+    model: opus  # Major Game.tsx + CropReveal refactor, complex state mgmt, animation, dual auth paths
     description: |
       Change: openspec/changes/image-anti-cheat/
       Read: design.md, specs/progressive-image-serving/spec.md
@@ -76,6 +79,7 @@ tasks:
   - title: "Anti-Cheat: Mock API and verification"
     parallel_group: 4
     completed: false
+    model: haiku  # Mock route additions, manual verification steps
     description: |
       Change: openspec/changes/image-anti-cheat/
       Read: design.md, tasks.md
@@ -101,6 +105,7 @@ tasks:
   - title: "Passkey: Dependencies, schema, and challenge store"
     parallel_group: 5
     completed: false
+    model: sonnet  # Schema migration, dependency setup, simple TTL store
     description: |
       Change: openspec/changes/passkey-auth/
       Read: proposal.md, design.md, specs/passkey-auth/spec.md
@@ -123,6 +128,7 @@ tasks:
   - title: "Passkey: Registration and login API endpoints"
     parallel_group: 6
     completed: false
+    model: opus  # Security-critical WebAuthn flows, 4 new endpoints, credential management
     description: |
       Change: openspec/changes/passkey-auth/
       Read: design.md, specs/passkey-auth/spec.md
@@ -142,6 +148,7 @@ tasks:
   - title: "Passkey: Frontend auth context and UI"
     parallel_group: 7
     completed: false
+    model: opus  # Auth context refactor, WebAuthn browser integration, multi-component UI changes
     description: |
       Change: openspec/changes/passkey-auth/
       Read: design.md, specs/passkey-auth/spec.md, specs/user-auth/spec.md
@@ -167,6 +174,7 @@ tasks:
   - title: "Passkey: Mock API and verification"
     parallel_group: 8
     completed: false
+    model: haiku  # Mock routes, verification checklist
     description: |
       Change: openspec/changes/passkey-auth/
       Read: tasks.md
@@ -191,6 +199,7 @@ tasks:
   - title: "Phone Images: Scraping script setup and HTTP fetching"
     parallel_group: 9
     completed: false
+    model: sonnet  # Cheerio scraping, HTTP handling, pagination — established patterns
     description: |
       Change: openspec/changes/phone-image-collection/
       Read: proposal.md, design.md, specs/phone-image-pipeline/spec.md
@@ -216,6 +225,7 @@ tasks:
   - title: "Phone Images: Processing, selection, and metadata"
     parallel_group: 10
     completed: false
+    model: sonnet  # Image processing pipeline, selection algorithm, metadata generation
     description: |
       Change: openspec/changes/phone-image-collection/
       Read: design.md, specs/phone-image-pipeline/spec.md, specs/phone-data/spec.md
@@ -246,6 +256,7 @@ tasks:
   - title: "Phone Images: Validation, mock data, and cleanup"
     parallel_group: 11
     completed: false
+    model: haiku  # Validation scripts, mock data expansion, cleanup
     description: |
       Change: openspec/changes/phone-image-collection/
       Read: tasks.md, specs/phone-data/spec.md
@@ -273,6 +284,7 @@ tasks:
   - title: "Tests: Infrastructure and Game.tsx tests"
     parallel_group: 12
     completed: false
+    model: opus  # Mock factory architecture, comprehensive Game.tsx test suite (most complex component)
     description: |
       Change: openspec/changes/test-coverage/
       Read: proposal.md, design.md, specs/test-coverage/spec.md
@@ -301,6 +313,7 @@ tasks:
   - title: "Tests: API endpoint handler tests"
     parallel_group: 13
     completed: false
+    model: sonnet  # 7 test files following established mock patterns
     description: |
       Change: openspec/changes/test-coverage/
       Read: design.md, specs/test-coverage/spec.md
@@ -323,6 +336,7 @@ tasks:
   - title: "Tests: Auth, component tests, and verification"
     parallel_group: 14
     completed: false
+    model: sonnet  # Auth + component tests following patterns, coverage config
     description: |
       Change: openspec/changes/test-coverage/
       Read: design.md, specs/test-coverage/spec.md, tasks.md

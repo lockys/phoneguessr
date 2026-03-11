@@ -276,7 +276,7 @@
     "releaseYear": 2023,
     "priceTier": "mid",
     "formFactor": "bar",
-    "difficulty": "medium",
+    "difficulty": "hard",
     "facts": [
       {
         "type": "feature",
@@ -291,7 +291,7 @@
     "releaseYear": 2022,
     "priceTier": "mid",
     "formFactor": "bar",
-    "difficulty": "medium",
+    "difficulty": "hard",
     "facts": [
       {
         "type": "feature",

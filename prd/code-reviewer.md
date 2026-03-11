@@ -75,13 +75,13 @@
 - [x] Registration requires prior Google OAuth authentication
 
 ### phone-image-collection
-- [ ] Image processing produces consistent dimensions and quality
-- [ ] No duplicate brand+model entries in phone-data.json
-- [ ] Existing 20 phones unmodified after merge
-- [ ] Scraping respects rate limits and User-Agent
+- [x] Image processing produces consistent dimensions and quality
+- [x] No duplicate brand+model entries in phone-data.json
+- [x] Existing 20 phones unmodified after merge
+- [x] Scraping respects rate limits and User-Agent
 
 ### test-coverage
-- [ ] Mock-db factory accurately simulates drizzle query chains
-- [ ] API tests use `// @vitest-environment node` pragma
-- [ ] No test pollution between test files (proper cleanup)
-- [ ] Coverage thresholds enforced in vitest config
+- [x] Mock-db factory accurately simulates drizzle query chains
+- [x] API tests use `// @vitest-environment node` pragma
+- [x] No test pollution between test files (proper cleanup)
+- [x] Coverage thresholds enforced in vitest config

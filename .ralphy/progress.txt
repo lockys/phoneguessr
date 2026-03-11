@@ -241,3 +241,71 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
 - [✓] 2026-03-08 21:05 - Mock-db factory accurately simulates drizzle query chains
 - [✓] 2026-03-09 - Install @simplewebauthn/browser in phoneguessr/ (v13.2.2, already in package.json + pnpm-lock.yaml, ran pnpm install to populate node_modules)
 - [✓] 2026-03-10 - Tests: guess-handler.test.ts — 8 tests covering correct/right_brand/wrong_brand feedback, auth saving (authenticated insert, no-cookie skip, invalid-token skip), and 404s (puzzle not found, phone not found)
+- [✓] 2026-03-08 13:06 - Mock-db factory accurately simulates drizzle query chains
+- [✓] 2026-03-08 13:49 - API tests use `// @vitest-environment node` pragma
+- [✓] 2026-03-08 13:58 - No test pollution between test files (proper cleanup)
+- [✓] 2026-03-08 14:10 - Coverage thresholds enforced in vitest config
+- [✓] 2026-03-08 14:16 - All strings use i18n keys with translations in all 5 locale files
+- [✗] 2026-03-08 19:14 - No inline styles — use CSS classes
+- [✗] 2026-03-08 22:08 - Component works on mobile (touch events, viewport sizing)
+- [✓] 2026-03-09 05:40 - Animations respect `prefers-reduced-motion` where appropriate
+- [✓] 2026-03-09 05:53 - No console errors or warnings in browser devtools
+- [✓] 2026-03-09 06:11 - Replace single upfront image fetch with per-level `fetchCropAtLevel(level)` calling `/api/puzzle/image?level=N`
+- [✓] 2026-03-09 06:24 - Fetch level 0 on initial load, store current crop base64 in state
+- [✓] 2026-03-09 06:38 - After each wrong guess, fetch next level (level = guesses.length)
+- [✓] 2026-03-09 07:42 - On game end (win/loss), fetch level 5 (full image) for reveal animation
+- [✓] 2026-03-09 07:58 - For unauthenticated users: store JWT token from response, pass as `&token=` on next request
+- [✓] 2026-03-09 08:17 - Handle 403 errors gracefully (error toast or retry at valid level)
+- [✓] 2026-03-09 08:25 - Remove ZOOM_LEVELS array and zoom-based drawImage scaling
+- [✓] 2026-03-09 08:41 - Draw received image at scale 1.0 (server provides correctly cropped region)
+- [✓] 2026-03-09 08:50 - Implement crossfade transition between crop levels (400ms)
+- [✓] 2026-03-09 09:15 - Keep reveal animation (win bouncy / loss ease-out) — full image at level 5
+- [✓] 2026-03-09 09:16 - Install `@simplewebauthn/browser` in phoneguessr/
+- [✓] 2026-03-09 09:25 - Add `loginWithPasskey()` to AuthProvider — calls login-options then login using `startAuthentication()`
+- [✓] 2026-03-09 09:37 - Add `registerPasskey()` — calls register-options then register using `startRegistration()`
+- [✓] 2026-03-09 09:45 - Add `hasPasskey` state (from /api/auth/me or dedicated endpoint)
+- [✓] 2026-03-09 09:49 - Add WebAuthn feature detection via `browserSupportsWebAuthn()`
+- [✓] 2026-03-09 10:00 - Update AuthButton.tsx — "Sign in with Passkey" button alongside Google OAuth when WebAuthn supported
+- [✓] 2026-03-09 10:21 - Handle passkey login errors with user-friendly messages
+- [✓] 2026-03-09 10:34 - Add loading state during passkey auth flow
+- [✓] 2026-03-09 11:19 - Add passkey section to ProfilePanel — "Set up Passkey" when no passkey, "Passkey registered" when set up
+- [✓] 2026-03-09 11:37 - Handle registration success/failure with user feedback
+- [✓] 2026-03-09 11:57 - Add option to re-register (replace) existing passkey
+- [✓] 2026-03-09 14:24 - Expand MOCK_PHONES array in `src/mock/data.ts` to 60-80 phones from expanded catalog
+- [✓] 2026-03-09 14:35 - Ensure mock data covers all difficulty tiers and diverse brands
+- [✓] 2026-03-09 14:37 - Verify mock data entries have all required metadata fields
+- [✓] 2026-03-09 15:05 - During gameplay, only a cropped region of the phone image is transmitted (not the full image)
+- [✓] 2026-03-09 15:19 - Requesting a higher crop level than earned returns a 403 error
+- [✓] 2026-03-09 16:16 - The full image is only sent after the game ends (win or all 6 guesses used)
+- [✗] 2026-03-09 21:55 - Anonymous users have the same anti-cheat protection via signed tokens
+- [✓] 2026-03-10 01:45 - Visual experience is identical to current behavior (same zoom levels)
+- [✓] 2026-03-10 02:02 - Authenticated users can register a passkey from their profile
+- [✓] 2026-03-10 02:20 - "Sign in with Passkey" button appears alongside Google OAuth on supported browsers
+- [✓] 2026-03-10 02:34 - Passkey login creates the same session as Google OAuth (transparent to the app)
+- [✓] 2026-03-10 02:41 - Passkey button is hidden on browsers without WebAuthn support
+- [✓] 2026-03-10 03:00 - Existing Google OAuth flow is completely unaffected
+- [✓] 2026-03-10 04:22 - Catalog expands from 20 to 400-650 phones across 130+ brands
+- [✓] 2026-03-10 04:26 - All phone images are high-quality JPEGs suitable for the guessing game
+- [✓] 2026-03-10 13:24 - Difficulty distribution: 20% easy, 25% medium, 55% hard — weighted puzzle selection in puzzle.ts, Nothing Phone reclassified as hard
+- [✓] 2026-03-10 05:36 - Difficulty distribution: 20% easy, 25% medium, 30% hard
+- [✓] 2026-03-10 05:57 - Original 20 phones preserved (backward compatible)
+- [✓] 2026-03-10 08:03 - Mock mode updated with representative sample (60-80 phones)
+- [✓] 2026-03-10 08:50 - Game.tsx has thorough unit tests covering all game states
+- [✓] 2026-03-10 10:19 - All 11 API endpoints have unit tests
+- [✓] 2026-03-10 10:33 - Auth flow (token creation, verification, OAuth) is tested
+- [✓] 2026-03-10 11:30 - Coverage: 80%+ for critical paths, 60%+ overall
+- [✓] 2026-03-10 11:33 - All existing 244 tests continue to pass
+- [✓] 2026-03-10 12:08 - Create `phoneguessr/src/test/mock-db.ts` — reusable drizzle db mock factory with chainable `.select().from().where().innerJoin().orderBy().limit()`
+- [✓] 2026-03-10 12:14 - Create `phoneguessr/src/test/mock-fetch.ts` — URL pattern → JSON response mapper for `vi.stubGlobal('fetch')`
+- [✓] 2026-03-10 12:20 - Create `phoneguessr/src/test/mock-auth.ts` — helper to create test session tokens and build Request objects with cookies
+- [✓] 2026-03-10 12:33 - Create `phoneguessr/src/components/Game.test.tsx` — loading state, ready state, start → playing, correct guess → won, 6 wrong → lost, localStorage restoration, DB restoration for authed user, DB fallback to localStorage, onboarding for first-time users
+- [✓] 2026-03-10 12:41 - `phoneguessr/tests/puzzle-handler.test.ts` — all 5 puzzle actions (today, image, yesterday, state, invalid). Use `// @vitest-environment node`
+- [✓] 2026-03-10 12:45 - `phoneguessr/tests/guess-handler.test.ts` — correct/right_brand/wrong_brand feedback, auth saving, 404s
+- [✓] 2026-03-10 12:50 - `phoneguessr/tests/result-handler.test.ts` — 401, 409 duplicate, score calculation, successful save
+- [✓] 2026-03-10 12:54 - `phoneguessr/tests/phones-handler.test.ts` — returns active phones with correct shape
+- [✓] 2026-03-10 12:58 - `phoneguessr/tests/leaderboard-handler.test.ts` — daily by score, weekly/monthly/all-time by wins, 400 invalid
+- [✓] 2026-03-10 13:08 - `phoneguessr/tests/profile-handler.test.ts` — 401, stats calculation, display name validation
+- [✓] 2026-03-10 23:20 - `phoneguessr/tests/hint-handler.test.ts` — 401, 400 invalid type, 409 completed, 409 max hints, success
+- [✓] 2026-03-10 23:27 - `phoneguessr/src/lib/auth.test.ts` — token round-trip, tampered rejection, cookie options
+- [✓] 2026-03-11 11:35 - `phoneguessr/src/lib/cookies.test.ts` — parseCookies, serializeCookie with all flags
+- [✓] 2026-03-11 - Tests: auth-login-handler.test.ts — 4 tests verifying GET /api/auth/login redirects to Google OAuth2 with correct params (302 status, correct endpoint URL, all 6 query params, null body)

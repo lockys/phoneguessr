@@ -80,6 +80,36 @@ describe('MOCK_PHONES catalog', () => {
   });
 });
 
+describe('difficulty distribution', () => {
+  it('has all three difficulty tiers represented', () => {
+    const difficulties = new Set(MOCK_PHONES.map(p => p.difficulty));
+    expect(difficulties.has('easy')).toBe(true);
+    expect(difficulties.has('medium')).toBe(true);
+    expect(difficulties.has('hard')).toBe(true);
+  });
+
+  it('Nothing Phone is classified as hard', () => {
+    const nothingPhones = MOCK_PHONES.filter(p => p.brand === 'Nothing');
+    for (const phone of nothingPhones) {
+      expect(phone.difficulty).toBe('hard');
+    }
+  });
+
+  it('Apple phones are classified as easy', () => {
+    const applePhones = MOCK_PHONES.filter(p => p.brand === 'Apple');
+    for (const phone of applePhones) {
+      expect(phone.difficulty).toBe('easy');
+    }
+  });
+
+  it('Samsung phones are classified as easy', () => {
+    const samsungPhones = MOCK_PHONES.filter(p => p.brand === 'Samsung');
+    for (const phone of samsungPhones) {
+      expect(phone.difficulty).toBe('easy');
+    }
+  });
+});
+
 describe('phone-data.json sync', () => {
   it('has the same number of entries as MOCK_PHONES', () => {
     expect(phoneDataJson.length).toBe(MOCK_PHONES.length);
@@ -92,6 +122,12 @@ describe('phone-data.json sync', () => {
       expect(seed.brand).toBe(mock.brand);
       expect(seed.model).toBe(mock.model);
       expect(seed.imagePath).toBe(mock.imagePath);
+    }
+  });
+
+  it('difficulty matches MOCK_PHONES for every entry', () => {
+    for (let i = 0; i < MOCK_PHONES.length; i++) {
+      expect(phoneDataJson[i].difficulty).toBe(MOCK_PHONES[i].difficulty);
     }
   });
 });
