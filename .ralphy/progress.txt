@@ -310,3 +310,4 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
 - [✓] 2026-03-11 11:35 - `phoneguessr/src/lib/cookies.test.ts` — parseCookies, serializeCookie with all flags
 - [✓] 2026-03-11 - Tests: auth-login-handler.test.ts — 4 tests verifying GET /api/auth/login redirects to Google OAuth2 with correct params (302 status, correct endpoint URL, all 6 query params, null body)
 - [✓] 2026-03-11 - Tests: auth-me-handler.test.ts — 4 tests for GET /api/auth/me (null user when no cookie, null user when invalid token, full user data for valid session, email null when missing from session)
+- [✓] 2026-03-11 - Tests: AuthButton.test.tsx — 9 tests covering loading state (renders nothing), signed-out state (sign-in button, login click), signed-in state (avatar+name+sign-out, no avatar fallback, logout click), auth error from URL (error display, URL cleanup, 5s auto-clear)
