@@ -309,5 +309,52 @@ Added 9 new tests for calculateStreakFromDates and getTodayUTC; fixed 2 incorrec
 - [✓] 2026-03-10 23:27 - `phoneguessr/src/lib/auth.test.ts` — token round-trip, tampered rejection, cookie options
 - [✓] 2026-03-11 11:35 - `phoneguessr/src/lib/cookies.test.ts` — parseCookies, serializeCookie with all flags
 - [✓] 2026-03-11 - Tests: auth-login-handler.test.ts — 4 tests verifying GET /api/auth/login redirects to Google OAuth2 with correct params (302 status, correct endpoint URL, all 6 query params, null body)
-- [✓] 2026-03-11 - Tests: auth-me-handler.test.ts — 4 tests for GET /api/auth/me (null user when no cookie, null user when invalid token, full user data for valid session, email null when missing from session)
-- [✓] 2026-03-11 - Tests: AuthButton.test.tsx — 9 tests covering loading state (renders nothing), signed-out state (sign-in button, login click), signed-in state (avatar+name+sign-out, no avatar fallback, logout click), auth error from URL (error display, URL cleanup, 5s auto-clear)
+- [✓] 2026-03-11 13:40 - `phoneguessr/tests/auth-callback-handler.test.ts` — success flow, missing code, token exchange failure
+- [✓] 2026-03-11 13:44 - `phoneguessr/tests/auth-me-handler.test.ts` — 4 tests for GET /api/auth/me (null user when no cookie, null user when invalid token, full user data for valid session, email null when missing from session)
+- [✓] 2026-03-11 14:34 - `phoneguessr/tests/auth-logout-handler.test.ts` — cookie cleared, redirect to /
+- [✓] 2026-03-11 14:40 - `ResultModal.test.tsx` — win/loss display, share button, sign-in prompt, close handlers
+- [✓] 2026-03-11 14:44 - `PhoneAutocomplete.test.tsx` — filtering, dropdown, keyboard nav (ArrowDown/Up/Enter/Escape)
+- [✓] 2026-03-11 14:49 - `AuthButton.test.tsx` — 9 tests covering loading state (renders nothing), signed-out state (sign-in button, login click), signed-in state (avatar+name+sign-out, no avatar fallback, logout click), auth error from URL (error display, URL cleanup, 5s auto-clear)
+- [✗] 2026-03-12 08:21 - `Leaderboard.test.tsx` — daily fetch/display, tab switching, loading/empty states
+- [✗] 2026-03-13 08:42 - Update `vitest.config.ts` — add coverage config targeting 60% overall
+- [✓] 2026-03-15 03:01 - Run `npm run test` — all 244 existing + new tests pass
+- [✓] 2026-03-15 04:20 - Run `npx vitest --coverage` — 80%+ for Game.tsx, API, auth; 60%+ overall
+- [✓] 2026-03-15 04:31 - Write unit tests for `generateCrop` (dimensions at each level, level 5 = full image)
+- [✓] 2026-03-15 04:34 - Write unit tests for image token sign/verify (valid, expired, tampered)
+- [✓] 2026-03-15 12:37 - Verify network tab shows only cropped region at each guess level
+- [✓] 2026-03-15 12:47 - Verify requesting higher level than guesses returns 403
+- [✓] 2026-03-15 13:28 - Verify JWT token flow for unauthenticated users
+- [✓] 2026-03-15 13:37 - Verify full image only served after game completion
+- [✓] 2026-03-15 13:53 - Verify crop dimensions match expected zoom levels visually
+- [✓] 2026-03-15 14:01 - Verify reveal animation works correctly
+- [✓] 2026-03-15 14:10 - Verify mock mode progressive crops work
+- [✓] 2026-03-15 14:25 - Test e2e: Google sign-in → register passkey → verify credential in DB
+- [✗] 2026-03-15 14:25 - Test e2e: sign out → sign in with passkey → verify session created
+- [✗] 2026-03-15 14:25 - Test error cases: expired challenge, invalid assertion, unauthenticated registration
+- [✗] 2026-03-15 14:25 - Test WebAuthn feature detection (passkey UI hidden on unsupported browsers)
+- [✗] 2026-03-15 14:25 - Test mock API mode for all passkey endpoints
+- [✗] 2026-03-15 14:25 - Verify existing Google OAuth flow unaffected
+- [✗] 2026-03-15 14:25 - Create validation script (`phoneguessr/scripts/validate-phone-data.ts`)
+- [✗] 2026-03-15 14:25 - Validate 100+ distinct brands in final dataset
+- [✗] 2026-03-15 14:25 - Validate difficulty distribution (20% easy, 25% medium, 30% hard)
+- [✗] 2026-03-15 14:25 - Validate image integrity (valid JPEG, non-empty, <200KB)
+- [✗] 2026-03-15 14:25 - Validate backward compatibility (original 20 phones unchanged)
+- [✗] 2026-03-15 14:25 - Run seed script against database
+- [✗] 2026-03-15 14:25 - Run full end-to-end: scrape → process → validate → seed
+- [✗] 2026-03-15 14:25 - Daily puzzle loads with correct image
+- [✗] 2026-03-15 14:25 - Autocomplete filters phones after 2+ characters typed
+- [✗] 2026-03-15 14:25 - Keyboard navigation works in autocomplete
+- [✗] 2026-03-15 14:25 - Feedback shows correct status (wrong brand, right brand, correct)
+- [✗] 2026-03-15 14:25 - Timer starts on "Start" and stops on game end
+- [✗] 2026-03-15 14:25 - Game state persists across page refreshes
+- [✗] 2026-03-15 14:25 - Confetti fires on correct guess
+- [✗] 2026-03-15 14:25 - Game over modal shows after win or 6 failed guesses
+- [✗] 2026-03-15 14:25 - Google sign-in redirects and returns with session
+- [✗] 2026-03-15 14:25 - Passkey sign-in works with biometric prompt
+- [✗] 2026-03-15 14:25 - Sign-out clears session
+- [✗] 2026-03-15 14:25 - Auth state persists across page refreshes
+- [✗] 2026-03-15 14:25 - Unauthenticated users can still play (localStorage mode)
+- [✗] 2026-03-15 14:25 - Swipe navigation between panels works smoothly
+- [✗] 2026-03-15 14:25 - Touch targets are at least 44px
+- [✗] 2026-03-15 14:25 - No horizontal overflow on 375px width
+- [✗] 2026-03-15 14:25 - Virtual keyboard doesn't obscure autocomplete dropdown

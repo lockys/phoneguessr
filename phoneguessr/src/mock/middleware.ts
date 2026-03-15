@@ -145,6 +145,10 @@ const routes: Record<
     json(res, getMockProfileStats());
   },
 
+  'GET /api/profile/history': (_req, res) => {
+    json(res, { results: [], total: 0 });
+  },
+
   'POST /api/profile/update': (_req, res) => {
     json(res, { success: true });
   },

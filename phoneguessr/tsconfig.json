@@ -1,6 +1,7 @@
 {
   "extends": "@modern-js/tsconfig/base",
   "compilerOptions": {
+    "target": "ES2022",
     "declaration": false,
     "noEmit": true,
     "allowImportingTsExtensions": true,

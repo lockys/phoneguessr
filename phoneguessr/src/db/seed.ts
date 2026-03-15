@@ -9,7 +9,6 @@ interface PhoneEntry {
   releaseYear: number;
   priceTier: string;
   formFactor: string;
-  region: string;
   facts?: { type: string; text: string }[];
 }
 

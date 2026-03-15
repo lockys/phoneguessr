@@ -12,4 +12,6 @@ export const ZOOM_LEVELS = [
   1.0, // level 5: full image
 ] as const;
 
+export const MAX_ZOOM_LEVEL = ZOOM_LEVELS.length - 1;
+
 export type ZoomLevel = (typeof ZOOM_LEVELS)[number];
