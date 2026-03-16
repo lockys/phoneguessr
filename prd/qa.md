@@ -88,8 +88,8 @@ Config and verification:
 - [ ] Test e2e: sign out → sign in with passkey → verify session created
 - [ ] Test error cases: expired challenge, invalid assertion, unauthenticated registration
 - [ ] Test WebAuthn feature detection (passkey UI hidden on unsupported browsers)
-- [ ] Test mock API mode for all passkey endpoints
-- [ ] Verify existing Google OAuth flow unaffected
+- [x] Test mock API mode for all passkey endpoints
+- [x] Verify existing Google OAuth flow unaffected
 
 ### Change: phone-image-collection (Validation)
 
@@ -109,24 +109,24 @@ Config and verification:
 ## Existing QA Checklist
 
 ### Gameplay
-- [ ] Daily puzzle loads with correct image
-- [ ] Autocomplete filters phones after 2+ characters typed
-- [ ] Keyboard navigation works in autocomplete
-- [ ] Feedback shows correct status (wrong brand, right brand, correct)
-- [ ] Timer starts on "Start" and stops on game end
-- [ ] Game state persists across page refreshes
-- [ ] Confetti fires on correct guess
-- [ ] Game over modal shows after win or 6 failed guesses
+- [x] Daily puzzle loads with correct image
+- [x] Autocomplete filters phones after 2+ characters typed
+- [x] Keyboard navigation works in autocomplete
+- [x] Feedback shows correct status (wrong brand, right brand, correct)
+- [x] Timer starts on "Start" and stops on game end
+- [x] Game state persists across page refreshes
+- [x] Confetti fires on correct guess
+- [x] Game over modal shows after win or 6 failed guesses
 
 ### Auth
-- [ ] Google sign-in redirects and returns with session
-- [ ] Passkey sign-in works with biometric prompt
-- [ ] Sign-out clears session
-- [ ] Auth state persists across page refreshes
-- [ ] Unauthenticated users can still play (localStorage mode)
+- [x] Google sign-in redirects and returns with session
+- [ ] Passkey sign-in works with biometric prompt *(BLOCKED: no frontend passkey UI implemented)*
+- [x] Sign-out clears session
+- [x] Auth state persists across page refreshes
+- [x] Unauthenticated users can still play (localStorage mode)
 
 ### Mobile
-- [ ] Swipe navigation between panels works smoothly
-- [ ] Touch targets are at least 44px
-- [ ] No horizontal overflow on 375px width
-- [ ] Virtual keyboard doesn't obscure autocomplete dropdown
+- [x] Swipe navigation between panels works smoothly
+- [ ] Touch targets are at least 44px *(FAIL: sign-out 33px, save 36px, close 28px, leaderboard tabs 33px height)*
+- [x] No horizontal overflow on 375px width
+- [ ] Virtual keyboard doesn't obscure autocomplete dropdown *(cannot verify without real device)*

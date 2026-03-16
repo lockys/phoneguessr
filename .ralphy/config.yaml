@@ -43,6 +43,11 @@ rules:
   - "When merging branches, .ralphy/progress.txt conflicts must use union strategy — keep ALL lines from both current and incoming (never discard either side)"
   - "For .ralphy/progress.txt merge conflicts: accept both current and incoming changes (git checkout --merge then keep all content)"
 
+  # Verification
+  - "Use Chrome DevTools MCP tools for runtime verification: navigate pages, check console errors/warnings, inspect network requests, take screenshots"
+  - "After implementing UI or API changes, reload localhost:8080 via chrome-devtools MCP and check for console errors/warnings"
+  - "Available MCP tools: navigate_page, list_console_messages, list_network_requests, take_screenshot, evaluate_script, etc."
+
   # OpenSpec integration (Model C — scoped Ralphy runs)
   - "Before implementing, read openspec/changes/*/tasks.md for the task list"
   - "Read proposal.md, design.md, and specs/*.md in the same change directory for context"
