@@ -1,4 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+
+// Mock database module to prevent neon() initialization
+vi.mock('../db/index.js', () => ({ db: {} }));
+
 import { DIFFICULTY_WEIGHTS, pickDifficulty } from './puzzle.js';
 
 describe('pickDifficulty', () => {

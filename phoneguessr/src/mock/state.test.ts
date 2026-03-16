@@ -76,8 +76,8 @@ describe('getMockHint', () => {
     const result = getMockHint('year');
     expect('hint' in result).toBe(true);
     if ('hint' in result) {
-      // MockPhone lacks releaseYear, so mock returns 'Unknown' (matches production behavior)
-      expect(result.hint).toBe('Unknown');
+      // MockPhone has releaseYear, hint should be a numeric string
+      expect(Number(result.hint)).toBeGreaterThan(2000);
     }
   });
 
@@ -85,8 +85,8 @@ describe('getMockHint', () => {
     const result = getMockHint('price_tier');
     expect('hint' in result).toBe(true);
     if ('hint' in result) {
-      // MockPhone lacks priceTier, so mock returns 'Unknown' (matches production behavior)
-      expect(result.hint).toBe('Unknown');
+      // MockPhone has priceTier, hint should be one of the valid tiers
+      expect(['budget', 'mid', 'flagship']).toContain(result.hint);
     }
   });
 
