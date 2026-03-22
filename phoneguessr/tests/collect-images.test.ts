@@ -1,188 +1,133 @@
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { BASE_URL, parseBrandListingPage } from '../scripts/collect-images';
+import type { ManifestEntry } from '../scripts/collect-images';
+import {
+  inferFormFactor,
+  inferPriceTier,
+  loadManifest,
+  phaseGenerate,
+  toKebabSlug,
+} from '../scripts/collect-images';
 
-// Minimal GSMArena brand listing HTML fixture (mirrors the real page structure)
-function makeBrandListingHtml({
-  phones = [] as Array<{ href: string; name: string; thumbnail: string }>,
-  nextPageHref = null as string | null,
-} = {}) {
-  const items = phones
-    .map(
-      ({ href, name, thumbnail }) =>
-        `<li><a href="${href}"><img src="${thumbnail}" title="${name}"><strong><span>${name}</span></strong></a></li>`,
-    )
-    .join('\n');
-
-  const navPages = nextPageHref
-    ? `<div class="review-nav-v2"><div class="nav-pages">
-         <a href="#" class="prevnextbuttondis">◄</a>
-         <strong>1</strong>
-         <a href="${nextPageHref}" class="prevnextbutton" title="Next page">►</a>
-       </div></div>`
-    : `<div class="review-nav-v2"><div class="nav-pages">
-         <a href="#" class="prevnextbuttondis">◄</a>
-         <strong>3</strong>
-         <a href="#" class="prevnextbuttondis">►</a>
-       </div></div>`;
-
-  return `<!doctype html><html><body>
-    <div class="makers"><ul>${items}</ul></div>
-    ${navPages}
-  </body></html>`;
-}
-
-describe('parseBrandListingPage', () => {
-  it('extracts phone name and href', () => {
-    const html = makeBrandListingHtml({
-      phones: [
-        {
-          href: 'apple_iphone_16_pro-12345.php',
-          name: 'iPhone 16 Pro',
-          thumbnail:
-            'https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-16-pro.jpg',
-        },
-      ],
-    });
-
-    const { phones } = parseBrandListingPage(html);
-
-    expect(phones).toHaveLength(1);
-    expect(phones[0].name).toBe('iPhone 16 Pro');
-    expect(phones[0].href).toBe('apple_iphone_16_pro-12345.php');
+describe('toKebabSlug', () => {
+  it('converts brand + model to kebab-case', () => {
+    expect(toKebabSlug('Apple', 'iPhone 16 Pro Max')).toBe('apple-iphone-16-pro-max');
+    expect(toKebabSlug('Samsung', 'Galaxy S25 Ultra')).toBe('samsung-galaxy-s25-ultra');
+    expect(toKebabSlug('Nothing', 'Phone 2')).toBe('nothing-phone-2');
   });
 
-  it('returns full thumbnail URL when src is already absolute', () => {
-    const absoluteThumb =
-      'https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-16-pro.jpg';
-    const html = makeBrandListingHtml({
-      phones: [
-        {
-          href: 'apple_iphone_16_pro-12345.php',
-          name: 'iPhone 16 Pro',
-          thumbnail: absoluteThumb,
-        },
-      ],
-    });
-
-    const { phones } = parseBrandListingPage(html);
-    expect(phones[0].thumbnail).toBe(absoluteThumb);
+  it('collapses multiple non-alphanumeric chars', () => {
+    expect(toKebabSlug('Sony Ericsson', 'W995')).toBe('sony-ericsson-w995');
   });
 
-  it('prepends BASE_URL when thumbnail src is relative', () => {
-    const html = makeBrandListingHtml({
-      phones: [
-        {
-          href: 'nokia_3310-100.php',
-          name: 'Nokia 3310',
-          thumbnail: 'vv/bigpic/nokia-3310.jpg',
-        },
-      ],
-    });
+  it('strips leading and trailing hyphens', () => {
+    const slug = toKebabSlug('Test', '!Phone!');
+    expect(slug).not.toMatch(/^-|-$/);
+  });
+});
 
-    const { phones } = parseBrandListingPage(html);
-    expect(phones[0].thumbnail).toBe(`${BASE_URL}/vv/bigpic/nokia-3310.jpg`);
+describe('inferPriceTier', () => {
+  it('returns flagship for Pro/Ultra/Max models', () => {
+    expect(inferPriceTier('Apple', 'iPhone 16 Pro Max')).toBe('flagship');
+    expect(inferPriceTier('Samsung', 'Galaxy S25 Ultra')).toBe('flagship');
+    expect(inferPriceTier('Google', 'Pixel 9 Pro')).toBe('flagship');
   });
 
-  it('extracts multiple phones from a single page', () => {
-    const html = makeBrandListingHtml({
-      phones: [
-        {
-          href: 'samsung_galaxy_s26-1.php',
-          name: 'Galaxy S26',
-          thumbnail: 'https://example.com/s26.jpg',
-        },
-        {
-          href: 'samsung_galaxy_s26_ultra-2.php',
-          name: 'Galaxy S26 Ultra',
-          thumbnail: 'https://example.com/s26u.jpg',
-        },
-        {
-          href: 'samsung_galaxy_z_flip7-3.php',
-          name: 'Galaxy Z Flip7',
-          thumbnail: 'https://example.com/flip7.jpg',
-        },
-      ],
-    });
-
-    const { phones } = parseBrandListingPage(html);
-    expect(phones).toHaveLength(3);
-    expect(phones.map(p => p.name)).toEqual([
-      'Galaxy S26',
-      'Galaxy S26 Ultra',
-      'Galaxy Z Flip7',
-    ]);
+  it('returns budget for budget brand names', () => {
+    expect(inferPriceTier('Tecno', 'Spark 20')).toBe('budget');
+    expect(inferPriceTier('Infinix', 'Hot 30')).toBe('budget');
   });
 
-  it('returns nextPageUrl when a next-page button is present', () => {
-    const html = makeBrandListingHtml({
-      phones: [
-        {
-          href: 'samsung_galaxy_s26-1.php',
-          name: 'Galaxy S26',
-          thumbnail: 'https://example.com/s26.jpg',
-        },
-      ],
-      nextPageHref: 'samsung-phones-f-9-0-p2.php',
-    });
+  it('returns mid as default', () => {
+    expect(inferPriceTier('Nokia', 'G42 5G')).toBe('mid');
+  });
+});
 
-    const { nextPageUrl } = parseBrandListingPage(html);
-    expect(nextPageUrl).toBe(`${BASE_URL}/samsung-phones-f-9-0-p2.php`);
+describe('inferFormFactor', () => {
+  it('identifies flip phones', () => {
+    expect(inferFormFactor('Galaxy Z Flip 6')).toBe('flip');
+    expect(inferFormFactor('Razr 50 Ultra')).toBe('flip');
   });
 
-  it('returns null nextPageUrl on the last page', () => {
-    const html = makeBrandListingHtml({
-      phones: [
-        {
-          href: 'nokia_3310-100.php',
-          name: 'Nokia 3310',
-          thumbnail: 'https://example.com/3310.jpg',
-        },
-      ],
-      nextPageHref: null,
-    });
-
-    const { nextPageUrl } = parseBrandListingPage(html);
-    expect(nextPageUrl).toBeNull();
+  it('identifies fold phones', () => {
+    expect(inferFormFactor('Galaxy Z Fold 6')).toBe('fold');
+    expect(inferFormFactor('Pixel 9 Pro Fold')).toBe('fold');
   });
 
-  it('returns null nextPageUrl when next href is "#"', () => {
-    const html = `<!doctype html><html><body>
-      <div class="makers"><ul>
-        <li><a href="nokia_3310-100.php"><img src="https://example.com/3310.jpg"><strong><span>Nokia 3310</span></strong></a></li>
-      </ul></div>
-      <div class="review-nav-v2"><div class="nav-pages">
-        <strong>1</strong>
-        <a href="#" class="prevnextbuttondis">►</a>
-      </div></div>
-    </body></html>`;
+  it('defaults to bar', () => {
+    expect(inferFormFactor('iPhone 16 Pro')).toBe('bar');
+    expect(inferFormFactor('Galaxy S25 Ultra')).toBe('bar');
+  });
+});
 
-    const { nextPageUrl } = parseBrandListingPage(html);
-    expect(nextPageUrl).toBeNull();
+describe('loadManifest', () => {
+  it('loads all entries when no brand filter', () => {
+    const entries = loadManifest(null);
+    expect(entries.length).toBeGreaterThan(0);
   });
 
-  it('returns empty list for a page with no phones', () => {
-    const html = `<!doctype html><html><body>
-      <div class="makers"><ul></ul></div>
-    </body></html>`;
-
-    const { phones, nextPageUrl } = parseBrandListingPage(html);
-    expect(phones).toHaveLength(0);
-    expect(nextPageUrl).toBeNull();
+  it('filters by brand (case-insensitive)', () => {
+    const entries = loadManifest('apple');
+    expect(entries.length).toBeGreaterThan(0);
+    for (const e of entries) {
+      expect(e.brand.toLowerCase()).toBe('apple');
+    }
   });
 
-  it('skips entries missing href or name', () => {
-    const html = `<!doctype html><html><body>
-      <div class="makers"><ul>
-        <li><a href=""><img src="https://example.com/img.jpg"><strong><span>Valid Phone</span></strong></a></li>
-        <li><a href="valid_phone-1.php"><img src="https://example.com/img.jpg"><strong><span>Valid Phone</span></strong></a></li>
-        <li><a href="no_name-2.php"><img src="https://example.com/img.jpg"><strong><span></span></strong></a></li>
-      </ul></div>
-    </body></html>`;
+  it('returns empty array for unknown brand', () => {
+    const entries = loadManifest('UnknownBrandXYZ');
+    expect(entries).toHaveLength(0);
+  });
 
-    const { phones } = parseBrandListingPage(html);
-    // Only the entry with both href and name should be included
-    expect(phones).toHaveLength(1);
-    expect(phones[0].name).toBe('Valid Phone');
-    expect(phones[0].href).toBe('valid_phone-1.php');
+  it('every entry has required fields', () => {
+    const entries = loadManifest(null);
+    for (const e of entries) {
+      expect(typeof e.brand).toBe('string');
+      expect(typeof e.model).toBe('string');
+      expect(typeof e.imageUrl).toBe('string');
+      expect(e.imageUrl).toMatch(/^https?:\/\//);
+      expect(typeof e.releaseYear).toBe('number');
+      expect(['budget', 'mid', 'flagship']).toContain(e.priceTier);
+      expect(['bar', 'flip', 'fold']).toContain(e.formFactor);
+      expect(['easy', 'medium', 'hard']).toContain(e.difficulty);
+      expect(typeof e.source).toBe('string');
+    }
+  });
+
+  it('has no duplicate brand+model entries', () => {
+    const entries = loadManifest(null);
+    const keys = entries.map(e => `${e.brand}|${e.model}`);
+    const unique = new Set(keys);
+    expect(unique.size).toBe(keys.length);
+  });
+});
+
+describe('phaseGenerate', () => {
+  it('skips entries without a processed image file', () => {
+    const entries: ManifestEntry[] = [
+      {
+        brand: 'TestBrand',
+        model: 'Model That Does Not Exist',
+        imageUrl: 'https://example.com/img.jpg',
+        releaseYear: 2024,
+        priceTier: 'mid',
+        formFactor: 'bar',
+        difficulty: 'hard',
+        source: 'test',
+      },
+    ];
+    const result = phaseGenerate(entries);
+    // Should not crash and should not add entries without images
+    const added = result.find(p => p.brand === 'TestBrand');
+    expect(added).toBeUndefined();
+  });
+
+  it('preserves existing phone-data.json entries', () => {
+    // Run with an empty manifest — existing entries should come through
+    const result = phaseGenerate([]);
+    expect(result.length).toBeGreaterThan(0);
+    const hasApple = result.some(p => p.brand === 'Apple');
+    expect(hasApple).toBe(true);
   });
 });

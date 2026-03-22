@@ -1,0 +1,28 @@
+{
+  "mustInclude": [
+    { "brand": "Nokia", "model": "3310", "note": "Most iconic phone ever made" },
+    { "brand": "Nokia", "model": "N95", "note": "Pioneering multimedia smartphone" },
+    { "brand": "Nokia", "model": "1100", "note": "Best-selling phone of all time" },
+    { "brand": "Motorola", "model": "RAZR V3", "note": "Iconic flip phone design" },
+    { "brand": "Motorola", "model": "StarTAC", "note": "First clamshell phone" },
+    { "brand": "BlackBerry", "model": "Bold 9000", "note": "Peak BlackBerry era" },
+    { "brand": "Sony Ericsson", "model": "W800", "note": "Walkman phone icon" },
+    { "brand": "Apple", "model": "iPhone 4s", "note": "Siri debut, last Steve Jobs phone" },
+    { "brand": "Samsung", "model": "Galaxy S", "note": "Original Galaxy" },
+    { "brand": "Samsung", "model": "Galaxy Note", "note": "Started the phablet trend" },
+    { "brand": "HTC", "model": "Dream", "note": "First Android phone (T-Mobile G1)" },
+    { "brand": "HTC", "model": "One M7", "note": "Iconic aluminum unibody" },
+    { "brand": "Google", "model": "Nexus 5", "note": "Beloved developer phone" },
+    { "brand": "LG", "model": "G2", "note": "Rear button pioneer" },
+    { "brand": "Palm", "model": "Pre", "note": "webOS pioneer" },
+    { "brand": "Siemens", "model": "SL45", "note": "First phone with MP3 player" },
+    { "brand": "Ericsson", "model": "T28", "note": "Thinnest phone of its era" },
+    { "brand": "Samsung", "model": "Galaxy Z Flip", "note": "Modern flip phone revival" }
+  ],
+  "exclude": [
+    { "pattern": "Watch", "reason": "Smartwatches, not phones" },
+    { "pattern": "Tab", "reason": "Tablets, not phones" },
+    { "pattern": "Pad", "reason": "Tablets, not phones" },
+    { "pattern": "Band", "reason": "Fitness bands, not phones" }
+  ]
+}
