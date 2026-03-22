@@ -1,7 +1,7 @@
 import { avg, count, eq, sql } from 'drizzle-orm';
-import type { Difficulty } from './difficulty.js';
 import { db } from '../db/index.js';
 import { dailyPuzzles, phones, results } from '../db/schema.js';
+import type { Difficulty } from './difficulty.js';
 
 /**
  * Get today's UTC date string (YYYY-MM-DD).
@@ -75,7 +75,11 @@ export async function getTodayPuzzle() {
 }
 
 // Difficulty weights: easy 20%, medium 25%, hard 55% (meets ≥30% hard requirement).
-export const DIFFICULTY_WEIGHTS = { easy: 0.2, medium: 0.25, hard: 0.55 } as const;
+export const DIFFICULTY_WEIGHTS = {
+  easy: 0.2,
+  medium: 0.25,
+  hard: 0.55,
+} as const;
 
 /**
  * Pick a difficulty tier based on a random roll in [0, 1).
@@ -83,7 +87,8 @@ export const DIFFICULTY_WEIGHTS = { easy: 0.2, medium: 0.25, hard: 0.55 } as con
  */
 export function pickDifficulty(roll: number): Difficulty {
   if (roll < DIFFICULTY_WEIGHTS.easy) return 'easy';
-  if (roll < DIFFICULTY_WEIGHTS.easy + DIFFICULTY_WEIGHTS.medium) return 'medium';
+  if (roll < DIFFICULTY_WEIGHTS.easy + DIFFICULTY_WEIGHTS.medium)
+    return 'medium';
   return 'hard';
 }
 

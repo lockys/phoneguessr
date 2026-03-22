@@ -29,7 +29,7 @@ export async function generateCrop(
   imagePath: string,
   level: number,
 ): Promise<string> {
-  // @ts-expect-error sharp is an optional server-side dependency, installed at deploy time
+  // @ts-ignore sharp is an optional server-side dependency, installed at deploy time
   const sharp = (await import('sharp')).default;
   const image = sharp(imagePath);
   const { width, height } = await image.metadata();
