@@ -41,7 +41,10 @@ describe('DIFFICULTY_WEIGHTS', () => {
   });
 
   it('weights sum to 1', () => {
-    const sum = DIFFICULTY_WEIGHTS.easy + DIFFICULTY_WEIGHTS.medium + DIFFICULTY_WEIGHTS.hard;
+    const sum =
+      DIFFICULTY_WEIGHTS.easy +
+      DIFFICULTY_WEIGHTS.medium +
+      DIFFICULTY_WEIGHTS.hard;
     expect(sum).toBeCloseTo(1.0);
   });
 

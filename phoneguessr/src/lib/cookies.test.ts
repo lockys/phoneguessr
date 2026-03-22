@@ -20,13 +20,13 @@ describe('parseCookies', () => {
   });
 
   it('decodes percent-encoded cookie values', () => {
-    const encoded = 'token=' + encodeURIComponent('hello world');
+    const encoded = `token=${encodeURIComponent('hello world')}`;
     expect(parseCookies(encoded)).toEqual({ token: 'hello world' });
   });
 
   it('decodes special characters in values', () => {
-    const encoded = 'data=' + encodeURIComponent('a=1&b=2');
-    expect(parseCookies(encoded)).toEqual({ 'data': 'a=1&b=2' });
+    const encoded = `data=${encodeURIComponent('a=1&b=2')}`;
+    expect(parseCookies(encoded)).toEqual({ data: 'a=1&b=2' });
   });
 
   it('handles cookies with no value (no = sign)', () => {
@@ -39,7 +39,7 @@ describe('parseCookies', () => {
 
   it('uses the value after the first = for values containing =', () => {
     const result = parseCookies('token=abc=def');
-    expect(result['token']).toBe('abc=def');
+    expect(result.token).toBe('abc=def');
   });
 });
 
@@ -107,6 +107,8 @@ describe('serializeCookie', () => {
       path: '/',
       maxAge: 86400,
     });
-    expect(result).toBe('session=tok; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=86400');
+    expect(result).toBe(
+      'session=tok; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=86400',
+    );
   });
 });
