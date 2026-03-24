@@ -27,13 +27,12 @@ npx vitest run src/components/Game.test.tsx
 npm run db:generate   # Generate Drizzle migration from schema changes
 npm run db:migrate    # Apply migrations
 npm run db:push       # Push schema directly (dev only)
-npm run db:seed       # Seed phone catalog from phone-data.json
+npm run db:seed       # Seed phone catalog from Wikimedia manifest
 
 # Phone image pipeline (run in order)
 npx tsx scripts/fetch-wikimedia-images.ts --dry-run   # Preview Wikimedia images
 npx tsx scripts/fetch-wikimedia-images.ts --overwrite  # Update manifest
-npx tsx scripts/collect-images.ts                      # Download + process images
-npx tsx scripts/validate-phone-data.ts                 # Validate phone-data.json
+npm run db:seed                                        # Seed DB from manifest (Wikimedia-only entries)
 ```
 
 ## Architecture
@@ -82,8 +81,7 @@ PostgreSQL via Neon (serverless), managed with Drizzle ORM. Schema file: `schema
 
 Three-stage pipeline for the phone catalog:
 1. `fetch-wikimedia-images.ts` — Queries Wikimedia Commons API for CC-licensed phone images, writes `press-kit-manifest.json`
-2. `collect-images.ts` — Downloads manifest URLs, processes with Sharp (resize to 800px, JPEG <200KB), outputs to `config/public/phones/`
-3. `generate-placeholders.ts` — Generates blur placeholders for loading states
+2. `db:seed` — Reads manifest, filters to Wikimedia-only entries, upserts phone records with direct CDN URLs
 
 `brand-config.ts` holds the canonical list of 130+ brands with their difficulty tiers. `validate-phone-data.ts` checks catalog integrity.
 
