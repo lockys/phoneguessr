@@ -17,7 +17,7 @@ export const phones = pgTable(
     id: serial('id').primaryKey(),
     brand: varchar('brand', { length: 100 }).notNull(),
     model: varchar('model', { length: 200 }).notNull(),
-    imagePath: text('image_path').notNull(),
+    imageUrl: text('image_url').notNull(),
     releaseYear: integer('release_year'),
     priceTier: varchar('price_tier', { length: 20 }),
     formFactor: varchar('form_factor', { length: 20 }),
