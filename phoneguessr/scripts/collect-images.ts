@@ -35,6 +35,10 @@ export interface ManifestEntry {
   formFactor: 'bar' | 'flip' | 'fold';
   difficulty: 'easy' | 'medium' | 'hard';
   source: string;
+  // Attribution fields (optional; required for CC BY / CC BY-SA compliance)
+  attribution?: string;
+  licenseShortName?: string;
+  licenseUrl?: string;
 }
 
 interface PhoneDataEntry {
