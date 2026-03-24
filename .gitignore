@@ -1,3 +1,6 @@
+# Worktrees
+.worktrees/
+
 # Dependencies
 node_modules/
 .pnpm-store/
@@ -34,3 +37,4 @@ coverage/
 .superset/
 .vercel
 .env*.local
+.staging/
