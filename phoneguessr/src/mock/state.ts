@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { MOCK_PHONES } from './data.ts';
 
 /**
@@ -31,28 +29,10 @@ export function getMockPuzzle() {
     puzzleId: 1,
     puzzleNumber: Math.max(1, puzzleNumber),
     puzzleDate: today,
-    imagePath: phone.imagePath,
+    imageUrl: phone.imageUrl,
     _answerId: phone.id,
     _answerBrand: phone.brand,
   };
-}
-
-export function getMockImageData(): string | null {
-  const puzzle = getMockPuzzle();
-  const imagePath = path.resolve(
-    'config/public',
-    puzzle.imagePath.replace(/^\/public\//, ''),
-  );
-  if (!fs.existsSync(imagePath)) return null;
-  const buffer = fs.readFileSync(imagePath);
-  const ext = path.extname(imagePath).slice(1).toLowerCase();
-  const mime =
-    ext === 'png'
-      ? 'image/png'
-      : ext === 'svg'
-        ? 'image/svg+xml'
-        : 'image/jpeg';
-  return `data:${mime};base64,${buffer.toString('base64')}`;
 }
 
 export function getMockProfileStats() {
@@ -101,7 +81,7 @@ export function getMockYesterdayPuzzle() {
     phone: {
       brand: phone.brand,
       model: phone.model,
-      imagePath: phone.imagePath,
+      imageUrl: phone.imageUrl,
       releaseYear: null as number | null,
     },
     facts: [] as string[],
@@ -111,27 +91,6 @@ export function getMockYesterdayPuzzle() {
       winRate: 68,
     },
   };
-}
-
-/**
- * Get yesterday's mock image data as base64 data URL.
- */
-export function getMockYesterdayImageData(): string | null {
-  const data = getMockYesterdayPuzzle();
-  const imagePath = path.resolve(
-    'config/public',
-    data.phone.imagePath.replace(/^\/public\//, ''),
-  );
-  if (!fs.existsSync(imagePath)) return null;
-  const buffer = fs.readFileSync(imagePath);
-  const ext = path.extname(imagePath).slice(1).toLowerCase();
-  const mime =
-    ext === 'png'
-      ? 'image/png'
-      : ext === 'svg'
-        ? 'image/svg+xml'
-        : 'image/jpeg';
-  return `data:${mime};base64,${buffer.toString('base64')}`;
 }
 
 /** Track mock hints used in the current session */

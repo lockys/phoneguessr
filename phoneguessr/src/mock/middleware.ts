@@ -8,7 +8,6 @@ import {
 import {
   getMockFeedback,
   getMockHint,
-  getMockImageData,
   getMockProfileStats,
   getMockPuzzle,
   getMockYesterdayPuzzle,
@@ -61,12 +60,8 @@ const routes: Record<
   },
 
   'GET /api/puzzle/image': (_req, res) => {
-    const imageData = getMockImageData();
-    if (!imageData) {
-      json(res, { error: 'Image not found' }, 404);
-      return;
-    }
-    json(res, { imageData });
+    const puzzle = getMockPuzzle();
+    json(res, { imageUrl: puzzle.imageUrl });
   },
 
   'GET /api/puzzle/yesterday': (_req, res) => {
