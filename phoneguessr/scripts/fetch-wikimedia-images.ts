@@ -14,6 +14,8 @@
  *   --help
  */
 
+import type { ManifestEntry } from './collect-images';
+
 // ─── License Filter ───────────────────────────────────────────────────────────
 
 const ACCEPTED_LICENSE_PREFIXES = ['CC0', 'Public domain', 'CC BY'];
@@ -187,4 +189,39 @@ export function mergeGaps(existing: GapEntry[], newGaps: GapEntry[]): GapEntry[]
     }
   }
   return merged;
+}
+
+// ─── Manifest Update ──────────────────────────────────────────────────────────
+
+/**
+ * Merge newEntries into existingEntries.
+ * - overwrite=false: skip entries whose brand|model already exists
+ * - overwrite=true:  replace entries whose brand|model already exists
+ */
+export function applyManifestUpdate(
+  existing: ManifestEntry[],
+  newEntries: ManifestEntry[],
+  overwrite: boolean,
+): ManifestEntry[] {
+  const keyMap = new Map<string, number>();
+  const result = [...existing];
+
+  for (let i = 0; i < result.length; i++) {
+    keyMap.set(`${result[i].brand}|${result[i].model}`, i);
+  }
+
+  for (const entry of newEntries) {
+    const key = `${entry.brand}|${entry.model}`;
+    if (keyMap.has(key)) {
+      if (overwrite) {
+        result[keyMap.get(key)!] = entry;
+      }
+      // else: skip
+    } else {
+      keyMap.set(key, result.length);
+      result.push(entry);
+    }
+  }
+
+  return result;
 }

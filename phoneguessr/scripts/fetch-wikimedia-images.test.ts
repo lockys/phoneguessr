@@ -184,3 +184,44 @@ describe('mergeGaps', () => {
     expect(mergeGaps([], [])).toHaveLength(0);
   });
 });
+
+import type { ManifestEntry } from './collect-images';
+import { applyManifestUpdate } from './fetch-wikimedia-images';
+
+describe('applyManifestUpdate', () => {
+  const existing: ManifestEntry[] = [{
+    brand: 'Samsung', model: 'Galaxy S24', imageUrl: 'https://gsmarena.com/s24.jpg',
+    releaseYear: 2024, priceTier: 'flagship', formFactor: 'bar',
+    difficulty: 'easy', source: 'gsmarena-bigpic',
+  }];
+
+  const wikiEntry: ManifestEntry = {
+    brand: 'Samsung', model: 'Galaxy S24', imageUrl: 'https://upload.wikimedia.org/s24.jpg',
+    releaseYear: 2024, priceTier: 'flagship', formFactor: 'bar',
+    difficulty: 'easy', source: 'wikimedia-commons',
+    attribution: 'Samsung', licenseShortName: 'CC BY-SA 4.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
+  };
+
+  it('skips existing entry by default (overwrite=false)', () => {
+    const result = applyManifestUpdate(existing, [wikiEntry], false);
+    expect(result).toHaveLength(1);
+    expect(result[0].source).toBe('gsmarena-bigpic');
+  });
+
+  it('replaces existing entry when overwrite=true', () => {
+    const result = applyManifestUpdate(existing, [wikiEntry], true);
+    expect(result).toHaveLength(1);
+    expect(result[0].source).toBe('wikimedia-commons');
+    expect(result[0].imageUrl).toContain('wikimedia.org');
+  });
+
+  it('appends new entry not in existing', () => {
+    const newEntry: ManifestEntry = {
+      ...wikiEntry, brand: 'Nokia', model: 'G42',
+      imageUrl: 'https://upload.wikimedia.org/nokia-g42.jpg',
+    };
+    const result = applyManifestUpdate(existing, [newEntry], false);
+    expect(result).toHaveLength(2);
+  });
+});
