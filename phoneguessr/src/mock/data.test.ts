@@ -1,7 +1,4 @@
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import phoneDataJson from '../db/phone-data.json';
 import { MOCK_PHONES } from './data';
 
 describe('MOCK_PHONES catalog', () => {
@@ -34,11 +31,9 @@ describe('MOCK_PHONES catalog', () => {
     }
   });
 
-  it('has valid imagePath format for every phone', () => {
+  it('has valid imageUrl format for every phone', () => {
     for (const phone of MOCK_PHONES) {
-      expect(phone.imagePath).toMatch(
-        /^\/public\/phones\/[\w-]+\.(jpg|png|svg)$/,
-      );
+      expect(phone.imageUrl).toMatch(/^https?:\/\//);
     }
   });
 
@@ -52,21 +47,6 @@ describe('MOCK_PHONES catalog', () => {
     for (const brand of ['Apple', 'Samsung', 'Google', 'OnePlus', 'Nothing']) {
       expect(brands.has(brand)).toBe(true);
     }
-  });
-
-  it('has image files on disk for phones from phone-data.json', () => {
-    // Only check images that are in phone-data.json (real catalog)
-    const missing: string[] = [];
-    for (const phone of phoneDataJson) {
-      const filePath = resolve(
-        'config/public',
-        phone.imagePath.replace(/^\/public\//, ''),
-      );
-      if (!existsSync(filePath)) {
-        missing.push(`${phone.brand} ${phone.model}: ${filePath}`);
-      }
-    }
-    expect(missing).toEqual([]);
   });
 
   it('no brand exceeds 40% of catalog', () => {
@@ -107,37 +87,6 @@ describe('difficulty distribution', () => {
     const samsungPhones = MOCK_PHONES.filter(p => p.brand === 'Samsung');
     for (const phone of samsungPhones) {
       expect(phone.difficulty).toBe('easy');
-    }
-  });
-});
-
-describe('phone-data.json sync', () => {
-  it('phone-data.json has at least 20 entries', () => {
-    expect(phoneDataJson.length).toBeGreaterThanOrEqual(20);
-  });
-
-  it('all phone-data.json entries are represented in MOCK_PHONES', () => {
-    const mockKeys = new Set(MOCK_PHONES.map(p => `${p.brand}|${p.model}`));
-    const missing: string[] = [];
-    for (const phone of phoneDataJson) {
-      const key = `${phone.brand}|${phone.model}`;
-      if (!mockKeys.has(key)) {
-        missing.push(key);
-      }
-    }
-    expect(missing).toEqual([]);
-  });
-
-  it('difficulty matches for phones present in both', () => {
-    const mockMap = new Map(
-      MOCK_PHONES.map(p => [`${p.brand}|${p.model}`, p]),
-    );
-    for (const phone of phoneDataJson) {
-      const key = `${phone.brand}|${phone.model}`;
-      const mock = mockMap.get(key);
-      if (mock) {
-        expect(phone.difficulty).toBe(mock.difficulty);
-      }
     }
   });
 });
