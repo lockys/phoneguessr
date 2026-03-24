@@ -45,7 +45,7 @@ export function Game() {
   const [timerRunning, setTimerRunning] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [imageData, setImageData] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>('');
   const elapsedRef = useRef(0);
 
   // Check localStorage for already-played state
@@ -60,7 +60,7 @@ export function Game() {
       // Fetch image as base64 to prevent cheating via filename
       const imgRes = await fetch(puzzleData.imageUrl);
       const imgData = await imgRes.json();
-      setImageData(imgData.imageData);
+      setImageUrl(imgData.imageUrl);
 
       let restored = false;
 
@@ -220,7 +220,7 @@ export function Game() {
 
       <div className="crop-wrapper">
         <CropReveal
-          imageSrc={imageData}
+          imageSrc={imageUrl}
           level={guesses.length}
           revealed={isFinished}
           isWin={
@@ -231,7 +231,6 @@ export function Game() {
                 : undefined
           }
           onRevealComplete={handleRevealComplete}
-          onImageDrawn={() => setImageData('')}
         />
         {gameState === 'ready' && (
           <div className="start-overlay">

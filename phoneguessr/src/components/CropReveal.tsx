@@ -8,7 +8,6 @@ interface CropRevealProps {
   revealed: boolean;
   isWin?: boolean;
   onRevealComplete?: () => void;
-  onImageDrawn?: () => void;
 }
 
 function easeOutCubic(t: number) {
@@ -50,7 +49,6 @@ export function CropReveal({
   revealed,
   isWin,
   onRevealComplete,
-  onImageDrawn,
 }: CropRevealProps) {
   const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -90,10 +88,11 @@ export function CropReveal({
 
   // Load image and crossfade from previous to new when src changes
   // level and revealed are captured intentionally at src-change time — not stale bugs
-  // biome-ignore lint/correctness/useExhaustiveDependencies: level/revealed/ensureCanvasSize/onImageDrawn captured at src-change time
+  // biome-ignore lint/correctness/useExhaustiveDependencies: level/revealed/ensureCanvasSize captured at src-change time
   useEffect(() => {
     if (!imageSrc) return;
     const img = new Image();
+    img.crossOrigin = 'anonymous';
     img.onload = () => {
       const prevImg = imgObjRef.current;
       imgObjRef.current = img;
@@ -109,7 +108,6 @@ export function CropReveal({
         // First load: draw immediately at scale 1 (server provides correctly cropped region)
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawImageOnCanvas(ctx, img, rect.width, rect.height, dpr);
-        onImageDrawn?.();
         return;
       }
 
@@ -138,8 +136,6 @@ export function CropReveal({
 
         if (t < 1) {
           animFrameRef.current = requestAnimationFrame(animate);
-        } else {
-          onImageDrawn?.();
         }
       };
 
