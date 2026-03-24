@@ -5,7 +5,7 @@
 
 ## Problem
 
-The current `press-kit-manifest.json` uses GSMArena image URLs (`fdn2.gsmarena.com`) whose licensing is unclear. The app database also only has 20 phones from 5 brands — far short of the 147-entry manifest and 130+ brand config. We need legally clear images from manufacturer-provided or openly-licensed sources, while significantly expanding coverage to ~50 major brands.
+The current `press-kit-manifest.json` uses GSMArena image URLs (`fdn2.gsmarena.com`) whose licensing is unclear. The app database also only has 20 phones from 5 brands — far short of the 147-entry manifest and 130+ brand config. We need legally clear images from openly-licensed sources, while significantly expanding coverage to ~50 major brands.
 
 ## Goal
 
@@ -26,7 +26,7 @@ collect-images.ts               ← UNCHANGED
   → generates phone-data.json
 ```
 
-No changes to `collect-images.ts` or the downstream pipeline.
+The pipeline logic of `collect-images.ts` is unchanged. The only required change to that file is extending the `ManifestEntry` interface with three optional attribution fields (see Manifest Entry Format below). `fetch-wikimedia-images.ts` imports `ManifestEntry` from `collect-images.ts` to share the single canonical type — no duplicate interface definitions.
 
 ## Script: `fetch-wikimedia-images.ts`
 
@@ -49,51 +49,78 @@ Brands included (not exhaustive): Apple, Samsung, Google, Xiaomi, OnePlus, Sony,
 
 ### Wikimedia Commons API Search
 
-For each model, two sequential API calls (no auth required):
+For each model, a **single combined API call** using a search generator with imageinfo properties:
 
-**1. Search call:**
 ```
 GET https://commons.wikimedia.org/w/api.php
-  ?action=query&list=search
-  &srsearch="{brand} {model}"
-  &srnamespace=6
-  &srlimit=10
-  &format=json
-```
-
-**2. Image info call** (for each candidate):
-```
-GET https://commons.wikimedia.org/w/api.php
-  ?action=query&titles=File:{filename}
+  ?action=query
+  &generator=search
+  &gsrsearch="{brand} {model}"
+  &gsrnamespace=6
+  &gsrlimit=10
   &prop=imageinfo
   &iiprop=url|extmetadata|size
+  &iiextmetadatafilter=LicenseShortName|Artist|LicenseUrl
   &format=json
+  &origin=*
+```
+
+The `generator=search` approach returns pages with their imageinfo in one request, avoiding a separate lookup step. The search term `"{brand} {model}"` must be URL-encoded (e.g. `Galaxy S24+` → `Galaxy%20S24%2B`).
+
+**User-Agent header** (required by Wikimedia API etiquette):
+```
+PhoneGuessr/1.0 (https://github.com/calvinjeng/guess-game) fetch-wikimedia-images/1.0
 ```
 
 ### License Filter
 
-Accept only:
-- `CC BY` (any version)
-- `CC BY-SA` (any version)
-- `CC0`
-- `Public Domain`
+Read `extmetadata.LicenseShortName.value` from each candidate. Accept using `String.startsWith` or `includes` matching:
 
-Reject: `CC BY-NC`, `All rights reserved`, or unknown/missing license.
+| Accept | Examples |
+|--------|---------|
+| `CC0` | `"CC0"` |
+| `Public Domain` | `"Public domain"` |
+| `CC BY` (any version) | `"CC BY 4.0"`, `"CC BY 2.0"` |
+| `CC BY-SA` (any version) | `"CC BY-SA 4.0"`, `"CC BY-SA 3.0"` |
+
+Reject if `LicenseShortName` is absent, empty, or contains `NC`, `ND`, `GFDL`, or `All rights reserved`.
+
+For dual-licensed images (e.g. `"CC BY-SA 3.0 or GFDL"`), accept if any component matches the above.
 
 ### Image Selection
 
-Among license-passing candidates:
-1. Prefer filenames containing "front" or the exact model name
-2. Prefer higher resolution (wider image wins)
-3. Accept PNG or JPEG only
+Among license-passing candidates, select the best image:
+
+1. **Aspect ratio guard**: skip images where `width > height` (landscape/banner images are wrong for phones)
+2. **Filename blocklist**: skip filenames containing `hand`, `holding`, `person`, `review`, `unbox` — these are press/review shots rather than clean product images
+3. **Filename preference**: prefer filenames containing the model name or "front"
+4. **Resolution**: among remaining candidates, prefer the highest pixel area (`width * height`)
+5. **Format**: accept JPEG and PNG only; skip SVG, GIF, TIFF
+
+**Known coverage gap**: Recent flagship phones (especially Apple iPhones and Google Pixels) have limited clean product shot coverage on Wikimedia Commons. These models are likely to land in `gaps.json` and require manual URL curation.
+
+### Attribution Metadata
+
+CC BY and CC BY-SA licenses require attribution. Store attribution fields on every manifest entry:
+
+```ts
+{
+  // ...existing fields...
+  attribution?: string      // extmetadata.Artist.value (HTML-stripped plain text)
+  licenseShortName?: string // extmetadata.LicenseShortName.value
+  licenseUrl?: string       // extmetadata.LicenseUrl.value
+}
+```
+
+The `ManifestEntry` interface in `collect-images.ts` must be extended to include these three fields (optional, for backwards compatibility with manually-curated entries).
 
 ### Rate Limiting
 
-1 request per 200ms — within Wikimedia's API guidelines for anonymous read-only access.
+Minimum **500ms** between requests (Wikimedia's recommended minimum for anonymous scripts). With ~250 models at one request each, total runtime is ~2 minutes. Requests are processed serially (no parallelism) to stay within anonymous access guidelines.
 
 ### Fallback
 
-If no licensed image is found for a model, skip it and record `{ brand, model }` in `phoneguessr/scripts/gaps.json` for manual follow-up. No GSMArena fallback.
+If no licensed image is found for a model, skip it and record `{ brand, model }` in `phoneguessr/scripts/gaps.json`. No GSMArena fallback.
 
 ## CLI Interface
 
@@ -102,16 +129,28 @@ npx tsx phoneguessr/scripts/fetch-wikimedia-images.ts [options]
 
 Options:
   --brand <name>   Only fetch images for one brand (e.g. "Samsung")
-  --dry-run        Search Wikimedia but do not write manifest
-  --overwrite      Replace existing manifest entries (default: skip existing)
+  --dry-run        Search Wikimedia but do not write manifest; print selected image URL and license per model
+  --overwrite      Replace existing entries with same brand|model key, regardless of source
   --help           Show help
 ```
 
-Default behavior is idempotent: existing manifest entries are skipped unless `--overwrite` is passed. This allows safe re-runs and incremental expansion.
+**`--dry-run` output format** (one line per model):
+```
+[dry-run] Samsung Galaxy S24  →  https://upload.wikimedia.org/...  (CC BY-SA 4.0)
+[dry-run] Samsung Galaxy S23  →  NO IMAGE FOUND
+```
+
+This allows validating image quality and license coverage before writing the manifest.
+
+**Default behavior**: skip any manifest entry whose `brand|model` key already exists (idempotent re-runs).
+
+**`--overwrite` behavior**: replace entries matching the same `brand|model` key — including existing GSMArena entries. This is the correct flag to use when migrating the manifest from GSMArena to Wikimedia.
+
+**`gaps.json` merge behavior**: on each run, the file is read first (if it exists) and new gaps are merged in (deduplicated by `brand|model`). Re-runs with `--brand` never clear gaps from other brands.
 
 ## Manifest Entry Format
 
-Generated entries use the existing `ManifestEntry` schema with `source: "wikimedia-commons"`:
+Generated entries use the existing `ManifestEntry` schema extended with attribution fields:
 
 ```json
 {
@@ -122,7 +161,10 @@ Generated entries use the existing `ManifestEntry` schema with `source: "wikimed
   "priceTier": "flagship",
   "formFactor": "bar",
   "difficulty": "easy",
-  "source": "wikimedia-commons"
+  "source": "wikimedia-commons",
+  "attribution": "Samsung Electronics",
+  "licenseShortName": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
 }
 ```
 
@@ -135,9 +177,14 @@ End-of-run summary printed to stdout:
 ✗ Gaps:    52  → written to phoneguessr/scripts/gaps.json
 ```
 
+## Validator Thresholds
+
+`validate-phone-data.ts` currently checks for 400+ phones and 100+ brands. After this script runs with a fresh manifest, the catalog will have ~200–250 phones from ~50 brands. The strict thresholds in the validator must be updated to match the new targets before running `--strict` mode.
+
 ## Out of Scope
 
-- Changes to `collect-images.ts` or downstream pipeline
+- Changes to `collect-images.ts` image processing pipeline
 - Niche/rugged brand coverage (Cat, Doogee, Crosscall, etc.)
 - Automatic gap-filling from other sources
 - Per-brand official website scrapers
+- Displaying attribution in the game UI (separate task)
