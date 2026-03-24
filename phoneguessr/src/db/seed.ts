@@ -9,6 +9,7 @@ interface PhoneEntry {
   releaseYear: number;
   priceTier: string;
   formFactor: string;
+  difficulty: string;
   facts?: { type: string; text: string }[];
 }
 
@@ -26,6 +27,7 @@ async function seed() {
         releaseYear: phone.releaseYear,
         priceTier: phone.priceTier,
         formFactor: phone.formFactor,
+        difficulty: phone.difficulty,
       })
       .onConflictDoNothing()
       .returning({ id: phones.id });

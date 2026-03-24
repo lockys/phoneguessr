@@ -1,3 +1,8 @@
+/**
+ * @deprecated Use `npm run collect-images` instead.
+ * This script generates SVG placeholders. The collect-images pipeline
+ * now downloads and processes real phone images from GSMArena.
+ */
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';

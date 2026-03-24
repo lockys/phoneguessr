@@ -1,34 +1,52 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Import all brand names from brand-config
+// Fallback list if brand-config can't be loaded
 const APPROVED_BRANDS = [
-  'Apple',
-  'Samsung',
-  'Google',
-  'OnePlus',
-  'Nothing',
-  'Xiaomi',
-  'Sony',
-  'Motorola',
-  'Huawei',
-  'OPPO',
-  'Vivo',
-  'Realme',
-  'ASUS',
-  'Honor',
-  'ZTE',
-  'Nubia',
+  // Major brands
+  'Apple', 'Samsung', 'Google', 'Nokia', 'Motorola',
+  'OnePlus', 'Xiaomi', 'Sony', 'Huawei', 'LG', 'HTC', 'BlackBerry',
+  // Mid brands
+  'OPPO', 'Vivo', 'Realme', 'Honor', 'Nothing', 'ASUS', 'Lenovo', 'ZTE',
+  'Meizu', 'Alcatel', 'Tecno', 'Infinix', 'Itel', 'Poco', 'Redmi', 'iQOO',
+  'Nubia', 'TCL', 'Sharp', 'Kyocera',
+  // Niche brands
+  'Fairphone', 'Cat', 'Doogee', 'Ulefone', 'Oukitel', 'Cubot', 'Umidigi',
+  'Blackview', 'Wiko', 'BLU', 'Lava', 'Micromax', 'Karbonn', 'Intex',
+  'Panasonic', 'Philips', 'Siemens', 'BenQ', 'Benefon', 'Palm', 'Sagem',
+  'Sendo', 'Vertu', 'Acer', 'Amazon', 'Microsoft', 'Energizer', 'CAT',
+  'Vodafone', 'T-Mobile', 'O2', 'Gigabyte', 'i-mate', 'Garmin-Asus',
+  'Sonim', 'Verykool', 'Plum', 'NIU', 'Celkon', 'Spice', 'Maxon', 'Haier',
+  'Bird', 'Amoi', 'VK Mobile', 'Thuraya', 'Ericsson', 'Sony Ericsson',
+  'NEC', 'Mitsubishi', 'Toshiba', 'Bosch', 'Maxwest', 'Yezz', 'QMobile',
+  'Gionee', 'Coolpad', 'XOLO', 'Posh', 'Unnecto', 'Icemobile', 'Prestigio',
+  'Allview', 'Casio', 'Sewon', 'Innostream', 'Chea', 'WND', 'Telit',
+  'Emporia', 'HP', 'Dopod', 'Jolla', 'YU', 'Essential', 'Razer', 'Opsson',
+  'Celcom', 'Zen', 'iNew', 'Wileyfox', 'Centric', 'Leagoo', 'Vernee',
+  'Maze', 'Sugar', 'Lemon', 'Vsmart', 'Vsun', 'OnePlus Nord', 'Roku',
+  'ZEN', 'MiOne', 'Ulefone Armor', 'Crosscall', 'Bea-fon', 'AGM', 'Oscal',
 ] as const;
 
 const VALID_PRICE_TIERS = ['budget', 'mid', 'flagship'] as const;
 const VALID_FORM_FACTORS = ['bar', 'flip', 'fold'] as const;
 const VALID_DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 
-const MIN_RELEASE_YEAR = 2020;
+const MIN_RELEASE_YEAR = 1996;
 const MAX_RELEASE_YEAR = new Date().getFullYear() + 1;
+
+// Original 20 phones that must remain unchanged
+const ORIGINAL_PHONES = [
+  'Apple|iPhone 16 Pro Max', 'Apple|iPhone 16 Pro', 'Apple|iPhone 16',
+  'Apple|iPhone 15 Pro Max', 'Apple|iPhone 15 Pro', 'Apple|iPhone 15',
+  'Apple|iPhone 14 Pro', 'Samsung|Galaxy S25 Ultra', 'Samsung|Galaxy S24 Ultra',
+  'Samsung|Galaxy S24', 'Samsung|Galaxy Z Fold 6', 'Samsung|Galaxy Z Flip 6',
+  'Google|Pixel 9 Pro', 'Google|Pixel 9', 'Google|Pixel 8 Pro', 'Google|Pixel 8',
+  'OnePlus|13', 'OnePlus|12', 'Nothing|Phone 2', 'Nothing|Phone 1',
+];
 
 interface PhoneEntry {
   brand: string;
@@ -108,7 +126,7 @@ function validateBrandNames(phones: PhoneEntry[]): ValidationResult[] {
     results.push({
       passed: true,
       name: 'brand-names',
-      detail: 'All brands use approved casing',
+      detail: 'All brands use approved names',
     });
   }
   return results;
@@ -199,7 +217,7 @@ function validateMetadataFields(phones: PhoneEntry[]): ValidationResult[] {
     results.push({
       passed: false,
       name: 'metadata-present',
-      detail: `${missingCount}/${phones.length} phones missing metadata fields (expected after expansion)`,
+      detail: `${missingCount}/${phones.length} phones missing metadata fields`,
     });
   }
 
@@ -217,10 +235,12 @@ function validateImageFiles(phones: PhoneEntry[]): ValidationResult[] {
   const results: ValidationResult[] = [];
   const imagesDir = join(__dirname, '..', 'config', 'public', 'phones');
   let missingCount = 0;
+  let oversizedCount = 0;
 
   for (const phone of phones) {
     const filename = phone.imagePath.replace('/public/phones/', '');
     const fullPath = join(imagesDir, filename);
+
     if (!existsSync(fullPath)) {
       missingCount++;
       if (missingCount <= 5) {
@@ -229,6 +249,19 @@ function validateImageFiles(phones: PhoneEntry[]): ValidationResult[] {
           name: 'image-files',
           detail: `Missing image: ${filename}`,
         });
+      }
+    } else {
+      // Image integrity: check file size (<200KB for JPEGs)
+      const stat = statSync(fullPath);
+      if (filename.endsWith('.jpg') && stat.size > 200 * 1024) {
+        oversizedCount++;
+        if (oversizedCount <= 3) {
+          results.push({
+            passed: false,
+            name: 'image-size',
+            detail: `Oversized: ${filename} (${(stat.size / 1024).toFixed(0)}KB > 200KB)`,
+          });
+        }
       }
     }
   }
@@ -241,6 +274,14 @@ function validateImageFiles(phones: PhoneEntry[]): ValidationResult[] {
     });
   }
 
+  if (oversizedCount > 3) {
+    results.push({
+      passed: false,
+      name: 'image-size',
+      detail: `... and ${oversizedCount - 3} more oversized images`,
+    });
+  }
+
   if (missingCount === 0) {
     results.push({
       passed: true,
@@ -248,6 +289,15 @@ function validateImageFiles(phones: PhoneEntry[]): ValidationResult[] {
       detail: `All ${phones.length} phone images found`,
     });
   }
+
+  if (oversizedCount === 0) {
+    results.push({
+      passed: true,
+      name: 'image-size',
+      detail: 'All JPEG images under 200KB',
+    });
+  }
+
   return results;
 }
 
@@ -366,6 +416,37 @@ function validateFileNaming(phones: PhoneEntry[]): ValidationResult[] {
   return results;
 }
 
+function validateBackwardCompatibility(phones: PhoneEntry[]): ValidationResult[] {
+  const results: ValidationResult[] = [];
+  const phoneMap = new Map<string, PhoneEntry>();
+
+  for (const phone of phones) {
+    phoneMap.set(`${phone.brand}|${phone.model}`, phone);
+  }
+
+  let missingCount = 0;
+  for (const key of ORIGINAL_PHONES) {
+    if (!phoneMap.has(key)) {
+      missingCount++;
+      results.push({
+        passed: false,
+        name: 'backward-compat',
+        detail: `Original phone missing: ${key.replace('|', ' ')}`,
+      });
+    }
+  }
+
+  if (missingCount === 0) {
+    results.push({
+      passed: true,
+      name: 'backward-compat',
+      detail: `All ${ORIGINAL_PHONES.length} original phones preserved`,
+    });
+  }
+
+  return results;
+}
+
 // --- Main ---
 
 console.log('Phone Data Validation');
@@ -382,6 +463,7 @@ const allResults: ValidationResult[] = [
   ...validateImageFiles(phones),
   ...validateMetadataFields(phones),
   ...validateCatalogTargets(phones),
+  ...validateBackwardCompatibility(phones),
 ];
 
 const passed = allResults.filter(r => r.passed);
@@ -395,7 +477,7 @@ if (passed.length > 0) {
 }
 
 if (failed.length > 0) {
-  console.log('\nFAIL (expected gaps before expansion):');
+  console.log('\nFAIL (expected gaps before full scrape):');
   for (const r of failed) {
     console.log(`  ✗ [${r.name}] ${r.detail}`);
   }
@@ -403,7 +485,7 @@ if (failed.length > 0) {
 
 console.log(`\nSummary: ${passed.length} passed, ${failed.length} failed`);
 
-// Exit with code 0 even on failures since current data is pre-expansion
+// Exit with code 0 even on failures since data may be pre-expansion
 // Use --strict flag to enforce all checks
 if (process.argv.includes('--strict')) {
   process.exit(failed.length > 0 ? 1 : 0);
