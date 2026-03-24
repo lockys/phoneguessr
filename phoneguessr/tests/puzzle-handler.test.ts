@@ -40,7 +40,7 @@ const PHONE = {
   id: 5,
   brand: 'Apple',
   model: 'iPhone 16 Pro',
-  imagePath: '/public/phones/apple-iphone-16-pro.png',
+  imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/apple-iphone-16-pro.jpg',
 };
 
 beforeEach(() => {
@@ -68,10 +68,8 @@ describe('GET /api/puzzle?action=today', () => {
 });
 
 describe('GET /api/puzzle?action=image', () => {
-  it('returns base64-encoded PNG image', async () => {
+  it('returns imageUrl directly from phone record', async () => {
     mockGetTodayPuzzle.mockResolvedValue({ puzzle: PUZZLE, phone: PHONE });
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue(Buffer.from('fake-png'));
 
     const res = await GET(
       new Request('http://localhost/api/puzzle?action=image'),
@@ -79,48 +77,7 @@ describe('GET /api/puzzle?action=image', () => {
     const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(body.imageData).toMatch(/^data:image\/png;base64,/);
-  });
-
-  it('returns correct MIME for JPEG', async () => {
-    const jpegPhone = { ...PHONE, imagePath: '/public/phones/phone.jpg' };
-    mockGetTodayPuzzle.mockResolvedValue({ puzzle: PUZZLE, phone: jpegPhone });
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue(Buffer.from('fake-jpg'));
-
-    const res = await GET(
-      new Request('http://localhost/api/puzzle?action=image'),
-    );
-    const body = await res.json();
-
-    expect(body.imageData).toMatch(/^data:image\/jpeg;base64,/);
-  });
-
-  it('returns correct MIME for SVG', async () => {
-    const svgPhone = { ...PHONE, imagePath: '/public/phones/phone.svg' };
-    mockGetTodayPuzzle.mockResolvedValue({ puzzle: PUZZLE, phone: svgPhone });
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue(Buffer.from('<svg></svg>'));
-
-    const res = await GET(
-      new Request('http://localhost/api/puzzle?action=image'),
-    );
-    const body = await res.json();
-
-    expect(body.imageData).toMatch(/^data:image\/svg\+xml;base64,/);
-  });
-
-  it('returns 404 when image file missing', async () => {
-    mockGetTodayPuzzle.mockResolvedValue({ puzzle: PUZZLE, phone: PHONE });
-    mockExistsSync.mockReturnValue(false);
-
-    const res = await GET(
-      new Request('http://localhost/api/puzzle?action=image'),
-    );
-    const body = await res.json();
-
-    expect(res.status).toBe(404);
-    expect(body.error).toBe('Image not found');
+    expect(body).toEqual({ imageUrl: PHONE.imageUrl });
   });
 });
 

@@ -17,7 +17,7 @@ describe('getMockYesterdayPuzzle', () => {
 
     expect(result.phone).toHaveProperty('brand');
     expect(result.phone).toHaveProperty('model');
-    expect(result.phone).toHaveProperty('imagePath');
+    expect(result.phone).toHaveProperty('imageUrl');
     expect(result.phone.releaseYear).toBeNull();
     expect(result.facts).toEqual([]);
     expect(typeof result.stats.totalPlayers).toBe('number');

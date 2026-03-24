@@ -44,7 +44,7 @@ describe('Phones table', () => {
     expect(cols).toContain('id');
     expect(cols).toContain('brand');
     expect(cols).toContain('model');
-    expect(cols).toContain('image_path');
+    expect(cols).toContain('image_url');
     expect(cols).toContain('active');
     expect(cols).toContain('created_at');
   });

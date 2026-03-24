@@ -150,22 +150,17 @@ describe('CropReveal', () => {
   });
 
   it('draws immediately on first image load — no crossfade', async () => {
-    const onImageDrawn = vi.fn();
     render(
       <CropReveal
         imageSrc="data:image/png;base64,first"
         level={0}
         revealed={false}
-        onImageDrawn={onImageDrawn}
       />,
     );
 
     await act(async () => {
       triggerImageLoad();
     });
-
-    // onImageDrawn fires immediately (not deferred into a RAF crossfade)
-    expect(onImageDrawn).toHaveBeenCalledTimes(1);
 
     // All draws during first load must be at full opacity (no alpha blending)
     expect(alphaAtDraw.length).toBeGreaterThan(0);
@@ -216,48 +211,6 @@ describe('CropReveal', () => {
     expect(hasPartialAlpha).toBe(true);
   });
 
-  it('calls onImageDrawn only after crossfade animation completes', async () => {
-    const onImageDrawn = vi.fn();
-
-    const { rerender } = render(
-      <CropReveal
-        imageSrc="data:image/png;base64,src1"
-        level={0}
-        revealed={false}
-        onImageDrawn={onImageDrawn}
-      />,
-    );
-
-    await act(async () => {
-      triggerImageLoad();
-    });
-    expect(onImageDrawn).toHaveBeenCalledTimes(1);
-
-    pendingRafs.clear();
-
-    rerender(
-      <CropReveal
-        imageSrc="data:image/png;base64,src2"
-        level={1}
-        revealed={false}
-        onImageDrawn={onImageDrawn}
-      />,
-    );
-
-    await act(async () => {
-      triggerImageLoad();
-    });
-
-    // Still only 1 call — crossfade is in progress
-    expect(onImageDrawn).toHaveBeenCalledTimes(1);
-
-    // Advance past the 400ms crossfade duration (t=1 → animation complete)
-    act(() => {
-      flushRafs(500);
-    });
-
-    expect(onImageDrawn).toHaveBeenCalledTimes(2);
-  });
 
   it('resets globalAlpha to 1 after each crossfade frame', async () => {
     const { rerender } = render(

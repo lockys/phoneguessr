@@ -108,11 +108,11 @@ describe('mockApiMiddleware', () => {
   });
 
   describe('GET /api/puzzle/image', () => {
-    it('returns base64 image data', async () => {
+    it('returns imageUrl from Wikimedia CDN', async () => {
       const res = await callMiddleware('GET', '/api/puzzle/image');
       const data = parseBody(res);
-      expect(data).toHaveProperty('imageData');
-      expect(data.imageData).toMatch(/^data:image\//);
+      expect(data).toHaveProperty('imageUrl');
+      expect(data.imageUrl).toMatch(/^https?:\/\//);
     });
   });
 
