@@ -205,7 +205,7 @@ export async function getYesterdayPuzzle() {
     phone: {
       brand: phone.brand,
       model: phone.model,
-      imagePath: phone.imagePath,
+      imageUrl: phone.imageUrl,
       releaseYear: null as number | null,
     },
     facts: [] as string[],

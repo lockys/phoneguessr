@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { and, asc, eq } from 'drizzle-orm';
 import { db } from '../phoneguessr/src/db/index.js';
 import { guesses, phones, results } from '../phoneguessr/src/db/schema.js';
@@ -27,28 +25,7 @@ export async function GET(request: Request) {
 
     case 'image': {
       const { phone } = await getTodayPuzzle();
-      const imagePath = path.resolve(
-        process.cwd(),
-        'phoneguessr',
-        'config',
-        'public',
-        phone.imagePath.replace(/^\/public\//, ''),
-      );
-
-      if (!fs.existsSync(imagePath)) {
-        return Response.json({ error: 'Image not found' }, { status: 404 });
-      }
-
-      const buffer = fs.readFileSync(imagePath);
-      const ext = path.extname(imagePath).slice(1).toLowerCase();
-      const mime =
-        ext === 'png'
-          ? 'image/png'
-          : ext === 'svg'
-            ? 'image/svg+xml'
-            : 'image/jpeg';
-      const base64 = buffer.toString('base64');
-      return Response.json({ imageData: `data:${mime};base64,${base64}` });
+      return Response.json({ imageUrl: phone.imageUrl });
     }
 
     case 'yesterday': {
