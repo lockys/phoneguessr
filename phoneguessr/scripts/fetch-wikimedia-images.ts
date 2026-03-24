@@ -505,6 +505,7 @@ Options:
   const existingGaps = loadGaps();
   const newEntries: ManifestEntry[] = [];
   const newGaps: GapEntry[] = [];
+  let foundCount = 0;
 
   for (const phone of phones) {
     // Rate limit: 500ms between requests per Wikimedia API etiquette
@@ -520,6 +521,7 @@ Options:
       continue;
     }
 
+    foundCount++;
     const entry: ManifestEntry = {
       brand: phone.brand,
       model: phone.model,
@@ -547,10 +549,10 @@ Options:
 
     const mergedGaps = mergeGaps(existingGaps, newGaps);
     if (mergedGaps.length > 0) saveGaps(mergedGaps);
-
-    console.log('\n══════════════════════════════════════');
-    console.log(`✓ Found:  ${newEntries.length} / ${phones.length}`);
-    console.log(`✗ Gaps:   ${newGaps.length}  → written to phoneguessr/scripts/gaps.json`);
-    console.log('══════════════════════════════════════\n');
   }
+
+  console.log('\n══════════════════════════════════════');
+  console.log(`✓ Found:  ${foundCount} / ${phones.length}`);
+  console.log(`✗ Gaps:   ${newGaps.length}${dryRun ? '' : '  → written to phoneguessr/scripts/gaps.json'}`);
+  console.log('══════════════════════════════════════\n');
 }
