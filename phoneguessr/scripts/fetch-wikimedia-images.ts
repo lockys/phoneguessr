@@ -93,3 +93,77 @@ function filenameScore(title: string, modelName: string): number {
   if (modelName && lower.includes(modelName.toLowerCase())) score += 1;
   return score;
 }
+
+// ─── API Client ───────────────────────────────────────────────────────────────
+
+const WIKIMEDIA_API = 'https://commons.wikimedia.org/w/api.php';
+const USER_AGENT = 'PhoneGuessr/1.0 (https://github.com/calvinjeng/guess-game) fetch-wikimedia-images/1.0';
+
+/**
+ * Search Wikimedia Commons for a phone image.
+ * Uses generator=search to get imageinfo in one request.
+ * Returns the best CC-licensed portrait image, or null if none found.
+ */
+export async function fetchWikimediaImage(
+  brand: string,
+  model: string,
+): Promise<WikiImageCandidate | null> {
+  const query = encodeURIComponent(`"${brand} ${model}"`);
+  const url =
+    `${WIKIMEDIA_API}?action=query` +
+    `&generator=search&gsrsearch=${query}&gsrnamespace=6&gsrlimit=10` +
+    `&prop=imageinfo&iiprop=url%7Cextmetadata%7Csize` +
+    `&iiextmetadatafilter=LicenseShortName%7CArtist%7CLicenseUrl` +
+    `&format=json&origin=*`;
+
+  let data: Record<string, unknown> = {};
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
+    if (!res.ok) return null;
+    data = await res.json() as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+
+  const pages = (data as { query?: { pages?: Record<string, unknown> } })?.query?.pages;
+  if (!pages || Object.keys(pages).length === 0) return null;
+
+  const candidates: WikiImageCandidate[] = [];
+
+  for (const page of Object.values(pages) as Array<{
+    title: string;
+    imageinfo?: Array<{
+      url: string;
+      width: number;
+      height: number;
+      extmetadata?: {
+        LicenseShortName?: { value: string };
+        Artist?: { value: string };
+        LicenseUrl?: { value: string };
+      };
+    }>;
+  }>) {
+    const info = page.imageinfo?.[0];
+    if (!info) continue;
+
+    const license = info.extmetadata?.LicenseShortName?.value ?? '';
+    if (!isLicenseAccepted(license)) continue;
+
+    candidates.push({
+      title: page.title,
+      url: info.url,
+      width: info.width,
+      height: info.height,
+      license,
+      attribution: stripHtml(info.extmetadata?.Artist?.value ?? ''),
+      licenseUrl: info.extmetadata?.LicenseUrl?.value ?? '',
+    });
+  }
+
+  return selectBestImage(candidates, model);
+}
+
+/** Strip HTML tags from attribution strings */
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]+>/g, '').trim();
+}

@@ -68,3 +68,94 @@ describe('selectBestImage', () => {
     expect(selectBestImage([small, large])?.url).toBe(large.url);
   });
 });
+
+import { vi } from 'vitest';
+import { fetchWikimediaImage } from './fetch-wikimedia-images';
+
+describe('fetchWikimediaImage', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('returns null on fetch failure', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')));
+    const result = await fetchWikimediaImage('Samsung', 'Galaxy S24');
+    expect(result).toBeNull();
+  });
+
+  it('returns null when no pages returned', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ query: { pages: {} } }),
+    }));
+    const result = await fetchWikimediaImage('Samsung', 'Galaxy S24');
+    expect(result).toBeNull();
+  });
+
+  it('returns null when page has no imageinfo', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        query: {
+          pages: {
+            '123': { title: 'File:Samsung Galaxy S24.jpg', imageinfo: [] },
+          },
+        },
+      }),
+    }));
+    const result = await fetchWikimediaImage('Samsung', 'Galaxy S24');
+    expect(result).toBeNull();
+  });
+
+  it('returns null when all candidates have rejected licenses', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        query: {
+          pages: {
+            '123': {
+              title: 'File:Samsung Galaxy S24.jpg',
+              imageinfo: [{
+                url: 'https://upload.wikimedia.org/s24.jpg',
+                width: 400, height: 800,
+                extmetadata: {
+                  LicenseShortName: { value: 'All rights reserved' },
+                  Artist: { value: 'Samsung' },
+                  LicenseUrl: { value: '' },
+                },
+              }],
+            },
+          },
+        },
+      }),
+    }));
+    const result = await fetchWikimediaImage('Samsung', 'Galaxy S24');
+    expect(result).toBeNull();
+  });
+
+  it('returns a candidate when license is CC BY-SA 4.0', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        query: {
+          pages: {
+            '123': {
+              title: 'File:Samsung Galaxy S24 front.jpg',
+              imageinfo: [{
+                url: 'https://upload.wikimedia.org/s24-front.jpg',
+                width: 400, height: 800,
+                extmetadata: {
+                  LicenseShortName: { value: 'CC BY-SA 4.0' },
+                  Artist: { value: 'TechReviewer' },
+                  LicenseUrl: { value: 'https://creativecommons.org/licenses/by-sa/4.0/' },
+                },
+              }],
+            },
+          },
+        },
+      }),
+    }));
+    const result = await fetchWikimediaImage('Samsung', 'Galaxy S24');
+    expect(result).not.toBeNull();
+    expect(result?.url).toBe('https://upload.wikimedia.org/s24-front.jpg');
+    expect(result?.license).toBe('CC BY-SA 4.0');
+  });
+});
