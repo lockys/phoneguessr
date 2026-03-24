@@ -211,7 +211,6 @@ describe('CropReveal', () => {
     expect(hasPartialAlpha).toBe(true);
   });
 
-
   it('resets globalAlpha to 1 after each crossfade frame', async () => {
     const { rerender } = render(
       <CropReveal

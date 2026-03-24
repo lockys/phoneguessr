@@ -40,7 +40,8 @@ const PHONE = {
   id: 5,
   brand: 'Apple',
   model: 'iPhone 16 Pro',
-  imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/apple-iphone-16-pro.jpg',
+  imageUrl:
+    'https://upload.wikimedia.org/wikipedia/commons/apple-iphone-16-pro.jpg',
 };
 
 beforeEach(() => {
