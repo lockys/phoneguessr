@@ -1,52 +1,57 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { sql } from 'drizzle-orm';
 import { db } from './index';
-import phoneData from './phone-data.json';
-import { phoneFacts, phones } from './schema';
+import { phones } from './schema';
 
-interface PhoneEntry {
+interface ManifestEntry {
   brand: string;
   model: string;
-  imagePath: string;
-  releaseYear: number;
-  priceTier: string;
-  formFactor: string;
-  difficulty: string;
-  facts?: { type: string; text: string }[];
+  imageUrl?: string;
+  source?: string;
+  releaseYear?: number;
+  priceTier?: string;
+  formFactor?: string;
+  difficulty?: string;
 }
 
 async function seed() {
-  console.log('Seeding phones...');
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const manifestPath = path.resolve(
+    __dirname,
+    '../../scripts/press-kit-manifest.json',
+  );
+  const manifest: ManifestEntry[] = JSON.parse(
+    fs.readFileSync(manifestPath, 'utf-8'),
+  );
 
-  for (const phone of phoneData as PhoneEntry[]) {
-    const [inserted] = await db
+  const entries = manifest.filter(
+    e => e.source === 'wikimedia-commons' && e.imageUrl,
+  );
+
+  console.log(`Seeding ${entries.length} phones from Wikimedia manifest...`);
+
+  for (const entry of entries) {
+    await db
       .insert(phones)
       .values({
-        brand: phone.brand,
-        model: phone.model,
-        imagePath: phone.imagePath,
+        brand: entry.brand,
+        model: entry.model,
+        imageUrl: entry.imageUrl as string,
         active: true,
-        releaseYear: phone.releaseYear,
-        priceTier: phone.priceTier,
-        formFactor: phone.formFactor,
-        difficulty: phone.difficulty,
+        releaseYear: entry.releaseYear ?? null,
+        priceTier: entry.priceTier ?? null,
+        formFactor: entry.formFactor ?? null,
+        difficulty: entry.difficulty ?? null,
       })
-      .onConflictDoNothing()
-      .returning({ id: phones.id });
-
-    if (inserted && phone.facts) {
-      for (const fact of phone.facts) {
-        await db
-          .insert(phoneFacts)
-          .values({
-            phoneId: inserted.id,
-            factType: fact.type,
-            factText: fact.text,
-          })
-          .onConflictDoNothing();
-      }
-    }
+      .onConflictDoUpdate({
+        target: [phones.brand, phones.model],
+        set: { imageUrl: sql`excluded.image_url` },
+      });
   }
 
-  console.log(`Seeded ${(phoneData as PhoneEntry[]).length} phones.`);
+  console.log(`Seeded ${entries.length} phones.`);
   process.exit(0);
 }
 
