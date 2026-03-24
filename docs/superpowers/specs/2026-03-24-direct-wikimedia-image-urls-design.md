@@ -53,7 +53,7 @@ Place it in `phoneguessr/drizzle/` with the next sequential filename (do not run
 
 ### 2. Seed script (`phoneguessr/src/db/seed.ts`)
 
-- Read from `press-kit-manifest.json` instead of `phone-data.json`. The manifest lives at `phoneguessr/scripts/press-kit-manifest.json`; from `src/db/seed.ts` use `path.resolve(fileURLToPath(import.meta.url), '../../scripts/press-kit-manifest.json')` with `fs.readFileSync` (do not use a static JSON import)
+- Read from `press-kit-manifest.json` instead of `phone-data.json`. The manifest lives at `phoneguessr/scripts/press-kit-manifest.json`; from `src/db/seed.ts` use `path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../scripts/press-kit-manifest.json')` with `fs.readFileSync` (do not use a static JSON import — `fileURLToPath` returns the file path, so `path.dirname` must be called first to get the directory)
 - Filter to entries where `source === "wikimedia-commons"` only — GSMArena URLs are under copyright and must not be served directly from the browser
 - For each accepted entry: if `imageUrl` is present, upsert into `phones`; if absent, skip
 - Use `onConflictDoUpdate` (not `onConflictDoNothing`) to overwrite `imageUrl` on re-seed so existing rows get the new URL
