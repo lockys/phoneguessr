@@ -220,11 +220,11 @@ describe('selectBestImage', () => {
 
   it('prefers image with model name in filename over generic name (same resolution)', () => {
     // Both same resolution — model name score must be the tiebreaker, not insertion order
-    const generic = { ...base, title: 'File:Phone front view.jpg', url: 'https://upload.wikimedia.org/generic.jpg' };
+    const generic = { ...base, title: 'File:Phone.jpg', url: 'https://upload.wikimedia.org/generic.jpg' };
     const named = { ...base, title: 'File:Samsung Galaxy S24.jpg', url: 'https://upload.wikimedia.org/named.jpg' };
-    // Test with generic first to prove ordering doesn't matter
-    expect(selectBestImage([generic, named])?.url).toBe(named.url);
-    expect(selectBestImage([named, generic])?.url).toBe(named.url);
+    // Test both orderings to prove score, not array position, determines winner
+    expect(selectBestImage([generic, named], 'Galaxy S24')?.url).toBe(named.url);
+    expect(selectBestImage([named, generic], 'Galaxy S24')?.url).toBe(named.url);
   });
 
   it('prefers higher resolution among equal candidates', () => {
@@ -500,7 +500,7 @@ export async function fetchWikimediaImage(
     });
   }
 
-  return selectBestImage(candidates);
+  return selectBestImage(candidates, model);
 }
 
 /** Strip HTML tags from attribution strings */
