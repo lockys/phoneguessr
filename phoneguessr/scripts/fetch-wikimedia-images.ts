@@ -167,3 +167,24 @@ export async function fetchWikimediaImage(
 function stripHtml(html: string): string {
   return html.replace(/<[^>]+>/g, '').trim();
 }
+
+// ─── Gap Tracking ─────────────────────────────────────────────────────────────
+
+export interface GapEntry {
+  brand: string;
+  model: string;
+}
+
+/** Merge two gap lists, deduplicating by brand|model key */
+export function mergeGaps(existing: GapEntry[], newGaps: GapEntry[]): GapEntry[] {
+  const seen = new Set(existing.map(g => `${g.brand}|${g.model}`));
+  const merged = [...existing];
+  for (const gap of newGaps) {
+    const key = `${gap.brand}|${gap.model}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      merged.push(gap);
+    }
+  }
+  return merged;
+}

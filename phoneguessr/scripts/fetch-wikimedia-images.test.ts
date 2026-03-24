@@ -159,3 +159,28 @@ describe('fetchWikimediaImage', () => {
     expect(result?.license).toBe('CC BY-SA 4.0');
   });
 });
+
+import { mergeGaps, type GapEntry } from './fetch-wikimedia-images';
+
+describe('mergeGaps', () => {
+  it('merges new gaps with existing, deduplicates', () => {
+    const existing: GapEntry[] = [{ brand: 'Apple', model: 'iPhone 16 Pro' }];
+    const newGaps: GapEntry[] = [
+      { brand: 'Apple', model: 'iPhone 16 Pro' },   // duplicate
+      { brand: 'Samsung', model: 'Galaxy S24' },     // new
+    ];
+    const result = mergeGaps(existing, newGaps);
+    expect(result).toHaveLength(2);
+    expect(result).toContainEqual({ brand: 'Apple', model: 'iPhone 16 Pro' });
+    expect(result).toContainEqual({ brand: 'Samsung', model: 'Galaxy S24' });
+  });
+
+  it('returns new gaps when existing is empty', () => {
+    const result = mergeGaps([], [{ brand: 'Nokia', model: 'G42' }]);
+    expect(result).toHaveLength(1);
+  });
+
+  it('returns empty when both are empty', () => {
+    expect(mergeGaps([], [])).toHaveLength(0);
+  });
+});
