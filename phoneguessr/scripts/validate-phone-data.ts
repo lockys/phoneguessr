@@ -254,34 +254,34 @@ function validateImageFiles(phones: PhoneEntry[]): ValidationResult[] {
 function validateCatalogTargets(phones: PhoneEntry[]): ValidationResult[] {
   const results: ValidationResult[] = [];
 
-  // Catalog size target: 120+
-  if (phones.length >= 120) {
+  // Catalog size target: 250+
+  if (phones.length >= 250) {
     results.push({
       passed: true,
       name: 'catalog-size',
-      detail: `${phones.length} phones (target: 120+)`,
+      detail: `${phones.length} phones (target: 250+)`,
     });
   } else {
     results.push({
       passed: false,
       name: 'catalog-size',
-      detail: `${phones.length} phones (target: 120+)`,
+      detail: `${phones.length} phones (target: 250+)`,
     });
   }
 
-  // Brand count target: 15+
+  // Brand count target: 50+
   const brands = new Set(phones.map(p => p.brand));
-  if (brands.size >= 15) {
+  if (brands.size >= 50) {
     results.push({
       passed: true,
       name: 'brand-count',
-      detail: `${brands.size} brands (target: 15+)`,
+      detail: `${brands.size} brands (target: 50+)`,
     });
   } else {
     results.push({
       passed: false,
       name: 'brand-count',
-      detail: `${brands.size} brands (target: 15+)`,
+      detail: `${brands.size} brands (target: 50+)`,
     });
   }
 
