@@ -81,6 +81,7 @@ export function PhoneAutocomplete({
         })
       : [];
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: query is a trigger to reset selection, not read inside the effect
   useEffect(() => {
     setSelectedIndex(0);
   }, [query]);

@@ -49,6 +49,7 @@ export function Game() {
   const elapsedRef = useRef(0);
 
   // Check localStorage for already-played state
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally runs once on mount; adding user to deps would re-fetch and reset game state on login
   useEffect(() => {
     Promise.all([
       fetch('/api/puzzle/today').then(r => r.json()),

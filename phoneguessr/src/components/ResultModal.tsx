@@ -54,10 +54,8 @@ export function ResultModal({
       className="modal-backdrop"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
-      role="dialog"
-      aria-modal="true"
     >
-      <div className="modal-card">
+      <dialog className="modal-card" open aria-modal="true">
         <button type="button" className="modal-close" onClick={onClose}>
           &times;
         </button>
@@ -103,7 +101,7 @@ export function ResultModal({
             </div>
           )}
         </div>
-      </div>
+      </dialog>
     </div>
   );
 }

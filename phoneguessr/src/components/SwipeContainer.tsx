@@ -113,7 +113,7 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
       el.removeEventListener('touchstart', onTouchStart);
       el.removeEventListener('touchend', onTouchEnd);
     };
-  }, []);
+  }, [children.length]);
 
   return (
     <>
