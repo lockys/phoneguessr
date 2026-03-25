@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-type Tab = 'daily' | 'weekly' | 'monthly' | 'all-time';
+type Tab = 'daily' | 'weekly' | 'all-time';
 
 interface DailyEntry {
   rank: number;
@@ -25,7 +25,6 @@ export function Leaderboard() {
   const TABS: { key: Tab; label: string }[] = [
     { key: 'daily', label: t('leaderboard.daily') },
     { key: 'weekly', label: t('leaderboard.weekly') },
-    { key: 'monthly', label: t('leaderboard.monthly') },
     { key: 'all-time', label: t('leaderboard.allTime') },
   ];
 
@@ -67,8 +66,27 @@ export function Leaderboard() {
         <div className="leaderboard-list">
           {entries.map(entry => (
             <div key={entry.rank} className="leaderboard-row">
-              <span className="lb-rank">#{entry.rank}</span>
-              <span className="lb-name">{entry.displayName}</span>
+              <span className="lb-rank">
+                {tab === 'all-time' && entry.rank === 1
+                  ? '🏆'
+                  : tab === 'all-time' && entry.rank === 2
+                    ? '🥈'
+                    : tab === 'all-time' && entry.rank === 3
+                      ? '🥉'
+                      : `#${entry.rank}`}
+              </span>
+              <span className="lb-name">
+                {entry.displayName}
+                {tab === 'all-time' && entry.rank === 1 && (
+                  <span className="lb-title"> · The Phone Whisperer</span>
+                )}
+                {tab === 'all-time' && entry.rank === 2 && (
+                  <span className="lb-title"> · Pixel Pursuer</span>
+                )}
+                {tab === 'all-time' && entry.rank === 3 && (
+                  <span className="lb-title"> · Swipe Rookie</span>
+                )}
+              </span>
               {'score' in entry ? (
                 <>
                   <span className="lb-guesses">{entry.guessCount}/6</span>

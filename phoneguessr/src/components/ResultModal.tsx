@@ -61,7 +61,10 @@ export function ResultModal({
         </button>
 
         <div className="game-over">
-          <h2 className="game-over-title">
+          <h2
+            className="game-over-title"
+            style={{ color: won ? 'var(--green)' : 'var(--red)' }}
+          >
             {won ? t('result.win') : t('result.loss')}
           </h2>
 

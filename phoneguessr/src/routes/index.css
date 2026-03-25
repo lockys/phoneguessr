@@ -722,6 +722,12 @@ body {
   color: var(--green);
 }
 
+.lb-title {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 /* Profile Panel */
 .profile-panel {
   padding-top: 8px;

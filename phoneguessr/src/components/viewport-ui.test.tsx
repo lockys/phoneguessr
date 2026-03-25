@@ -563,10 +563,10 @@ describe('Leaderboard – tab layout and structure', () => {
     vi.unstubAllGlobals();
   });
 
-  it('renders 4 tab buttons in flex row', () => {
+  it('renders 3 tab buttons in flex row', () => {
     const { container } = render(<Leaderboard />);
     const tabs = container.querySelectorAll('.leaderboard-tab');
-    expect(tabs).toHaveLength(4);
+    expect(tabs).toHaveLength(3);
   });
 
   it('daily tab is active by default', () => {
@@ -579,7 +579,7 @@ describe('Leaderboard – tab layout and structure', () => {
   it('switches active tab on click', () => {
     const { container } = render(<Leaderboard />);
     const tabs = container.querySelectorAll('.leaderboard-tab');
-    fireEvent.click(tabs[2]); // monthly
+    fireEvent.click(tabs[2]); // all-time
     expect(tabs[2]).toHaveClass('active');
     expect(tabs[0]).not.toHaveClass('active');
   });

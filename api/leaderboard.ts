@@ -67,8 +67,6 @@ function getStartDate(period: string | null): Date | null {
       monday.setUTCHours(0, 0, 0, 0);
       return monday;
     }
-    case 'monthly':
-      return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
     case 'all-time':
       return new Date(0);
     default:
