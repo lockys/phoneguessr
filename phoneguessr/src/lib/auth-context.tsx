@@ -18,6 +18,7 @@ interface AuthContextValue {
   login: () => void;
   logout: () => void;
   loginWithPasskey: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -27,6 +28,7 @@ const AuthContext = createContext<AuthContextValue>({
   login: () => {},
   logout: () => {},
   loginWithPasskey: async () => {},
+  refreshUser: async () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -50,6 +52,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     window.location.href = '/api/auth/logout';
+  };
+
+  const refreshUser = async () => {
+    const res = await fetch('/api/auth/me');
+    const data = await res.json();
+    setUser(data.user ?? null);
   };
 
   const loginWithPasskey = async () => {
@@ -81,6 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         logout,
         loginWithPasskey,
+        refreshUser,
       }}
     >
       {children}

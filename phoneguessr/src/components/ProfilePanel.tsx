@@ -72,7 +72,7 @@ function getLocalStats(): Stats {
 
 export function ProfilePanel() {
   const { t } = useTranslation();
-  const { user, login } = useAuth();
+  const { user, login, refreshUser } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
   const [displayName, setDisplayName] = useState('');
   const [saved, setSaved] = useState(false);
@@ -115,11 +115,14 @@ export function ProfilePanel() {
 
   const handleSave = async () => {
     try {
-      await fetch('/api/profile/update', {
+      const res = await fetch('/api/profile/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ displayName }),
       });
+      if (res.ok) {
+        await refreshUser();
+      }
     } catch {
       /* mock mode - save locally */
     }
