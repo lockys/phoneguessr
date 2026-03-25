@@ -24,10 +24,7 @@ export async function GET(request: Request) {
         });
       } catch (err) {
         console.error('[puzzle/today]', err);
-        return Response.json(
-          { error: 'puzzle_unavailable', detail: String(err) },
-          { status: 500 },
-        );
+        return Response.json({ error: 'puzzle_unavailable' }, { status: 500 });
       }
     }
 
@@ -37,10 +34,7 @@ export async function GET(request: Request) {
         return Response.json({ imageUrl: phone.imageUrl });
       } catch (err) {
         console.error('[puzzle/image]', err);
-        return Response.json(
-          { error: 'puzzle_unavailable', detail: String(err) },
-          { status: 500 },
-        );
+        return Response.json({ error: 'puzzle_unavailable' }, { status: 500 });
       }
     }
 
