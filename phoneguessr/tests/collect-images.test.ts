@@ -12,8 +12,12 @@ import {
 
 describe('toKebabSlug', () => {
   it('converts brand + model to kebab-case', () => {
-    expect(toKebabSlug('Apple', 'iPhone 16 Pro Max')).toBe('apple-iphone-16-pro-max');
-    expect(toKebabSlug('Samsung', 'Galaxy S25 Ultra')).toBe('samsung-galaxy-s25-ultra');
+    expect(toKebabSlug('Apple', 'iPhone 16 Pro Max')).toBe(
+      'apple-iphone-16-pro-max',
+    );
+    expect(toKebabSlug('Samsung', 'Galaxy S25 Ultra')).toBe(
+      'samsung-galaxy-s25-ultra',
+    );
     expect(toKebabSlug('Nothing', 'Phone 2')).toBe('nothing-phone-2');
   });
 
