@@ -16,12 +16,65 @@ export async function GET(request: Request) {
     case 'today': {
       try {
         const { puzzle } = await getTodayPuzzle();
-        return Response.json({
+        const base = {
           puzzleId: puzzle.id,
           puzzleNumber: puzzle.puzzleNumber,
           puzzleDate: puzzle.puzzleDate,
           imageUrl: '/api/puzzle/image',
-        });
+        };
+
+        // For authenticated users, embed today's game state so the frontend
+        // knows immediately whether they already played (no race condition).
+        const token = parseCookies(request.headers.get('cookie'))[COOKIE_NAME];
+        if (token) {
+          const session = await verifySessionToken(token);
+          if (session) {
+            const [userGuesses, resultRows] = await Promise.all([
+              db
+                .select({
+                  phoneName: phones.brand,
+                  phoneModel: phones.model,
+                  feedback: guesses.feedback,
+                })
+                .from(guesses)
+                .innerJoin(phones, eq(guesses.phoneId, phones.id))
+                .where(
+                  and(
+                    eq(guesses.userId, session.userId),
+                    eq(guesses.puzzleId, puzzle.id),
+                  ),
+                )
+                .orderBy(asc(guesses.guessNumber)),
+              db
+                .select()
+                .from(results)
+                .where(
+                  and(
+                    eq(results.userId, session.userId),
+                    eq(results.puzzleId, puzzle.id),
+                  ),
+                )
+                .limit(1),
+            ]);
+
+            const [result] = resultRows;
+            if (userGuesses.length > 0 || result) {
+              return Response.json({
+                ...base,
+                state: {
+                  guesses: userGuesses.map(g => ({
+                    phoneName: `${g.phoneName} ${g.phoneModel}`,
+                    feedback: g.feedback,
+                  })),
+                  elapsed: result?.elapsedSeconds ?? null,
+                  won: result?.isWin ?? null,
+                },
+              });
+            }
+          }
+        }
+
+        return Response.json(base);
       } catch (err) {
         console.error('[puzzle/today]', err);
         return Response.json({ error: 'puzzle_unavailable' }, { status: 500 });

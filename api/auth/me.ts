@@ -1,3 +1,6 @@
+import { eq } from 'drizzle-orm';
+import { db } from '../../phoneguessr/src/db/index.js';
+import { users } from '../../phoneguessr/src/db/schema.js';
 import { COOKIE_NAME, verifySessionToken } from '../../phoneguessr/src/lib/auth.js';
 import { parseCookies } from '../../phoneguessr/src/lib/cookies.js';
 
@@ -12,11 +15,18 @@ export async function GET(request: Request) {
     return Response.json({ user: null });
   }
 
+  // Read displayName/avatarUrl from DB so updates are reflected immediately
+  const [dbUser] = await db
+    .select({ displayName: users.displayName, avatarUrl: users.avatarUrl })
+    .from(users)
+    .where(eq(users.id, session.userId))
+    .limit(1);
+
   return Response.json({
     user: {
       id: session.userId,
-      displayName: session.displayName,
-      avatarUrl: session.avatarUrl,
+      displayName: dbUser?.displayName ?? session.displayName,
+      avatarUrl: dbUser?.avatarUrl ?? session.avatarUrl,
       email: session.email ?? null,
     },
   });

@@ -49,8 +49,6 @@ export function Game() {
   const [imageUrl, setImageUrl] = useState<string>('');
   const elapsedRef = useRef(0);
 
-  // Check localStorage for already-played state
-  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally runs once on mount; adding user to deps would re-fetch and reset game state on login
   useEffect(() => {
     Promise.all([
       fetch('/api/puzzle/today').then(r => r.json()),
@@ -59,39 +57,31 @@ export function Game() {
       setPuzzle(puzzleData);
       setPhoneList(phonesData.phones);
 
-      // Fetch image as base64 to prevent cheating via filename
       const imgRes = await fetch(puzzleData.imageUrl);
       const imgData = await imgRes.json();
       setImageUrl(imgData.imageUrl);
 
       let restored = false;
 
-      // Authenticated users: load state from database
-      if (user && !puzzleData._mockAnswerId) {
-        try {
-          const stateRes = await fetch('/api/puzzle/state');
-          if (stateRes.ok) {
-            const state = await stateRes.json();
-            if (state && state.guesses?.length > 0) {
-              setGuesses(state.guesses);
-              if (state.elapsed != null) elapsedRef.current = state.elapsed;
-              if (state.won != null) {
-                setGameState(state.won ? 'won' : 'lost');
-                setShowModal(true);
-              } else {
-                // Mid-game: guesses exist but no result yet
-                setGameState('playing');
-                setTimerRunning(true);
-              }
-              restored = true;
-            }
+      // Authenticated: state is embedded in the puzzle response (no race condition)
+      if (puzzleData.state && !puzzleData._mockAnswerId) {
+        const { state } = puzzleData;
+        if (state.guesses?.length > 0 || state.won != null) {
+          setGuesses(state.guesses || []);
+          if (state.elapsed != null) elapsedRef.current = state.elapsed;
+          if (state.won != null) {
+            setAlreadyPlayed(true);
+            setGameState(state.won ? 'won' : 'lost');
+            setShowModal(true);
+          } else {
+            setGameState('playing');
+            setTimerRunning(true);
           }
-        } catch {
-          // Fall through to localStorage
+          restored = true;
         }
       }
 
-      // Anonymous users (or DB fetch failed): check localStorage
+      // Anonymous users: check localStorage
       if (!restored) {
         const saved = localStorage.getItem(
           `phoneguessr_${puzzleData.puzzleDate}`,

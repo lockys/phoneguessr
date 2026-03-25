@@ -6,13 +6,8 @@ import {
   results,
   users,
 } from '../phoneguessr/src/db/schema.js';
-import {
-  COOKIE_NAME,
-  createSessionToken,
-  getSessionCookieOptions,
-  verifySessionToken,
-} from '../phoneguessr/src/lib/auth.js';
-import { parseCookies, serializeCookie } from '../phoneguessr/src/lib/cookies.js';
+import { COOKIE_NAME, verifySessionToken } from '../phoneguessr/src/lib/auth.js';
+import { parseCookies } from '../phoneguessr/src/lib/cookies.js';
 import { validateDisplayName } from '../phoneguessr/src/lib/validation.js';
 
 async function getAuth(request: Request) {
@@ -129,24 +124,5 @@ export async function POST(request: Request) {
     .set({ displayName: result.value })
     .where(eq(users.id, session.userId));
 
-  // Re-issue JWT so /api/auth/me returns the updated displayName immediately
-  const newToken = await createSessionToken({
-    ...session,
-    displayName: result.value,
-  });
-  const cookieOpts = getSessionCookieOptions();
-  const setCookieHeader = serializeCookie(cookieOpts.name, newToken, {
-    httpOnly: cookieOpts.httpOnly,
-    secure: cookieOpts.secure,
-    sameSite: cookieOpts.sameSite,
-    path: cookieOpts.path,
-    maxAge: cookieOpts.maxAge,
-  });
-
-  return new Response(JSON.stringify({ success: true }), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Set-Cookie': setCookieHeader,
-    },
-  });
+  return Response.json({ success: true });
 }

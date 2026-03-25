@@ -1,5 +1,9 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createMockDb } from '../src/test/mock-db.js';
+
+const mockDb = createMockDb();
+vi.mock('../src/db/index.js', () => ({ db: mockDb }));
 
 const mockVerifySessionToken =
   vi.fn<
@@ -22,6 +26,7 @@ const { GET } = await import('../../api/auth/me.js');
 describe('GET /api/auth/me', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockDb.reset();
   });
 
   it('returns null user when no cookie is present', async () => {
@@ -43,14 +48,20 @@ describe('GET /api/auth/me', () => {
     expect(mockVerifySessionToken).toHaveBeenCalledWith('invalid-token');
   });
 
-  it('returns user data for a valid session', async () => {
+  it('returns user data from DB for a valid session', async () => {
     mockVerifySessionToken.mockResolvedValueOnce({
       userId: 42,
       googleId: 'g-123',
-      displayName: 'Test User',
+      displayName: 'Stale JWT Name',
       avatarUrl: 'https://example.com/avatar.jpg',
       email: 'test@example.com',
     });
+    mockDb.mockQuery([
+      {
+        displayName: 'Test User',
+        avatarUrl: 'https://example.com/avatar.jpg',
+      },
+    ]);
     const res = await GET(
       new Request('http://localhost/api/auth/me', {
         headers: { cookie: 'phoneguessr_session=valid-token' },
@@ -67,18 +78,20 @@ describe('GET /api/auth/me', () => {
     });
   });
 
-  it('returns email as null when session has no email', async () => {
+  it('falls back to JWT displayName when user not found in DB', async () => {
     mockVerifySessionToken.mockResolvedValueOnce({
       userId: 7,
       googleId: 'g-456',
-      displayName: 'No Email',
+      displayName: 'JWT Fallback',
     });
+    mockDb.mockQuery([]); // empty result
     const res = await GET(
       new Request('http://localhost/api/auth/me', {
-        headers: { cookie: 'phoneguessr_session=token-no-email' },
+        headers: { cookie: 'phoneguessr_session=token' },
       }),
     );
     const body = await res.json();
+    expect(body.user.displayName).toBe('JWT Fallback');
     expect(body.user.email).toBeNull();
     expect(body.user.avatarUrl).toBeUndefined();
   });
