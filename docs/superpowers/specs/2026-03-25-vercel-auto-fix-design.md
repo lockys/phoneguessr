@@ -14,7 +14,8 @@ When CI (lint/test/build) or a Vercel deployment fails on `main`, a GitHub Actio
 A single new file — `.github/workflows/auto-fix.yml` — handles the full flow.
 
 **Triggers:**
-- `workflow_run` on the `CI` workflow with conclusion `failure`
+- `workflow_run` on the `CI` workflow, activity type `completed`, conclusion `failure`
+  - Must use `types: [completed]` explicitly — otherwise the event fires on `requested` too, before CI finishes
 - `deployment_status` with state `failure` (Vercel fires this via GitHub's deployment API)
 
 **Flow:**
@@ -23,11 +24,18 @@ CI fails / Vercel deployment fails
         ↓
 auto-fix.yml triggers
         ↓
+[Setup] actions/checkout@v4 + actions/setup-node@v4 (Node 20, npm cache)
+        ↓
+[Install] cd phoneguessr && npm ci
+        ↓
 [Guard] Count consecutive "fix(auto):" commits in git log
         → ≥ 3? → exit 0 (abort silently)
         ↓
 [Fetch logs] GitHub Actions API → get failed job logs (CI)
-             deployment_status event payload → logUrl (Vercel)
+             deployment_status event payload → log_url (Vercel)
+        ↓
+[Git config] git config user.name "Auto-Fix Bot"
+             git config user.email "auto-fix@users.noreply.github.com"
         ↓
 [Claude Code] claude -p "<logs + instructions>" --allowedTools Edit,Bash,Read,Glob,Grep
         → edits files
@@ -47,30 +55,31 @@ CI re-runs → passes → done
 ### `.github/workflows/auto-fix.yml`
 
 The only new file. Responsibilities:
-1. Detect trigger type (CI failure vs Vercel failure)
-2. Run the loop-cap guard
-3. Fetch failure logs
-4. Configure git identity for bot commits
-5. Run Claude Code CLI in non-interactive mode
-6. Push fix if Claude made changes
-7. Abort cleanly if Claude signals it cannot fix
+1. Check out the repo and set up Node.js
+2. Install dependencies (`npm ci`)
+3. Run the loop-cap guard
+4. Fetch failure logs
+5. Configure git identity for bot commits
+6. Run Claude Code CLI in non-interactive mode
+7. Push fix if Claude made changes
+8. Abort cleanly if Claude signals it cannot fix
 
 ### Secrets required (set in GitHub repo settings)
 
 | Secret | Purpose |
 |--------|---------|
 | `ANTHROPIC_API_KEY` | Authenticates Claude Code CLI |
-| `AUTO_FIX_TOKEN` | GitHub PAT with `contents: write` — needed to push to `main` and re-trigger CI (GITHUB_TOKEN cannot re-trigger workflows) |
+| `AUTO_FIX_TOKEN` | GitHub PAT with `contents: write` — needed to push to `main` and re-trigger CI (GITHUB_TOKEN cannot re-trigger workflows). Owner must be exempt from branch protection rules if any are enabled on `main`. |
 
 ### Claude Code invocation
 
 ```bash
-claude -p "$PROMPT" \
-  --allowedTools "Edit,Bash,Read,Glob,Grep" \
-  --max-turns 30
+claude -p "$PROMPT" --allowedTools "Edit,Bash,Read,Glob,Grep"
 ```
 
 Allowed tools: `Edit`, `Bash`, `Read`, `Glob`, `Grep` — no web access, no git push (workflow owns that).
+
+Note: `--allowedTools` is a supported Claude Code CLI flag. No `--max-turns` flag is used — the prompt instructs Claude to commit and exit when done.
 
 ---
 
@@ -90,7 +99,8 @@ Instructions:
 5. If both pass, stage and commit with message: "fix(auto): <brief description>"
 6. Do NOT push — the workflow handles that
 7. If you cannot determine a safe fix, create a file `.auto-fix-failed`
-   with a brief explanation of why
+   with a brief explanation of why, then exit 0
+8. After committing (or creating .auto-fix-failed), stop — do not take further actions
 ```
 
 The workflow checks for `.auto-fix-failed` after Claude exits. If present → abort (no push).
@@ -103,12 +113,14 @@ The workflow checks `git diff HEAD` for staged changes. If none → abort (nothi
 Before running Claude, the workflow counts consecutive `fix(auto):` commits at the tip of `main`:
 
 ```bash
-count=$(git log --oneline | awk '/^[a-f0-9]+ fix\(auto\):/{c++} !/^[a-f0-9]+ fix\(auto\):/{exit} END{print c}')
-if [ "$count" -ge 3 ]; then
+count=$(git log --oneline | awk 'BEGIN{c=0} /^[a-f0-9]+ fix\(auto\):/{c++} !/^[a-f0-9]+ fix\(auto\):/{exit} END{print c}')
+if [ "${count:-0}" -ge 3 ]; then
   echo "Auto-fix cap reached ($count consecutive). Aborting."
   exit 0
 fi
 ```
+
+`BEGIN{c=0}` ensures the count defaults to 0 even when no matching commits exist. `${count:-0}` guards against empty output.
 
 If ≥ 3 consecutive auto-fix commits exist, the workflow exits cleanly — CI will remain failing until a human intervenes.
 
@@ -137,6 +149,28 @@ if: github.event.deployment_status.state == 'failure'
 ```
 
 The Vercel deployment log URL is available at `github.event.deployment_status.log_url`.
+
+---
+
+## Runner Environment
+
+The workflow runs on `ubuntu-latest`. Required setup steps before Claude runs:
+
+```yaml
+- uses: actions/checkout@v4
+  with:
+    token: ${{ secrets.AUTO_FIX_TOKEN }}  # needed to push later
+    fetch-depth: 10  # enough for loop-cap git log check
+
+- uses: actions/setup-node@v4
+  with:
+    node-version: 20
+    cache: npm
+    cache-dependency-path: phoneguessr/package-lock.json
+
+- run: npm ci
+  working-directory: phoneguessr
+```
 
 ---
 
