@@ -1,0 +1,117 @@
+name: Auto-Fix
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+  deployment_status: {}
+
+jobs:
+  auto-fix:
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'failure') ||
+      (github.event_name == 'deployment_status' && github.event.deployment_status.state == 'failure')
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.AUTO_FIX_TOKEN }}
+          fetch-depth: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: phoneguessr/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: phoneguessr
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Loop-cap guard
+        id: guard
+        run: |
+          count=$(git log --oneline | awk 'BEGIN{c=0} /^[a-f0-9]+ fix\(auto\):/{c++} !/^[a-f0-9]+ fix\(auto\):/{exit} END{print c}')
+          count=${count:-0}
+          echo "consecutive_fixes=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" -ge 3 ]; then
+            echo "Auto-fix cap reached ($count consecutive fix(auto): commits). Aborting."
+            exit 0
+          fi
+
+      - name: Fetch CI failure logs
+        if: github.event_name == 'workflow_run' && steps.guard.outputs.consecutive_fixes < 3
+        id: ci-logs
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_FIX_TOKEN }}
+        run: |
+          RUN_ID="${{ github.event.workflow_run.id }}"
+          # Download logs for the failed run
+          gh run view "$RUN_ID" --log-failed 2>/dev/null > /tmp/failure-logs.txt || \
+            gh run view "$RUN_ID" --log 2>/dev/null | tail -200 > /tmp/failure-logs.txt || \
+            echo "Could not fetch CI logs for run $RUN_ID" > /tmp/failure-logs.txt
+
+      - name: Fetch Vercel failure logs
+        if: github.event_name == 'deployment_status' && steps.guard.outputs.consecutive_fixes < 3
+        run: |
+          LOG_URL="${{ github.event.deployment_status.log_url }}"
+          if [ -n "$LOG_URL" ]; then
+            curl -s "$LOG_URL" | tail -200 > /tmp/failure-logs.txt || \
+              echo "Could not fetch Vercel logs from $LOG_URL" > /tmp/failure-logs.txt
+          else
+            echo "Vercel deployment failed. Log URL not available. Check Vercel dashboard." > /tmp/failure-logs.txt
+          fi
+
+      - name: Configure git identity
+        if: steps.guard.outputs.consecutive_fixes < 3
+        run: |
+          git config user.name "Auto-Fix Bot"
+          git config user.email "auto-fix@users.noreply.github.com"
+
+      - name: Run Claude Code auto-fix
+        if: steps.guard.outputs.consecutive_fixes < 3
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          LOGS=$(cat /tmp/failure-logs.txt)
+          PROMPT="You are an automated fix agent for the PhoneGuessr repo.
+
+A CI/deployment failure occurred. Here are the logs:
+
+$LOGS
+
+Instructions:
+1. Read the failing test/lint/build output and identify the root cause
+2. Edit the necessary files to fix the issue
+3. Run \`cd phoneguessr && npm run lint\` to verify lint passes
+4. Run \`cd phoneguessr && npm run test\` to verify tests pass
+5. If both pass, stage and commit with message: \"fix(auto): <brief description>\"
+6. Do NOT push — the workflow handles that
+7. If you cannot determine a safe fix, create a file \`.auto-fix-failed\` with a brief explanation of why, then stop
+8. After committing (or creating .auto-fix-failed), stop — do not take further actions"
+
+          claude -p "$PROMPT" --allowedTools "Edit,Bash,Read,Glob,Grep"
+
+      - name: Push fix or abort
+        if: steps.guard.outputs.consecutive_fixes < 3
+        run: |
+          if [ -f ".auto-fix-failed" ]; then
+            echo "Claude could not determine a safe fix:"
+            cat .auto-fix-failed
+            exit 0
+          fi
+          # Check if Claude made a commit
+          if git diff --quiet HEAD~1 HEAD 2>/dev/null; then
+            echo "No changes committed by Claude. Nothing to push."
+            exit 0
+          fi
+          git push origin main
