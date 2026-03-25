@@ -44,6 +44,7 @@ export function Game() {
   const [guesses, setGuesses] = useState<Guess[]>([]);
   const [timerRunning, setTimerRunning] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [alreadyPlayed, setAlreadyPlayed] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const elapsedRef = useRef(0);
@@ -150,6 +151,32 @@ export function Game() {
           guessNumber: guesses.length + 1,
         }),
       });
+
+      if (res.status === 409) {
+        // Already played today — restore completed state from DB
+        try {
+          const stateRes = await fetch('/api/puzzle/state');
+          if (stateRes.ok) {
+            const state = await stateRes.json();
+            if (state?.guesses?.length > 0) {
+              setGuesses(state.guesses);
+              if (state.elapsed != null) elapsedRef.current = state.elapsed;
+            }
+            setTimerRunning(false);
+            setGameState(state?.won ? 'won' : 'lost');
+          } else {
+            setTimerRunning(false);
+            setGameState('lost');
+          }
+        } catch {
+          setTimerRunning(false);
+          setGameState('lost');
+        }
+        setAlreadyPlayed(true);
+        setShowModal(true);
+        return;
+      }
+
       ({ feedback } = await res.json());
     }
     const newGuess: Guess = {
@@ -260,6 +287,7 @@ export function Game() {
           elapsed={elapsedRef.current}
           puzzleNumber={puzzle.puzzleNumber}
           onClose={() => setShowModal(false)}
+          alreadyPlayed={alreadyPlayed}
         />
       )}
 

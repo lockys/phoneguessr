@@ -14,6 +14,7 @@ interface ResultModalProps {
   elapsed: number;
   puzzleNumber: number;
   onClose: () => void;
+  alreadyPlayed?: boolean;
 }
 
 export function ResultModal({
@@ -22,6 +23,7 @@ export function ResultModal({
   elapsed,
   puzzleNumber,
   onClose,
+  alreadyPlayed,
 }: ResultModalProps) {
   const { t } = useTranslation();
   const { user, login } = useAuth();
@@ -61,6 +63,9 @@ export function ResultModal({
         </button>
 
         <div className="game-over">
+          {alreadyPlayed && (
+            <p className="already-played-notice">{t('result.alreadyPlayed')}</p>
+          )}
           <h2
             className="game-over-title"
             style={{ color: won ? 'var(--green)' : 'var(--red)' }}

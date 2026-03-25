@@ -584,6 +584,12 @@ body {
   padding: 20px 0;
 }
 
+.already-played-notice {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
 .game-over-title {
   font-size: 20px;
   margin-bottom: 16px;

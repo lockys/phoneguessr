@@ -11,6 +11,7 @@
 
   "result.win": "You got it!",
   "result.loss": "Better luck tomorrow!",
+  "result.alreadyPlayed": "You already played today",
   "result.guesses": "Guesses",
   "result.score": "Score",
   "result.time": "Time",
