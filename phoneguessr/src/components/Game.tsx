@@ -224,6 +224,8 @@ export function Game() {
         JSON.stringify({ guesses: finalGuesses, elapsed, won }),
       );
     }
+    // Signal to InstallPrompt that the user has completed a game
+    localStorage.setItem('phoneguessr_install_eligible', 'true');
   };
 
   if (gameState === 'loading' || !puzzle) {
