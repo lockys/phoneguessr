@@ -42,6 +42,7 @@ export function Game() {
   const [puzzle, setPuzzle] = useState<PuzzleData | null>(null);
   const [phoneList, setPhoneList] = useState<Phone[]>([]);
   const [guesses, setGuesses] = useState<Guess[]>([]);
+  const [pendingGuessName, setPendingGuessName] = useState<string | null>(null);
   const [timerRunning, setTimerRunning] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [alreadyPlayed, setAlreadyPlayed] = useState(false);
@@ -120,6 +121,9 @@ export function Game() {
   const handleGuess = async (phone: Phone) => {
     if (!puzzle || gameState !== 'playing') return;
 
+    const phoneName = `${phone.brand} ${phone.model}`;
+    setPendingGuessName(phoneName);
+
     let feedback: Guess['feedback'];
 
     if (puzzle._mockAnswerId != null) {
@@ -162,6 +166,7 @@ export function Game() {
           setTimerRunning(false);
           setGameState('lost');
         }
+        setPendingGuessName(null);
         setAlreadyPlayed(true);
         setShowModal(true);
         return;
@@ -169,8 +174,9 @@ export function Game() {
 
       ({ feedback } = await res.json());
     }
+    setPendingGuessName(null);
     const newGuess: Guess = {
-      phoneName: `${phone.brand} ${phone.model}`,
+      phoneName,
       feedback,
     };
     setGuesses(prev => {
@@ -259,7 +265,11 @@ export function Game() {
       </div>
       <Confetti show={gameState === 'won'} />
 
-      <GuessHistory guesses={guesses} maxGuesses={MAX_GUESSES} />
+      <GuessHistory
+        guesses={guesses}
+        maxGuesses={MAX_GUESSES}
+        pendingGuessName={pendingGuessName}
+      />
 
       {gameState === 'playing' && (
         <PhoneAutocomplete
