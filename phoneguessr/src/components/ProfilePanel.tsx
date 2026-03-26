@@ -1,3 +1,4 @@
+import { COUNTRY_LIST, countryCodeToFlag } from '@/lib/region';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../lib/auth-context';
@@ -76,6 +77,7 @@ export function ProfilePanel() {
   const { user, login, refreshUser } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
   const [displayName, setDisplayName] = useState('');
+  const [regionValue, setRegionValue] = useState('');
   const [saved, setSaved] = useState(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [historyTotal, setHistoryTotal] = useState(0);
@@ -87,6 +89,7 @@ export function ProfilePanel() {
   useEffect(() => {
     if (user) {
       setDisplayName(user.displayName || '');
+      setRegionValue(user.region ?? '');
       fetch('/api/profile/stats')
         .then(r => r.json())
         .then(setStats)
@@ -122,7 +125,10 @@ export function ProfilePanel() {
       const res = await fetch('/api/profile/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ displayName }),
+        body: JSON.stringify({
+          displayName,
+          region: regionValue === '' ? null : regionValue,
+        }),
       });
       if (res.ok) {
         await refreshUser();
@@ -206,6 +212,24 @@ export function ProfilePanel() {
               {t('profile.language')}
             </label>
             <LanguageSelector id="profile-lang" />
+          </div>
+          <div className="profile-form-field">
+            <label className="profile-form-label" htmlFor="profile-region">
+              {t('profile.region')}
+            </label>
+            <select
+              id="profile-region"
+              className="profile-form-input"
+              value={regionValue}
+              onChange={e => setRegionValue(e.target.value)}
+            >
+              <option value="">— No region —</option>
+              {COUNTRY_LIST.map(c => (
+                <option key={c.code} value={c.code}>
+                  {countryCodeToFlag(c.code)} {c.name}
+                </option>
+              ))}
+            </select>
           </div>
           <button
             type="button"
