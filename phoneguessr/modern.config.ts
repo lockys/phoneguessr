@@ -14,13 +14,35 @@ export default defineConfig({
   plugins: [appTools()],
   html: {
     tags: [
+      { tag: 'link', attrs: { rel: 'manifest', href: '/manifest.json' } },
+      { tag: 'meta', attrs: { name: 'theme-color', content: '#1a1a2e' } },
       {
-        tag: 'link',
-        attrs: { rel: 'manifest', href: '/manifest.json' },
+        tag: 'meta',
+        attrs: { name: 'apple-mobile-web-app-capable', content: 'yes' },
       },
       {
         tag: 'meta',
-        attrs: { name: 'theme-color', content: '#1a1a2e' },
+        attrs: {
+          name: 'apple-mobile-web-app-status-bar-style',
+          content: 'black-translucent',
+        },
+      },
+      {
+        tag: 'meta',
+        attrs: { name: 'apple-mobile-web-app-title', content: 'PhoneGuessr' },
+      },
+      {
+        tag: 'link',
+        attrs: { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png' },
+      },
+      {
+        tag: 'link',
+        attrs: {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '32x32',
+          href: '/icons/favicon-32x32.png',
+        },
       },
     ],
   },
