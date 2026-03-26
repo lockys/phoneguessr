@@ -1,5 +1,6 @@
 import confetti from 'canvas-confetti';
 import { useEffect, useRef } from 'react';
+import { useWebHaptics } from 'web-haptics/react';
 
 interface ConfettiProps {
   show: boolean;
@@ -7,10 +8,15 @@ interface ConfettiProps {
 
 export function Confetti({ show }: ConfettiProps) {
   const firedRef = useRef(false);
+  const haptic = useWebHaptics();
 
   useEffect(() => {
     if (!show || firedRef.current) return;
     firedRef.current = true;
+
+    // Heavy impact synced with confetti burst, followed by success chime
+    haptic.trigger('heavy');
+    const hapticTimer = setTimeout(() => haptic.trigger('success'), 150);
 
     const duration = 600;
     const end = Date.now() + duration;
@@ -52,8 +58,11 @@ export function Confetti({ show }: ConfettiProps) {
     };
 
     rafId = requestAnimationFrame(frame);
-    return () => cancelAnimationFrame(rafId);
-  }, [show]);
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(hapticTimer);
+    };
+  }, [show, haptic]);
 
   return null;
 }
