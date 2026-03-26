@@ -16,6 +16,7 @@
   --red: #f87171;
   --border: #2a2a4a;
   --radius: 8px;
+  color-scheme: dark;
 }
 
 body {
@@ -143,6 +144,8 @@ body {
 
 .modal-card {
   background: var(--surface);
+  color: var(--text);
+  border: none;
   border-radius: 16px;
   padding: 28px 24px;
   max-width: 360px;
@@ -150,7 +153,7 @@ body {
   position: relative;
   margin: 0;
   inset: unset;
-  max-height: calc(100dvh - 32px);
+  max-height: calc(100dvh - 64px);
   overflow-y: auto;
   animation: modal-slide-up 0.3s ease;
 }
@@ -613,6 +616,7 @@ body {
 .stat-value {
   font-size: 24px;
   font-weight: 700;
+  color: var(--text);
 }
 
 .stat-label {
