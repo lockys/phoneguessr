@@ -67,6 +67,7 @@ describe('GET /api/auth/me', () => {
         displayName: 'Test User',
         avatarUrl: 'https://example.com/avatar.jpg',
         isAdmin: false,
+        region: null,
       },
     ]);
     const res = await meHandler(
@@ -82,6 +83,7 @@ describe('GET /api/auth/me', () => {
         avatarUrl: 'https://example.com/avatar.jpg',
         email: 'test@example.com',
         isAdmin: false,
+        region: null,
       },
     });
   });

@@ -76,6 +76,7 @@ async function handleMe(request: Request) {
       displayName: users.displayName,
       avatarUrl: users.avatarUrl,
       isAdmin: users.isAdmin,
+      region: users.region,
     })
     .from(users)
     .where(eq(users.id, session.userId))
@@ -88,6 +89,7 @@ async function handleMe(request: Request) {
       avatarUrl: dbUser?.avatarUrl ?? session.avatarUrl,
       email: session.email ?? null,
       isAdmin: dbUser?.isAdmin ?? false,
+      region: dbUser?.region ?? null,
     },
   });
 }
