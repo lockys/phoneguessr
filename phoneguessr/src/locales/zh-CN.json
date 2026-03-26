@@ -1,7 +1,7 @@
 {
   "game.title": "PhoneGuessr",
   "game.loading": "加载谜题中...",
-  "game.meta.title": "PhoneGuessr - 每日手机猜谜游戏",
+  "game.meta.title": "PhoneGuessr",
   "game.meta.description": "从裁剪的照片中辨识手机。每天一道谜题。",
   "game.start": "开始",
 
@@ -51,6 +51,9 @@
   "leaderboard.loading": "加载中...",
   "leaderboard.empty": "暂无记录。成为第一个解开今日谜题的人！",
   "leaderboard.wins": "{{count}} 胜",
+  "leaderboard.title1": "手机通灵师",
+  "leaderboard.title2": "像素追猎者",
+  "leaderboard.title3": "滑动新手",
 
   "about.title": "PhoneGuessr",
   "about.tagline": "每日手机猜谜游戏",

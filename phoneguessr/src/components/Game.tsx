@@ -239,6 +239,11 @@ export function Game() {
           #{puzzle.puzzleNumber}
           <Timer running={timerRunning} onTick={handleTick} />
         </div>
+        {gameState === 'playing' && !pendingGuessName && (
+          <div className="guess-remaining-text">
+            {t('guess.remaining', { count: MAX_GUESSES - guesses.length })}
+          </div>
+        )}
       </div>
 
       <div className="crop-wrapper">
@@ -265,11 +270,7 @@ export function Game() {
       </div>
       <Confetti show={gameState === 'won'} />
 
-      <GuessHistory
-        guesses={guesses}
-        maxGuesses={MAX_GUESSES}
-        pendingGuessName={pendingGuessName}
-      />
+      <GuessHistory guesses={guesses} pendingGuessName={pendingGuessName} />
 
       {gameState === 'playing' && (
         <PhoneAutocomplete

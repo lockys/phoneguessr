@@ -78,13 +78,13 @@ export function Leaderboard() {
               <span className="lb-name">
                 {entry.displayName}
                 {tab === 'all-time' && entry.rank === 1 && (
-                  <span className="lb-title"> · The Phone Whisperer</span>
+                  <span className="lb-title"> · {t('leaderboard.title1')}</span>
                 )}
                 {tab === 'all-time' && entry.rank === 2 && (
-                  <span className="lb-title"> · Pixel Pursuer</span>
+                  <span className="lb-title"> · {t('leaderboard.title2')}</span>
                 )}
                 {tab === 'all-time' && entry.rank === 3 && (
-                  <span className="lb-title"> · Swipe Rookie</span>
+                  <span className="lb-title"> · {t('leaderboard.title3')}</span>
                 )}
               </span>
               {'score' in entry ? (

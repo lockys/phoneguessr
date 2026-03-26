@@ -1,7 +1,7 @@
 {
   "game.title": "PhoneGuessr",
   "game.loading": "Loading puzzle...",
-  "game.meta.title": "PhoneGuessr - Daily Phone Guessing Game",
+  "game.meta.title": "PhoneGuessr",
   "game.meta.description": "Identify phones from cropped photos. One puzzle per day.",
   "game.start": "Start",
 
@@ -58,6 +58,9 @@
   "leaderboard.loading": "Loading...",
   "leaderboard.empty": "No entries yet. Be the first to solve today's puzzle!",
   "leaderboard.wins": "{{count}} wins",
+  "leaderboard.title1": "The Phone Whisperer",
+  "leaderboard.title2": "Pixel Pursuer",
+  "leaderboard.title3": "Swipe Rookie",
 
   "about.title": "PhoneGuessr",
   "about.tagline": "Daily phone guessing game",

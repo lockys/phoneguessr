@@ -1,7 +1,7 @@
 {
   "game.title": "PhoneGuessr",
   "game.loading": "퍼즐 불러오는 중...",
-  "game.meta.title": "PhoneGuessr - 매일 스마트폰 맞추기 게임",
+  "game.meta.title": "PhoneGuessr",
   "game.meta.description": "잘린 사진에서 스마트폰을 맞춰보세요. 매일 하나의 퍼즐.",
   "game.start": "시작",
 
@@ -51,6 +51,9 @@
   "leaderboard.loading": "불러오는 중...",
   "leaderboard.empty": "아직 기록이 없습니다. 오늘의 퍼즐을 처음으로 풀어보세요!",
   "leaderboard.wins": "{{count}}승",
+  "leaderboard.title1": "폰 속삭이는 자",
+  "leaderboard.title2": "픽셀 추적자",
+  "leaderboard.title3": "스와이프 신인",
 
   "about.title": "PhoneGuessr",
   "about.tagline": "매일 스마트폰 맞추기 게임",

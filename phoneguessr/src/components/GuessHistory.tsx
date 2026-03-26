@@ -8,15 +8,10 @@ interface Guess {
 
 interface GuessHistoryProps {
   guesses: Guess[];
-  maxGuesses: number;
   pendingGuessName?: string | null;
 }
 
-export function GuessHistory({
-  guesses,
-  maxGuesses,
-  pendingGuessName,
-}: GuessHistoryProps) {
+export function GuessHistory({ guesses, pendingGuessName }: GuessHistoryProps) {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const prevCountRef = useRef(guesses.length);
@@ -104,11 +99,6 @@ export function GuessHistory({
             <span className="guess-validating-dot" />
             <span className="guess-validating-dot" />
           </span>
-        </div>
-      )}
-      {!pendingGuessName && maxGuesses - guesses.length > 0 && (
-        <div className="guess-remaining-text">
-          {t('guess.remaining', { count: maxGuesses - guesses.length })}
         </div>
       )}
     </div>
