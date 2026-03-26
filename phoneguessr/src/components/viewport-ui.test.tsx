@@ -118,14 +118,15 @@ describe('ResultModal – layout structure', () => {
   });
 
   it('renders modal-backdrop with centered flex container', () => {
-    const { container } = render(<ResultModal {...baseProps} />);
-    const backdrop = container.querySelector('.modal-backdrop');
+    render(<ResultModal {...baseProps} />);
+    // Portal renders into document.body, not the render container
+    const backdrop = document.querySelector('.modal-backdrop');
     expect(backdrop).toBeInTheDocument();
   });
 
   it('renders modal-card inside backdrop', () => {
-    const { container } = render(<ResultModal {...baseProps} />);
-    const card = container.querySelector('.modal-card');
+    render(<ResultModal {...baseProps} />);
+    const card = document.querySelector('.modal-card');
     expect(card).toBeInTheDocument();
     expect(card?.parentElement).toHaveClass('modal-backdrop');
   });
@@ -138,20 +139,16 @@ describe('ResultModal – layout structure', () => {
 
   it('closes on backdrop click (outside card)', () => {
     const onClose = vi.fn();
-    const { container } = render(
-      <ResultModal {...baseProps} onClose={onClose} />,
-    );
-    const backdrop = container.querySelector('.modal-backdrop') as HTMLElement;
+    render(<ResultModal {...baseProps} onClose={onClose} />);
+    const backdrop = document.querySelector('.modal-backdrop') as HTMLElement;
     fireEvent.click(backdrop);
     expect(onClose).toHaveBeenCalledOnce();
   });
 
   it('does not close when clicking inside the card', () => {
     const onClose = vi.fn();
-    const { container } = render(
-      <ResultModal {...baseProps} onClose={onClose} />,
-    );
-    const card = container.querySelector('.modal-card') as HTMLElement;
+    render(<ResultModal {...baseProps} onClose={onClose} />);
+    const card = document.querySelector('.modal-card') as HTMLElement;
     fireEvent.click(card);
     expect(onClose).not.toHaveBeenCalled();
   });
@@ -612,7 +609,7 @@ describe('Cross-browser CSS class coverage', () => {
 
   it('modal-backdrop has backdrop-filter class for cross-browser blur', () => {
     const onClose = vi.fn();
-    const { container } = render(
+    render(
       <ResultModal
         won={true}
         guesses={[{ phoneName: 'iPhone 16', feedback: 'correct' }]}
@@ -621,8 +618,9 @@ describe('Cross-browser CSS class coverage', () => {
         onClose={onClose}
       />,
     );
-    // .modal-backdrop CSS includes both backdrop-filter and -webkit-backdrop-filter
-    expect(container.querySelector('.modal-backdrop')).toBeInTheDocument();
+    // Portal renders into document.body; .modal-backdrop CSS includes both
+    // backdrop-filter and -webkit-backdrop-filter
+    expect(document.querySelector('.modal-backdrop')).toBeInTheDocument();
   });
 
   it('autocomplete-cursor has cross-browser blink animation class', () => {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../lib/auth-context';
 import { generateShareText } from '../lib/share';
@@ -51,7 +52,7 @@ export function ResultModal({
     if (e.key === 'Escape') onClose();
   };
 
-  return (
+  return createPortal(
     <div
       className="modal-backdrop"
       onClick={handleBackdropClick}
@@ -110,6 +111,7 @@ export function ResultModal({
           )}
         </div>
       </dialog>
-    </div>
+    </div>,
+    document.body,
   );
 }
