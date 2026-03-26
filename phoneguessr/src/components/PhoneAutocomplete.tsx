@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 interface Phone {
@@ -141,77 +142,78 @@ export function PhoneAutocomplete({
   };
 
   const pinned = isFocused && isTouch;
-  // Measured lazily on first pin so we don't force layout on every render
-  const placeholderRef = useRef<HTMLDivElement>(null);
+
+  const inputEl = (
+    <div
+      className={`autocomplete${pinned ? ' autocomplete--pinned' : ''}`}
+      style={
+        pinned
+          ? { position: 'fixed', bottom: fixedBottom, left: 0, right: 0 }
+          : undefined
+      }
+    >
+      <div className="autocomplete-wrapper">
+        {query.length === 0 && !disabled && (
+          <span className="autocomplete-typing-placeholder">
+            {typingText}
+            <span className="autocomplete-cursor" />
+          </span>
+        )}
+        <input
+          ref={inputRef}
+          type="text"
+          className="autocomplete-input"
+          value={query}
+          onChange={e => {
+            setQuery(e.target.value);
+            setShowDropdown(true);
+          }}
+          onFocus={() => {
+            setIsFocused(true);
+            if (query.length >= 2) setShowDropdown(true);
+          }}
+          onBlur={() => {
+            setIsFocused(false);
+            setTimeout(() => setShowDropdown(false), 150);
+          }}
+          onKeyDown={handleKeyDown}
+          placeholder={disabled ? t('input.placeholder') : ''}
+          disabled={disabled}
+          autoComplete="off"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          inputMode="search"
+          enterKeyHint="search"
+        />
+      </div>
+      {showDropdown && filtered.length > 0 && (
+        <ul className="autocomplete-dropdown">
+          {filtered.slice(0, 8).map((phone, i) => (
+            <li
+              key={phone.id}
+              className={`autocomplete-item ${i === selectedIndex ? 'selected' : ''}`}
+              onPointerDown={() => handleSelect(phone)}
+            >
+              <span className="autocomplete-brand">{phone.brand}</span>{' '}
+              {phone.model}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 
   return (
     <>
       {/* Holds space in the document flow while the input is fixed */}
-      {pinned && (
-        <div
-          ref={placeholderRef}
-          className="autocomplete-placeholder"
-          aria-hidden
-        />
-      )}
-      <div
-        className={`autocomplete${pinned ? ' autocomplete--pinned' : ''}`}
-        style={
-          pinned
-            ? { position: 'fixed', bottom: fixedBottom, left: 0, right: 0 }
-            : undefined
-        }
-      >
-        <div className="autocomplete-wrapper">
-          {query.length === 0 && !disabled && (
-            <span className="autocomplete-typing-placeholder">
-              {typingText}
-              <span className="autocomplete-cursor" />
-            </span>
-          )}
-          <input
-            ref={inputRef}
-            type="text"
-            className="autocomplete-input"
-            value={query}
-            onChange={e => {
-              setQuery(e.target.value);
-              setShowDropdown(true);
-            }}
-            onFocus={() => {
-              setIsFocused(true);
-              if (query.length >= 2) setShowDropdown(true);
-            }}
-            onBlur={() => {
-              setIsFocused(false);
-              setTimeout(() => setShowDropdown(false), 150);
-            }}
-            onKeyDown={handleKeyDown}
-            placeholder={disabled ? t('input.placeholder') : ''}
-            disabled={disabled}
-            autoComplete="off"
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            inputMode="search"
-            enterKeyHint="search"
-          />
-        </div>
-        {showDropdown && filtered.length > 0 && (
-          <ul className="autocomplete-dropdown">
-            {filtered.slice(0, 8).map((phone, i) => (
-              <li
-                key={phone.id}
-                className={`autocomplete-item ${i === selectedIndex ? 'selected' : ''}`}
-                onPointerDown={() => handleSelect(phone)}
-              >
-                <span className="autocomplete-brand">{phone.brand}</span>{' '}
-                {phone.model}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {pinned && <div className="autocomplete-placeholder" aria-hidden />}
+      {/*
+       * Portal to document.body when pinned so that position:fixed is relative
+       * to the viewport, not the .swipe-panel ancestor which has contain:paint
+       * (CSS Containment creates a new containing block for fixed descendants).
+       */}
+      {pinned ? createPortal(inputEl, document.body) : inputEl}
     </>
   );
 }
