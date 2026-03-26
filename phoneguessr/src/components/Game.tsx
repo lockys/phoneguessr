@@ -229,7 +229,6 @@ export function Game() {
   return (
     <div className="game">
       <div className="game-header">
-        <h1 className="game-title">{t('game.title')}</h1>
         <div className="game-meta">
           #{puzzle.puzzleNumber}
           <Timer running={timerRunning} onTick={handleTick} />

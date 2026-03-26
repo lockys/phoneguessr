@@ -38,10 +38,16 @@ body {
 
 .app-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   gap: 8px;
   padding: 16px 16px 8px;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 /* Swipe Container */
@@ -490,7 +496,7 @@ body {
 
 .autocomplete-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 16px;
   font-size: 16px;
   background: transparent;
   border: none;
@@ -515,14 +521,14 @@ body {
   margin-bottom: 4px;
   list-style: none;
   z-index: 10;
-  max-height: min(240px, 40dvh);
+  max-height: min(300px, 50dvh);
   overflow-y: auto;
 }
 
 .autocomplete-item {
-  padding: 10px 16px;
+  padding: 14px 16px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .autocomplete-item:hover,
@@ -1378,7 +1384,7 @@ body {
 /* Mobile Layout */
 @media (max-width: 480px) {
   .guess-history {
-    max-height: 140px;
+    max-height: 200px;
     overflow-y: auto;
     scrollbar-width: none;
   }
