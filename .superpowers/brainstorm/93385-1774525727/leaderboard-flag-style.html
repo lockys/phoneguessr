@@ -1,0 +1,102 @@
+<h2>Flag Display on Leaderboard</h2>
+<p class="subtitle">How should the region flag appear next to each player's name?</p>
+
+<div class="cards">
+
+  <!-- Option A: Flag before name -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0d1117;">
+      <div style="background:#161b22;border-radius:8px;padding:12px;font-family:system-ui,sans-serif;">
+        <!-- Row 1 -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #21262d;">
+          <span style="color:#f1c40f;font-size:14px;width:24px;">#1</span>
+          <span style="font-size:16px;">🇹🇼</span>
+          <span style="color:#c9d1d9;font-size:13px;flex:1;">calvinjeng</span>
+          <span style="color:#8b949e;font-size:12px;">42 wins</span>
+        </div>
+        <!-- Row 2 -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #21262d;">
+          <span style="color:#bdc3c7;font-size:14px;width:24px;">#2</span>
+          <span style="font-size:16px;">🇯🇵</span>
+          <span style="color:#c9d1d9;font-size:13px;flex:1;">player42</span>
+          <span style="color:#8b949e;font-size:12px;">38 wins</span>
+        </div>
+        <!-- Row 3 -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+          <span style="color:#c9d1d9;font-size:14px;width:24px;">#3</span>
+          <span style="font-size:16px;">🇺🇸</span>
+          <span style="color:#c9d1d9;font-size:13px;flex:1;">techfan99</span>
+          <span style="color:#8b949e;font-size:12px;">31 wins</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Flag before name</h3>
+      <p>Flag emoji sits right before the display name. Clean, visible, standard for global leaderboards.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Flag after name (subtle) -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0d1117;">
+      <div style="background:#161b22;border-radius:8px;padding:12px;font-family:system-ui,sans-serif;">
+        <!-- Row 1 -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #21262d;">
+          <span style="color:#f1c40f;font-size:14px;width:24px;">#1</span>
+          <span style="color:#c9d1d9;font-size:13px;flex:1;">calvinjeng <span style="font-size:14px;">🇹🇼</span></span>
+          <span style="color:#8b949e;font-size:12px;">42 wins</span>
+        </div>
+        <!-- Row 2 -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #21262d;">
+          <span style="color:#bdc3c7;font-size:14px;width:24px;">#2</span>
+          <span style="color:#c9d1d9;font-size:13px;flex:1;">player42 <span style="font-size:14px;">🇯🇵</span></span>
+          <span style="color:#8b949e;font-size:12px;">38 wins</span>
+        </div>
+        <!-- Row 3 -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+          <span style="color:#c9d1d9;font-size:14px;width:24px;">#3</span>
+          <span style="color:#c9d1d9;font-size:13px;flex:1;">techfan99 <span style="font-size:14px;">🇺🇸</span></span>
+          <span style="color:#8b949e;font-size:12px;">31 wins</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Flag after name</h3>
+      <p>Flag sits after the name as a subtle accent. Name is the primary focus; flag adds context.</p>
+    </div>
+  </div>
+
+  <!-- Option C: No flag for players without region set -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0d1117;">
+      <div style="background:#161b22;border-radius:8px;padding:12px;font-family:system-ui,sans-serif;">
+        <!-- Row 1 - has flag -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #21262d;">
+          <span style="color:#f1c40f;font-size:14px;width:24px;">#1</span>
+          <span style="font-size:16px;">🇹🇼</span>
+          <span style="color:#c9d1d9;font-size:13px;flex:1;">calvinjeng</span>
+          <span style="color:#8b949e;font-size:12px;">42 wins</span>
+        </div>
+        <!-- Row 2 - no flag set -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #21262d;">
+          <span style="color:#bdc3c7;font-size:14px;width:24px;">#2</span>
+          <span style="font-size:16px;color:#30363d;">🌐</span>
+          <span style="color:#c9d1d9;font-size:13px;flex:1;">player42</span>
+          <span style="color:#8b949e;font-size:12px;">38 wins</span>
+        </div>
+        <!-- Row 3 - has flag -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+          <span style="color:#c9d1d9;font-size:14px;width:24px;">#3</span>
+          <span style="font-size:16px;">🇺🇸</span>
+          <span style="color:#c9d1d9;font-size:13px;flex:1;">techfan99</span>
+          <span style="color:#8b949e;font-size:12px;">31 wins</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A + globe for unset</h3>
+      <p>Same as A, but players without a region get a muted 🌐 globe placeholder instead of nothing.</p>
+    </div>
+  </div>
+
+</div>

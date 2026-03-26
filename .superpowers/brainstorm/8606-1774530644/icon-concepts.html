@@ -1,0 +1,196 @@
+<h2>App Icon Concept</h2>
+<p class="subtitle">Which direction feels right for PhoneGuessr? (app icon: 512×512, shown at various sizes)</p>
+
+<div class="cards">
+
+  <!-- Option A: Phone + Question Mark -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:24px;background:#0d1117;display:flex;align-items:center;justify-content:center;gap:24px;">
+      <!-- 512x512 feel -->
+      <div style="position:relative;width:80px;height:80px;">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <rect width="80" height="80" rx="18" fill="#1a1a2e"/>
+          <!-- phone body -->
+          <rect x="22" y="12" width="36" height="56" rx="6" fill="#e2e8f0"/>
+          <rect x="25" y="20" width="30" height="38" rx="3" fill="#0f172a"/>
+          <!-- question mark -->
+          <text x="40" y="46" text-anchor="middle" font-size="22" font-weight="bold" fill="#f59e0b" font-family="system-ui">?</text>
+          <!-- home button -->
+          <circle cx="40" cy="63" r="3" fill="#94a3b8"/>
+        </svg>
+      </div>
+      <!-- small sizes -->
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+        <svg viewBox="0 0 80 80" width="48" height="48">
+          <rect width="80" height="80" rx="18" fill="#1a1a2e"/>
+          <rect x="22" y="12" width="36" height="56" rx="6" fill="#e2e8f0"/>
+          <rect x="25" y="20" width="30" height="38" rx="3" fill="#0f172a"/>
+          <text x="40" y="46" text-anchor="middle" font-size="22" font-weight="bold" fill="#f59e0b" font-family="system-ui">?</text>
+          <circle cx="40" cy="63" r="3" fill="#94a3b8"/>
+        </svg>
+        <svg viewBox="0 0 80 80" width="28" height="28">
+          <rect width="80" height="80" rx="18" fill="#1a1a2e"/>
+          <rect x="22" y="12" width="36" height="56" rx="6" fill="#e2e8f0"/>
+          <rect x="25" y="20" width="30" height="38" rx="3" fill="#0f172a"/>
+          <text x="40" y="46" text-anchor="middle" font-size="22" font-weight="bold" fill="#f59e0b" font-family="system-ui">?</text>
+          <circle cx="40" cy="63" r="3" fill="#94a3b8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Phone + Question Mark</h3>
+      <p>Classic, instantly readable. Dark navy background, white phone outline, amber "?" on screen. Clean at all sizes.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Magnifying glass over phone -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:24px;background:#0d1117;display:flex;align-items:center;justify-content:center;gap:24px;">
+      <div style="position:relative;width:80px;height:80px;">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#1e40af"/>
+              <stop offset="100%" style="stop-color:#7c3aed"/>
+            </linearGradient>
+          </defs>
+          <rect width="80" height="80" rx="18" fill="url(#grad1)"/>
+          <!-- phone -->
+          <rect x="16" y="14" width="30" height="48" rx="5" fill="white" opacity="0.9"/>
+          <rect x="19" y="20" width="24" height="32" rx="2" fill="#1e293b"/>
+          <circle cx="31" cy="57" r="2.5" fill="#94a3b8"/>
+          <!-- magnifying glass -->
+          <circle cx="50" cy="38" r="13" fill="none" stroke="#fbbf24" stroke-width="4"/>
+          <circle cx="50" cy="38" r="9" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.4"/>
+          <line x1="59" y1="47" x2="67" y2="55" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+        <svg viewBox="0 0 80 80" width="48" height="48">
+          <defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1e40af"/><stop offset="100%" style="stop-color:#7c3aed"/></linearGradient></defs>
+          <rect width="80" height="80" rx="18" fill="url(#grad2)"/>
+          <rect x="16" y="14" width="30" height="48" rx="5" fill="white" opacity="0.9"/>
+          <rect x="19" y="20" width="24" height="32" rx="2" fill="#1e293b"/>
+          <circle cx="31" cy="57" r="2.5" fill="#94a3b8"/>
+          <circle cx="50" cy="38" r="13" fill="none" stroke="#fbbf24" stroke-width="4"/>
+          <line x1="59" y1="47" x2="67" y2="55" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <svg viewBox="0 0 80 80" width="28" height="28">
+          <defs><linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1e40af"/><stop offset="100%" style="stop-color:#7c3aed"/></linearGradient></defs>
+          <rect width="80" height="80" rx="18" fill="url(#grad3)"/>
+          <rect x="16" y="14" width="30" height="48" rx="5" fill="white" opacity="0.9"/>
+          <rect x="19" y="20" width="24" height="32" rx="2" fill="#1e293b"/>
+          <circle cx="50" cy="38" r="13" fill="none" stroke="#fbbf24" stroke-width="4"/>
+          <line x1="59" y1="47" x2="67" y2="55" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Phone + Magnifying Glass</h3>
+      <p>Blue-to-purple gradient, white phone, gold magnifying glass overlapping. Communicates "inspect &amp; identify". More dynamic.</p>
+    </div>
+  </div>
+
+  <!-- Option C: Abstract cropped/zoomed phone on gradient -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:24px;background:#0d1117;display:flex;align-items:center;justify-content:center;gap:24px;">
+      <div style="position:relative;width:80px;height:80px;">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <defs>
+            <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#0f766e"/>
+              <stop offset="100%" style="stop-color:#0369a1"/>
+            </linearGradient>
+            <clipPath id="rounded-rect">
+              <rect width="80" height="80" rx="18"/>
+            </clipPath>
+          </defs>
+          <rect width="80" height="80" rx="18" fill="url(#grad4)"/>
+          <!-- large cropped phone — partially cut off, suggesting the game mechanic -->
+          <rect x="-5" y="10" width="55" height="70" rx="8" fill="white" opacity="0.15" clip-path="url(#rounded-rect)"/>
+          <rect x="-2" y="18" width="46" height="55" rx="4" fill="#0f172a" opacity="0.7" clip-path="url(#rounded-rect)"/>
+          <!-- focus/crop lines in corner -->
+          <line x1="48" y1="10" x2="48" y2="70" stroke="white" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
+          <!-- guess indicator dots -->
+          <circle cx="58" cy="35" r="5" fill="#fbbf24"/>
+          <circle cx="58" cy="50" r="5" fill="white" opacity="0.3"/>
+          <circle cx="58" cy="65" r="5" fill="white" opacity="0.3"/>
+          <!-- label "PG" -->
+          <text x="58" y="22" text-anchor="middle" font-size="8" font-weight="900" fill="white" font-family="system-ui" opacity="0.9">PG</text>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+        <svg viewBox="0 0 80 80" width="48" height="48">
+          <defs><linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0f766e"/><stop offset="100%" style="stop-color:#0369a1"/></linearGradient><clipPath id="rr2"><rect width="80" height="80" rx="18"/></clipPath></defs>
+          <rect width="80" height="80" rx="18" fill="url(#grad5)"/>
+          <rect x="-5" y="10" width="55" height="70" rx="8" fill="white" opacity="0.15" clip-path="url(#rr2)"/>
+          <rect x="-2" y="18" width="46" height="55" rx="4" fill="#0f172a" opacity="0.7" clip-path="url(#rr2)"/>
+          <line x1="48" y1="10" x2="48" y2="70" stroke="white" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>
+          <circle cx="58" cy="35" r="5" fill="#fbbf24"/>
+          <circle cx="58" cy="50" r="5" fill="white" opacity="0.3"/>
+          <circle cx="58" cy="65" r="5" fill="white" opacity="0.3"/>
+        </svg>
+        <svg viewBox="0 0 80 80" width="28" height="28">
+          <defs><linearGradient id="grad6" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0f766e"/><stop offset="100%" style="stop-color:#0369a1"/></linearGradient><clipPath id="rr3"><rect width="80" height="80" rx="18"/></clipPath></defs>
+          <rect width="80" height="80" rx="18" fill="url(#grad6)"/>
+          <rect x="-5" y="10" width="55" height="70" rx="8" fill="white" opacity="0.15" clip-path="url(#rr3)"/>
+          <rect x="-2" y="18" width="46" height="55" rx="4" fill="#0f172a" opacity="0.7" clip-path="url(#rr3)"/>
+          <circle cx="58" cy="35" r="5" fill="#fbbf24"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Cropped Phone + Guess Dots</h3>
+      <p>Teal-to-blue gradient, partially cropped phone silhouette (mirrors the game mechanic), gold/grey dots representing guesses remaining.</p>
+    </div>
+  </div>
+
+  <!-- Option D: Eye on phone screen -->
+  <div class="card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:24px;background:#0d1117;display:flex;align-items:center;justify-content:center;gap:24px;">
+      <div style="position:relative;width:80px;height:80px;">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <defs>
+            <linearGradient id="grad7" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#4c1d95"/>
+              <stop offset="100%" style="stop-color:#be185d"/>
+            </linearGradient>
+          </defs>
+          <rect width="80" height="80" rx="18" fill="url(#grad7)"/>
+          <!-- phone outline -->
+          <rect x="18" y="10" width="44" height="60" rx="7" fill="none" stroke="white" stroke-width="3" opacity="0.9"/>
+          <rect x="22" y="17" width="36" height="44" rx="3" fill="white" opacity="0.1"/>
+          <!-- eye on screen -->
+          <ellipse cx="40" cy="39" rx="14" ry="9" fill="none" stroke="white" stroke-width="2.5"/>
+          <circle cx="40" cy="39" r="5" fill="white"/>
+          <circle cx="40" cy="39" r="2.5" fill="#4c1d95"/>
+          <circle cx="42" cy="37" r="1" fill="white"/>
+          <!-- camera notch -->
+          <rect x="35" y="13" width="10" height="3" rx="1.5" fill="white" opacity="0.5"/>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+        <svg viewBox="0 0 80 80" width="48" height="48">
+          <defs><linearGradient id="grad8" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#4c1d95"/><stop offset="100%" style="stop-color:#be185d"/></linearGradient></defs>
+          <rect width="80" height="80" rx="18" fill="url(#grad8)"/>
+          <rect x="18" y="10" width="44" height="60" rx="7" fill="none" stroke="white" stroke-width="3" opacity="0.9"/>
+          <ellipse cx="40" cy="39" rx="14" ry="9" fill="none" stroke="white" stroke-width="2.5"/>
+          <circle cx="40" cy="39" r="5" fill="white"/>
+          <circle cx="40" cy="39" r="2.5" fill="#4c1d95"/>
+        </svg>
+        <svg viewBox="0 0 80 80" width="28" height="28">
+          <defs><linearGradient id="grad9" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#4c1d95"/><stop offset="100%" style="stop-color:#be185d"/></linearGradient></defs>
+          <rect width="80" height="80" rx="18" fill="url(#grad9)"/>
+          <rect x="18" y="10" width="44" height="60" rx="7" fill="none" stroke="white" stroke-width="3" opacity="0.9"/>
+          <ellipse cx="40" cy="39" rx="14" ry="9" fill="none" stroke="white" stroke-width="2.5"/>
+          <circle cx="40" cy="39" r="5" fill="white"/>
+        </svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D — Phone + Eye</h3>
+      <p>Purple-to-pink gradient, phone outline with an eye on the screen. "Look closely and identify." Bold and distinctive.</p>
+    </div>
+  </div>
+
+</div>

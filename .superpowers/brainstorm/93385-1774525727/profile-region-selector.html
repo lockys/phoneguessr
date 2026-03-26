@@ -1,0 +1,86 @@
+<h2>Region Selector in Profile</h2>
+<p class="subtitle">How should the region picker look in the personal info section?</p>
+
+<div class="cards">
+
+  <!-- Option A: Dropdown inline with language selector -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0d1117;">
+      <div style="background:#161b22;border-radius:12px;padding:16px;font-family:system-ui,sans-serif;max-width:320px;margin:0 auto;">
+        <div style="color:#8b949e;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;">Personal Info</div>
+
+        <!-- Display name -->
+        <div style="margin-bottom:10px;">
+          <label style="color:#8b949e;font-size:11px;display:block;margin-bottom:4px;">Display name</label>
+          <input style="width:100%;box-sizing:border-box;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:7px 10px;color:#c9d1d9;font-size:13px;" value="calvinjeng"/>
+        </div>
+
+        <!-- Language -->
+        <div style="margin-bottom:10px;">
+          <label style="color:#8b949e;font-size:11px;display:block;margin-bottom:4px;">Language</label>
+          <select style="width:100%;box-sizing:border-box;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:7px 10px;color:#c9d1d9;font-size:13px;">
+            <option>English</option>
+          </select>
+        </div>
+
+        <!-- Region — same row style as language -->
+        <div style="margin-bottom:14px;">
+          <label style="color:#8b949e;font-size:11px;display:block;margin-bottom:4px;">Region</label>
+          <select style="width:100%;box-sizing:border-box;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:7px 10px;color:#c9d1d9;font-size:13px;">
+            <option>🇹🇼  Taiwan</option>
+            <option>🇺🇸  United States</option>
+            <option>🇯🇵  Japan</option>
+          </select>
+        </div>
+
+        <button style="width:100%;background:#1f6feb;border:none;border-radius:6px;padding:8px;color:#fff;font-size:13px;cursor:pointer;">Save</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Full-width dropdown</h3>
+      <p>Region sits right below Language as a standard select dropdown. Consistent with existing fields.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Flag pill selector -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0d1117;">
+      <div style="background:#161b22;border-radius:12px;padding:16px;font-family:system-ui,sans-serif;max-width:320px;margin:0 auto;">
+        <div style="color:#8b949e;font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;">Personal Info</div>
+
+        <!-- Display name -->
+        <div style="margin-bottom:10px;">
+          <label style="color:#8b949e;font-size:11px;display:block;margin-bottom:4px;">Display name</label>
+          <input style="width:100%;box-sizing:border-box;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:7px 10px;color:#c9d1d9;font-size:13px;" value="calvinjeng"/>
+        </div>
+
+        <!-- Language -->
+        <div style="margin-bottom:10px;">
+          <label style="color:#8b949e;font-size:11px;display:block;margin-bottom:4px;">Language</label>
+          <select style="width:100%;box-sizing:border-box;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:7px 10px;color:#c9d1d9;font-size:13px;">
+            <option>English</option>
+          </select>
+        </div>
+
+        <!-- Region — current flag shown, click to change -->
+        <div style="margin-bottom:14px;">
+          <label style="color:#8b949e;font-size:11px;display:block;margin-bottom:6px;">Region</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="background:#0d1117;border:1px solid #388bfd;border-radius:6px;padding:7px 12px;color:#c9d1d9;font-size:13px;display:flex;align-items:center;gap:8px;flex:1;">
+              <span style="font-size:18px;">🇹🇼</span>
+              <span>Taiwan</span>
+            </div>
+            <button style="background:#21262d;border:1px solid #30363d;border-radius:6px;padding:7px 12px;color:#8b949e;font-size:12px;cursor:pointer;">Change</button>
+          </div>
+        </div>
+
+        <button style="width:100%;background:#1f6feb;border:none;border-radius:6px;padding:8px;color:#fff;font-size:13px;cursor:pointer;">Save</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Flag pill + Change button</h3>
+      <p>Shows the current flag prominently. "Change" opens the country picker. More visual, slightly more complex.</p>
+    </div>
+  </div>
+
+</div>

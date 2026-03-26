@@ -1,0 +1,127 @@
+<h2>Admin Page Layout</h2>
+<p class="subtitle">Which layout works best for browsing and editing the phone catalog?</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0d1117;">
+      <div style="background:#161b22;border-radius:8px;padding:12px;font-family:monospace;font-size:11px;">
+        <div style="display:flex;gap:8px;align-items:center;border-bottom:1px solid #30363d;padding-bottom:8px;margin-bottom:8px;color:#8b949e;">
+          <span style="width:48px">IMG</span>
+          <span style="flex:1">Brand / Model</span>
+          <span style="width:180px">Image URL</span>
+          <span style="width:80px">Actions</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #21262d;">
+          <div style="width:48px;height:36px;background:#21262d;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#8b949e;font-size:9px;">IMG</div>
+          <span style="flex:1;color:#c9d1d9;font-size:12px;">Apple iPhone 15 Pro</span>
+          <span style="width:180px;color:#58a6ff;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">wikimedia.org/Apple_iP…</span>
+          <div style="width:80px;display:flex;gap:4px;">
+            <span style="background:#21262d;border-radius:3px;padding:2px 6px;color:#c9d1d9;font-size:10px;cursor:pointer;">Edit</span>
+            <span style="background:#21262d;border-radius:3px;padding:2px 6px;color:#f85149;font-size:10px;cursor:pointer;">Del</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #21262d;">
+          <div style="width:48px;height:36px;background:#21262d;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#8b949e;font-size:9px;">IMG</div>
+          <span style="flex:1;color:#c9d1d9;font-size:12px;">Samsung Galaxy S25</span>
+          <span style="width:180px;color:#58a6ff;font-size:10px;">wikimedia.org/Samsung_…</span>
+          <div style="width:80px;display:flex;gap:4px;">
+            <span style="background:#21262d;border-radius:3px;padding:2px 6px;color:#c9d1d9;font-size:10px;cursor:pointer;">Edit</span>
+            <span style="background:#21262d;border-radius:3px;padding:2px 6px;color:#f85149;font-size:10px;cursor:pointer;">Del</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;padding:6px 0;">
+          <div style="width:48px;height:36px;background:#21262d;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#8b949e;font-size:9px;">IMG</div>
+          <span style="flex:1;color:#c9d1d9;font-size:12px;">Google Pixel 9</span>
+          <span style="width:180px;color:#58a6ff;font-size:10px;">wikimedia.org/Google_P…</span>
+          <div style="width:80px;display:flex;gap:4px;">
+            <span style="background:#21262d;border-radius:3px;padding:2px 6px;color:#c9d1d9;font-size:10px;cursor:pointer;">Edit</span>
+            <span style="background:#21262d;border-radius:3px;padding:2px 6px;color:#f85149;font-size:10px;cursor:pointer;">Del</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Table with inline edit</h3>
+      <p>Dense list. Click Edit to expand a row into an inline form. Good for scanning many entries quickly.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0d1117;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div style="background:#161b22;border-radius:8px;overflow:hidden;">
+          <div style="height:70px;background:#21262d;display:flex;align-items:center;justify-content:center;color:#8b949e;font-size:10px;">📱 IMG</div>
+          <div style="padding:8px;">
+            <div style="color:#c9d1d9;font-size:11px;font-weight:600;">Apple</div>
+            <div style="color:#8b949e;font-size:10px;">iPhone 15 Pro</div>
+            <div style="display:flex;gap:4px;margin-top:6px;">
+              <span style="background:#1f6feb;border-radius:3px;padding:2px 6px;color:#fff;font-size:9px;">Edit</span>
+              <span style="background:#21262d;border-radius:3px;padding:2px 6px;color:#f85149;font-size:9px;">✕</span>
+            </div>
+          </div>
+        </div>
+        <div style="background:#161b22;border-radius:8px;overflow:hidden;">
+          <div style="height:70px;background:#21262d;display:flex;align-items:center;justify-content:center;color:#8b949e;font-size:10px;">📱 IMG</div>
+          <div style="padding:8px;">
+            <div style="color:#c9d1d9;font-size:11px;font-weight:600;">Samsung</div>
+            <div style="color:#8b949e;font-size:10px;">Galaxy S25</div>
+            <div style="display:flex;gap:4px;margin-top:6px;">
+              <span style="background:#1f6feb;border-radius:3px;padding:2px 6px;color:#fff;font-size:9px;">Edit</span>
+              <span style="background:#21262d;border-radius:3px;padding:2px 6px;color:#f85149;font-size:9px;">✕</span>
+            </div>
+          </div>
+        </div>
+        <div style="background:#161b22;border-radius:8px;overflow:hidden;">
+          <div style="height:70px;background:#21262d;display:flex;align-items:center;justify-content:center;color:#8b949e;font-size:10px;">📱 IMG</div>
+          <div style="padding:8px;">
+            <div style="color:#c9d1d9;font-size:11px;font-weight:600;">Google</div>
+            <div style="color:#8b949e;font-size:10px;">Pixel 9</div>
+            <div style="display:flex;gap:4px;margin-top:6px;">
+              <span style="background:#1f6feb;border-radius:3px;padding:2px 6px;color:#fff;font-size:9px;">Edit</span>
+              <span style="background:#21262d;border-radius:3px;padding:2px 6px;color:#f85149;font-size:9px;">✕</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Image card grid</h3>
+      <p>Visually browse phones like a gallery. Each card shows the image prominently. Edit opens a modal.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;background:#0d1117;">
+      <div style="display:flex;gap:8px;height:140px;">
+        <div style="flex:1;background:#161b22;border-radius:8px;padding:10px;overflow:hidden;">
+          <div style="color:#8b949e;font-size:10px;margin-bottom:6px;">130 phones</div>
+          <div style="background:#1f6feb22;border-left:2px solid #1f6feb;padding:6px 8px;border-radius:4px;margin-bottom:4px;">
+            <div style="color:#c9d1d9;font-size:11px;">Apple iPhone 15 Pro</div>
+          </div>
+          <div style="padding:6px 8px;margin-bottom:4px;">
+            <div style="color:#8b949e;font-size:11px;">Samsung Galaxy S25</div>
+          </div>
+          <div style="padding:6px 8px;margin-bottom:4px;">
+            <div style="color:#8b949e;font-size:11px;">Google Pixel 9</div>
+          </div>
+          <div style="padding:6px 8px;">
+            <div style="color:#8b949e;font-size:11px;">OnePlus 13</div>
+          </div>
+        </div>
+        <div style="flex:1.5;background:#161b22;border-radius:8px;padding:10px;">
+          <div style="color:#c9d1d9;font-size:11px;font-weight:600;margin-bottom:8px;">Apple iPhone 15 Pro</div>
+          <div style="height:60px;background:#21262d;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#8b949e;font-size:10px;margin-bottom:8px;">📱 Image preview</div>
+          <div style="background:#21262d;border-radius:4px;padding:4px 6px;color:#8b949e;font-size:9px;margin-bottom:6px;">https://wikimedia.org/…</div>
+          <div style="display:flex;gap:4px;">
+            <span style="background:#1f6feb;border-radius:3px;padding:2px 8px;color:#fff;font-size:9px;">Save</span>
+            <span style="background:#da3633;border-radius:3px;padding:2px 8px;color:#fff;font-size:9px;">Delete</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Split: list + detail panel</h3>
+      <p>Scrollable list on the left, edit form on the right. Selecting a phone loads it into the panel. Fast to navigate.</p>
+    </div>
+  </div>
+</div>
