@@ -95,34 +95,33 @@ describe('Onboarding', () => {
   });
 
   it('renders progress bars', () => {
-    const { container } = render(<Onboarding onDone={onDone} />);
-    const bars = container.querySelectorAll('.onboarding-progress-bar');
+    render(<Onboarding onDone={onDone} />);
+    // Portal renders into document.body, not the render container
+    const bars = document.querySelectorAll('.onboarding-progress-bar');
     expect(bars).toHaveLength(3);
     expect(bars[0]).toHaveClass('onboarding-progress-active');
     expect(bars[1]).not.toHaveClass('onboarding-progress-active');
   });
 
   it('fills progress bars as steps advance', () => {
-    const { container } = render(<Onboarding onDone={onDone} />);
+    render(<Onboarding onDone={onDone} />);
     fireEvent.click(screen.getByText('onboarding.next'));
-    const bars = container.querySelectorAll('.onboarding-progress-bar');
+    const bars = document.querySelectorAll('.onboarding-progress-bar');
     expect(bars[0]).toHaveClass('onboarding-progress-active');
     expect(bars[1]).toHaveClass('onboarding-progress-active');
     expect(bars[2]).not.toHaveClass('onboarding-progress-active');
   });
 
   it('renders a spotlight element', () => {
-    const { container } = render(<Onboarding onDone={onDone} />);
-    expect(
-      container.querySelector('.onboarding-spotlight'),
-    ).toBeInTheDocument();
+    render(<Onboarding onDone={onDone} />);
+    expect(document.querySelector('.onboarding-spotlight')).toBeInTheDocument();
   });
 
   it('renders bottom card layout', () => {
-    const { container } = render(<Onboarding onDone={onDone} />);
-    expect(container.querySelector('.onboarding-card')).toBeInTheDocument();
+    render(<Onboarding onDone={onDone} />);
+    expect(document.querySelector('.onboarding-card')).toBeInTheDocument();
     expect(
-      container.querySelector('.onboarding-step-indicator'),
+      document.querySelector('.onboarding-step-indicator'),
     ).toBeInTheDocument();
   });
 });
