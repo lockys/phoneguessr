@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../lib/auth-context';
 import { GuessDistribution } from './GuessDistribution';
 import { LanguageSelector } from './LanguageSelector';
+import { Onboarding } from './Onboarding';
 
 interface Stats {
   gamesPlayed: number;
@@ -81,6 +82,7 @@ export function ProfilePanel() {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetStatus, setResetStatus] = useState<'idle' | 'ok' | 'err'>('idle');
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -322,6 +324,16 @@ export function ProfilePanel() {
           </button>
         </div>
       )}
+
+      <button
+        type="button"
+        className="profile-view-intro-btn"
+        onClick={() => setShowOnboarding(true)}
+      >
+        {t('profile.viewIntro')}
+      </button>
+
+      {showOnboarding && <Onboarding onDone={() => setShowOnboarding(false)} />}
     </div>
   );
 }

@@ -94,5 +94,7 @@
   "onboarding.step3.desc": "你有 6 次猜測機會。猜測次數越少、速度越快，分數越高。每天都有新謎題！",
   "onboarding.skip": "跳過",
   "onboarding.next": "下一步",
-  "onboarding.done": "開始遊戲！"
+  "onboarding.done": "開始遊戲！",
+
+  "profile.viewIntro": "重新觀看教學"
 }

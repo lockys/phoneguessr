@@ -1120,6 +1120,25 @@ body {
   margin-bottom: 12px;
 }
 
+.profile-view-intro-btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.profile-view-intro-btn:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
 /* Profile User Card */
 .profile-user-card {
   display: flex;

@@ -101,5 +101,7 @@
   "onboarding.step3.desc": "You have 6 guesses. Fewer guesses and faster times mean a better score. Come back every day for a new puzzle!",
   "onboarding.skip": "Skip",
   "onboarding.next": "Next",
-  "onboarding.done": "Let's play!"
+  "onboarding.done": "Let's play!",
+
+  "profile.viewIntro": "View intro again"
 }

@@ -94,5 +94,7 @@
   "onboarding.step3.desc": "チャンスは6回。少ない推測数と速いタイムでハイスコアを目指しましょう。毎日新しいパズルが登場！",
   "onboarding.skip": "スキップ",
   "onboarding.next": "次へ",
-  "onboarding.done": "プレイ開始！"
+  "onboarding.done": "プレイ開始！",
+
+  "profile.viewIntro": "チュートリアルをもう一度見る"
 }

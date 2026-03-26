@@ -94,5 +94,7 @@
   "onboarding.step3.desc": "你有 6 次猜测机会。猜测次数越少、速度越快，分数越高。每天都有新谜题！",
   "onboarding.skip": "跳过",
   "onboarding.next": "下一步",
-  "onboarding.done": "开始游戏！"
+  "onboarding.done": "开始游戏！",
+
+  "profile.viewIntro": "重新观看教程"
 }
