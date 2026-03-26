@@ -69,3 +69,49 @@ describe('GET /api/admin/phones', () => {
     expect(body.total).toBe(1);
   });
 });
+
+describe('PATCH /api/admin/phones', () => {
+  beforeEach(() => { vi.clearAllMocks(); mockDb.reset(); });
+
+  it('returns 403 for non-admin', async () => {
+    mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
+    mockDb.mockQuery([NON_ADMIN_DB_ROW]);
+    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', { brand: 'Apple' }));
+    expect(res.status).toBe(403);
+  });
+
+  it('returns 400 when no fields provided', async () => {
+    mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
+    mockDb.mockQuery([ADMIN_DB_ROW]);
+    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', {}));
+    expect(res.status).toBe(400);
+  });
+
+  it('returns 400 when a field is an empty string', async () => {
+    mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
+    mockDb.mockQuery([ADMIN_DB_ROW]);
+    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', { brand: '' }));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toMatch(/brand/);
+  });
+
+  it('returns 400 when id is missing from URL', async () => {
+    mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
+    mockDb.mockQuery([ADMIN_DB_ROW]);
+    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones', { brand: 'Apple' }));
+    expect(res.status).toBe(400);
+  });
+
+  it('updates phone and returns updated row', async () => {
+    mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
+    const updated = { id: 1, brand: 'Apple', model: 'iPhone 15 Pro Max', imageUrl: 'https://x.jpg', active: true };
+    // Queue: 1) requireAdmin user lookup, 2) UPDATE returning
+    mockDb.mockQuery([ADMIN_DB_ROW]);
+    mockDb.mockQuery([updated]);
+    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', { model: 'iPhone 15 Pro Max' }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.success).toBe(true);
+    expect(body.phone).toEqual(updated);
+  });
+});

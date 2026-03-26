@@ -48,7 +48,57 @@ export async function GET(request: Request): Promise<Response> {
 }
 
 export async function PATCH(request: Request): Promise<Response> {
-  return Response.json({ error: 'Not implemented' }, { status: 501 });
+  const admin = await requireAdmin(request);
+  if (!admin) return Response.json({ error: 'Forbidden' }, { status: 403 });
+
+  const url = new URL(request.url);
+  const id = Number(url.searchParams.get('id'));
+  if (!id) return Response.json({ error: 'Missing id' }, { status: 400 });
+
+  const body = (await request.json().catch(() => ({}))) as Record<
+    string,
+    unknown
+  >;
+  const updates: Partial<{ brand: string; model: string; imageUrl: string }> =
+    {};
+
+  for (const field of ['brand', 'model', 'imageUrl'] as const) {
+    if (field in body) {
+      if (
+        typeof body[field] !== 'string' ||
+        (body[field] as string).trim() === ''
+      ) {
+        return Response.json(
+          { error: `${field} must be a non-empty string` },
+          { status: 400 },
+        );
+      }
+      updates[field] = (body[field] as string).trim();
+    }
+  }
+
+  if (Object.keys(updates).length === 0) {
+    return Response.json(
+      { error: 'At least one field (brand, model, imageUrl) is required' },
+      { status: 400 },
+    );
+  }
+
+  const [updated] = await db
+    .update(phones)
+    .set(updates)
+    .where(eq(phones.id, id))
+    .returning({
+      id: phones.id,
+      brand: phones.brand,
+      model: phones.model,
+      imageUrl: phones.imageUrl,
+      active: phones.active,
+    });
+
+  if (!updated)
+    return Response.json({ error: 'Phone not found' }, { status: 404 });
+  return Response.json({ success: true, phone: updated });
 }
 
 export async function DELETE(request: Request): Promise<Response> {
