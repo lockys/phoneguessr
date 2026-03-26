@@ -117,10 +117,15 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = (await request.json()) as {
-    displayName?: string;
-    region?: string | null;
-  };
+  let body: { displayName?: string; region?: string | null };
+  try {
+    body = (await request.json()) as {
+      displayName?: string;
+      region?: string | null;
+    };
+  } catch {
+    return Response.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
   const updates: { displayName?: string; region?: string | null } = {};
 
   if ('displayName' in body) {
@@ -133,7 +138,7 @@ export async function POST(request: Request) {
 
   if ('region' in body) {
     const r = body.region;
-    if (r === null || r === '' || r === undefined) {
+    if (r === null || r === '') {
       updates.region = null;
     } else if (
       typeof r !== 'string' ||

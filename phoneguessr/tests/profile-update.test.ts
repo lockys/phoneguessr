@@ -49,9 +49,24 @@ describe('POST /api/profile — region field', () => {
 
   it('normalizes region code to uppercase before saving', async () => {
     mockDb.mockQuery([]);
+    let capturedSetArg: unknown;
+    const originalUpdate = mockDb.update;
+    mockDb.update = vi.fn((...args: unknown[]) => {
+      const chain = originalUpdate(
+        ...(args as Parameters<typeof originalUpdate>),
+      );
+      const originalSet = chain.set.bind(chain);
+      chain.set = vi.fn((arg: unknown) => {
+        capturedSetArg = arg;
+        return originalSet(arg);
+      });
+      return chain;
+    }) as typeof mockDb.update;
     const res = await POST(makeReq({ region: 'tw' }));
     expect(res.status).toBe(200);
     expect(mockDb.update).toHaveBeenCalledOnce();
+    expect(capturedSetArg).toMatchObject({ region: 'TW' });
+    mockDb.update = originalUpdate;
   });
 
   it('clears region when null is sent', async () => {
