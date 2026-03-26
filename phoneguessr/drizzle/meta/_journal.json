@@ -15,6 +15,13 @@
       "when": 1772870924142,
       "tag": "0001_cultured_moira_mactaggert",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1774527852827,
+      "tag": "0004_add_region_to_users",
+      "breakpoints": true
     }
   ]
 }

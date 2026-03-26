@@ -49,6 +49,7 @@ export const users = pgTable('users', {
   email: varchar('email', { length: 255 }).unique(),
   avatarUrl: text('avatar_url'),
   isAdmin: boolean('is_admin').notNull().default(false),
+  region: varchar('region', { length: 2 }),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
