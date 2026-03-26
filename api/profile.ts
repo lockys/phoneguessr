@@ -6,8 +6,12 @@ import {
   results,
   users,
 } from '../phoneguessr/src/db/schema.js';
-import { COOKIE_NAME, verifySessionToken } from '../phoneguessr/src/lib/auth.js';
+import {
+  COOKIE_NAME,
+  verifySessionToken,
+} from '../phoneguessr/src/lib/auth.js';
 import { parseCookies } from '../phoneguessr/src/lib/cookies.js';
+import { COUNTRY_CODES } from '../phoneguessr/src/lib/region.js';
 import { validateDisplayName } from '../phoneguessr/src/lib/validation.js';
 
 async function getAuth(request: Request) {
@@ -113,16 +117,38 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body: { displayName: string } = await request.json();
-  const result = validateDisplayName(body.displayName);
-  if (!result.valid) {
-    return Response.json({ error: result.error }, { status: 400 });
+  const body = (await request.json()) as {
+    displayName?: string;
+    region?: string | null;
+  };
+  const updates: { displayName?: string; region?: string | null } = {};
+
+  if ('displayName' in body) {
+    const result = validateDisplayName(body.displayName);
+    if (!result.valid) {
+      return Response.json({ error: result.error }, { status: 400 });
+    }
+    updates.displayName = result.value;
   }
 
-  await db
-    .update(users)
-    .set({ displayName: result.value })
-    .where(eq(users.id, session.userId));
+  if ('region' in body) {
+    const r = body.region;
+    if (r === null || r === '' || r === undefined) {
+      updates.region = null;
+    } else if (
+      typeof r !== 'string' ||
+      !COUNTRY_CODES.includes(r.toUpperCase())
+    ) {
+      return Response.json({ error: 'Invalid region code' }, { status: 400 });
+    } else {
+      updates.region = r.toUpperCase();
+    }
+  }
 
+  if (Object.keys(updates).length === 0) {
+    return Response.json({ success: true });
+  }
+
+  await db.update(users).set(updates).where(eq(users.id, session.userId));
   return Response.json({ success: true });
 }
