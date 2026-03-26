@@ -63,6 +63,7 @@ export function createMockDb() {
     select: vi.fn((..._args: unknown[]) => makeChain(queue)),
     insert: vi.fn((..._args: unknown[]) => makeChain(queue)),
     update: vi.fn((..._args: unknown[]) => makeChain(queue)),
+    delete: vi.fn((..._args: unknown[]) => makeChain(queue)),
 
     /**
      * Enqueue one or more results for upcoming awaited db queries, in call order.
