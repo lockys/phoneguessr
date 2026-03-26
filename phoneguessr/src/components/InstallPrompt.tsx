@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
+import type { BeforeInstallPromptEvent } from '../routes/layout';
 import { getDeferredPrompt } from '../routes/layout';
 import './install-prompt.css';
-
-interface BeforeInstallPromptEvent extends Event {
-  prompt(): Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
 
 function isIos(): boolean {
   return /iphone|ipad|ipod/i.test(navigator.userAgent);

@@ -79,6 +79,7 @@ describe('InstallPrompt', () => {
       expect(localStorage.getItem('phoneguessr_install_dismissed')).toBe(
         'true',
       );
+      expect(screen.queryByText(/add phoneguessr/i)).toBeNull();
     });
   });
 

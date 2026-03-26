@@ -4,7 +4,7 @@ import { InstallPrompt } from '../components/InstallPrompt';
 import { AuthProvider } from '../lib/auth-context';
 import '../i18n';
 
-interface BeforeInstallPromptEvent extends Event {
+export interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
