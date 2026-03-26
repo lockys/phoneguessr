@@ -8,10 +8,10 @@ vi.mock('../src/lib/auth.js', () => ({
   GOOGLE_REDIRECT_URI: 'http://localhost:3000/api/auth/callback',
 }));
 
-const { default: authHandler } = await import('../../api/auth.js');
+const { GET: authGet } = await import('../../api/auth.js');
 
 const loginHandler = () =>
-  authHandler(new Request('http://localhost/api/auth/login?action=login'));
+  authGet(new Request('http://localhost/api/auth/login?action=login'));
 
 describe('GET /api/auth/login', () => {
   it('returns a 302 redirect', async () => {

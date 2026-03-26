@@ -244,17 +244,31 @@ async function resetToday(request: Request) {
   });
 }
 
-// --- Main handler ---
+// --- Named method exports (Vercel Node.js serverless function style) ---
 
-export default async function handler(request: Request): Promise<Response> {
+const forbidden = () =>
+  Response.json({ error: 'Forbidden' }, { status: 403 });
+
+export async function GET(request: Request): Promise<Response> {
   const admin = await requireAdmin(request);
-  if (!admin) return Response.json({ error: 'Forbidden' }, { status: 403 });
+  if (!admin) return forbidden();
+  return handlePhones(request);
+}
 
-  const url = new URL(request.url);
-  const resource = url.searchParams.get('resource');
+export async function PATCH(request: Request): Promise<Response> {
+  const admin = await requireAdmin(request);
+  if (!admin) return forbidden();
+  return handlePhones(request);
+}
 
-  if (resource === 'phones') return handlePhones(request);
-  if (resource === 'reset') return handleReset(request);
+export async function DELETE(request: Request): Promise<Response> {
+  const admin = await requireAdmin(request);
+  if (!admin) return forbidden();
+  return handlePhones(request);
+}
 
-  return Response.json({ error: 'Unknown resource' }, { status: 400 });
+export async function POST(request: Request): Promise<Response> {
+  const admin = await requireAdmin(request);
+  if (!admin) return forbidden();
+  return handleReset(request);
 }

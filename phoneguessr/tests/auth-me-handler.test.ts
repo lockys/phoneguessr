@@ -21,12 +21,12 @@ vi.mock('../src/lib/auth.js', () => ({
   verifySessionToken: mockVerifySessionToken,
 }));
 
-const { default: authHandler } = await import('../../api/auth.js');
+const { GET: authGet } = await import('../../api/auth.js');
 
 function meHandler(req: Request) {
   const url = new URL(req.url);
   url.searchParams.set('action', 'me');
-  return authHandler(new Request(url.toString(), req));
+  return authGet(new Request(url.toString(), req));
 }
 
 describe('GET /api/auth/me', () => {

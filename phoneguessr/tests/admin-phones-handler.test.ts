@@ -11,14 +11,16 @@ vi.mock('../src/lib/auth.js', () => ({
   verifySessionToken: mockVerifySessionToken,
 }));
 
-const { default: adminHandler } = await import('../../api/admin.js');
+const {
+  GET: adminGet,
+  PATCH: adminPatch,
+  DELETE: adminDelete,
+} = await import('../../api/admin.js');
 
-// Wrap requests to add ?resource=phones so the merged handler routes correctly
 function phonesHandler(req: Request): Promise<Response> {
-  const url = new URL(req.url);
-  url.searchParams.set('resource', 'phones');
-  const patched = new Request(url.toString(), req);
-  return adminHandler(patched);
+  if (req.method === 'PATCH') return adminPatch(req);
+  if (req.method === 'DELETE') return adminDelete(req);
+  return adminGet(req);
 }
 
 const ADMIN_USER = { userId: 1, googleId: 'g1', displayName: 'Admin' };

@@ -214,7 +214,7 @@ async function handleCallback(request: Request) {
   }
 }
 
-export default async function handler(request: Request): Promise<Response> {
+export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const action = url.searchParams.get('action');
 
