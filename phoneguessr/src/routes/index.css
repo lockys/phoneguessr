@@ -134,6 +134,87 @@ body {
   }
 }
 
+/* Initial swipe indicator (first visit only) */
+.swipe-hint-initial {
+  bottom: 38%;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  animation: none;
+}
+
+.swipe-hint-initial.swipe-hint-left {
+  animation: swipe-bounce-left 4s ease forwards;
+}
+
+.swipe-hint-initial.swipe-hint-right {
+  animation: swipe-bounce-right 4s ease forwards;
+}
+
+@keyframes swipe-bounce-left {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  10% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  25% {
+    opacity: 0.9;
+    transform: translateX(0);
+  }
+  40% {
+    transform: translateX(-12px);
+  }
+  55% {
+    transform: translateX(0);
+  }
+  70% {
+    transform: translateX(-12px);
+  }
+  83% {
+    transform: translateX(0);
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+}
+
+@keyframes swipe-bounce-right {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  10% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  25% {
+    opacity: 0.9;
+    transform: translateX(0);
+  }
+  40% {
+    transform: translateX(12px);
+  }
+  55% {
+    transform: translateX(0);
+  }
+  70% {
+    transform: translateX(12px);
+  }
+  83% {
+    transform: translateX(0);
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
 /* Result Modal */
 .modal-backdrop {
   position: fixed;
