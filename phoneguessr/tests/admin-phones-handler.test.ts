@@ -115,3 +115,35 @@ describe('PATCH /api/admin/phones', () => {
     expect(body.phone).toEqual(updated);
   });
 });
+
+describe('DELETE /api/admin/phones', () => {
+  beforeEach(() => { vi.clearAllMocks(); mockDb.reset(); });
+
+  it('returns 400 when id is missing', async () => {
+    mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
+    mockDb.mockQuery([ADMIN_DB_ROW]);
+    const res = await DEL(makeReq('DELETE', 'http://localhost/api/admin/phones'));
+    expect(res.status).toBe(400);
+  });
+
+  it('returns 409 when phone is referenced by a daily puzzle', async () => {
+    mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
+    // Queue: 1) requireAdmin user lookup, 2) dailyPuzzles guard SELECT (found)
+    mockDb.mockQuery([ADMIN_DB_ROW]);
+    mockDb.mockQuery([{ id: 5 }]);
+    const res = await DEL(makeReq('DELETE', 'http://localhost/api/admin/phones?id=1'));
+    expect(res.status).toBe(409);
+    expect((await res.json()).error).toMatch(/daily puzzle/i);
+  });
+
+  it('hard-deletes phone when no puzzle references it', async () => {
+    mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
+    // Queue: 1) requireAdmin, 2) dailyPuzzles guard (empty), 3) DELETE phones
+    mockDb.mockQuery([ADMIN_DB_ROW]);
+    mockDb.mockQuery([]);
+    mockDb.mockQuery([{ id: 1 }]);
+    const res = await DEL(makeReq('DELETE', 'http://localhost/api/admin/phones?id=1'));
+    expect(res.status).toBe(200);
+    expect((await res.json()).success).toBe(true);
+  });
+});

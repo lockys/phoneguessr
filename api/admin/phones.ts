@@ -1,6 +1,10 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../../phoneguessr/src/db/index.js';
-import { phones, users } from '../../phoneguessr/src/db/schema.js';
+import {
+  dailyPuzzles,
+  phones,
+  users,
+} from '../../phoneguessr/src/db/schema.js';
 import {
   COOKIE_NAME,
   verifySessionToken,
@@ -102,7 +106,28 @@ export async function PATCH(request: Request): Promise<Response> {
 }
 
 export async function DELETE(request: Request): Promise<Response> {
-  return Response.json({ error: 'Not implemented' }, { status: 501 });
+  const admin = await requireAdmin(request);
+  if (!admin) return Response.json({ error: 'Forbidden' }, { status: 403 });
+
+  const url = new URL(request.url);
+  const id = Number(url.searchParams.get('id'));
+  if (!id) return Response.json({ error: 'Missing id' }, { status: 400 });
+
+  const [puzzle] = await db
+    .select({ id: dailyPuzzles.id })
+    .from(dailyPuzzles)
+    .where(eq(dailyPuzzles.phoneId, id))
+    .limit(1);
+
+  if (puzzle) {
+    return Response.json(
+      { error: 'Phone is used in a daily puzzle' },
+      { status: 409 },
+    );
+  }
+
+  await db.delete(phones).where(eq(phones.id, id));
+  return Response.json({ success: true });
 }
 
 export default async function handler(request: Request): Promise<Response> {
