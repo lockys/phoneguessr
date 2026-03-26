@@ -79,6 +79,8 @@ export function ProfilePanel() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [historyTotal, setHistoryTotal] = useState(0);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetStatus, setResetStatus] = useState<'idle' | 'ok' | 'err'>('idle');
 
   useEffect(() => {
     if (user) {
@@ -261,6 +263,49 @@ export function ProfilePanel() {
                 </button>
               )}
             </>
+          )}
+        </div>
+      )}
+
+      {user?.isAdmin && (
+        <div className="admin-panel">
+          <h3 className="admin-panel-title">Admin — Reset Today's Game</h3>
+          <div className="admin-reset-row">
+            <input
+              type="email"
+              className="profile-form-input"
+              value={resetEmail}
+              onChange={e => setResetEmail(e.target.value)}
+              placeholder="user@example.com"
+            />
+            <button
+              type="button"
+              className="admin-reset-btn"
+              disabled={!resetEmail}
+              onClick={async () => {
+                setResetStatus('idle');
+                const res = await fetch('/api/admin/reset?action=reset-today', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email: resetEmail }),
+                });
+                setResetStatus(res.ok ? 'ok' : 'err');
+                if (res.ok) setResetEmail('');
+                setTimeout(() => setResetStatus('idle'), 3000);
+              }}
+            >
+              Reset
+            </button>
+          </div>
+          {resetStatus === 'ok' && (
+            <p className="admin-reset-msg ok">
+              Done — user can play again today.
+            </p>
+          )}
+          {resetStatus === 'err' && (
+            <p className="admin-reset-msg err">
+              Failed — user not found or server error.
+            </p>
           )}
         </div>
       )}

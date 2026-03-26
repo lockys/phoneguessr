@@ -929,6 +929,59 @@ body {
   color: #000;
 }
 
+.admin-panel {
+  margin-top: 24px;
+  padding: 16px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.admin-panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.admin-reset-row {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-reset-btn {
+  padding: 8px 14px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.admin-reset-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.admin-reset-msg {
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.admin-reset-msg.ok {
+  color: var(--green);
+}
+
+.admin-reset-msg.err {
+  color: var(--red);
+}
+
 .profile-auth-prompt {
   margin-top: 16px;
   padding: 16px;

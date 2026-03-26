@@ -15,9 +15,13 @@ export async function GET(request: Request) {
     return Response.json({ user: null });
   }
 
-  // Read displayName/avatarUrl from DB so updates are reflected immediately
+  // Read from DB so displayName updates and isAdmin are always current
   const [dbUser] = await db
-    .select({ displayName: users.displayName, avatarUrl: users.avatarUrl })
+    .select({
+      displayName: users.displayName,
+      avatarUrl: users.avatarUrl,
+      isAdmin: users.isAdmin,
+    })
     .from(users)
     .where(eq(users.id, session.userId))
     .limit(1);
@@ -28,6 +32,7 @@ export async function GET(request: Request) {
       displayName: dbUser?.displayName ?? session.displayName,
       avatarUrl: dbUser?.avatarUrl ?? session.avatarUrl,
       email: session.email ?? null,
+      isAdmin: dbUser?.isAdmin ?? false,
     },
   });
 }

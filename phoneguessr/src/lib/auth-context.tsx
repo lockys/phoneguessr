@@ -9,6 +9,7 @@ interface User {
   displayName: string;
   avatarUrl?: string;
   email?: string | null;
+  isAdmin?: boolean;
 }
 
 interface AuthContextValue {

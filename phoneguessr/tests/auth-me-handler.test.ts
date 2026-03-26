@@ -60,6 +60,7 @@ describe('GET /api/auth/me', () => {
       {
         displayName: 'Test User',
         avatarUrl: 'https://example.com/avatar.jpg',
+        isAdmin: false,
       },
     ]);
     const res = await GET(
@@ -74,6 +75,7 @@ describe('GET /api/auth/me', () => {
         displayName: 'Test User',
         avatarUrl: 'https://example.com/avatar.jpg',
         email: 'test@example.com',
+        isAdmin: false,
       },
     });
   });
