@@ -44,7 +44,9 @@ describe('GET /api/admin/phones', () => {
 
   it('returns 403 when no session cookie', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(null);
-    const res = await phonesHandler(new Request('http://localhost/api/admin/phones'));
+    const res = await phonesHandler(
+      new Request('http://localhost/api/admin/phones'),
+    );
     expect(res.status).toBe(403);
   });
 
@@ -52,7 +54,9 @@ describe('GET /api/admin/phones', () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     // Queue: 1) requireAdmin user lookup (array, as drizzle select returns)
     mockDb.mockQuery([NON_ADMIN_DB_ROW]);
-    const res = await phonesHandler(makeReq('GET', 'http://localhost/api/admin/phones'));
+    const res = await phonesHandler(
+      makeReq('GET', 'http://localhost/api/admin/phones'),
+    );
     expect(res.status).toBe(403);
   });
 
@@ -70,7 +74,9 @@ describe('GET /api/admin/phones', () => {
     // Queue: 1) requireAdmin user lookup, 2) phones SELECT
     mockDb.mockQuery([ADMIN_DB_ROW]);
     mockDb.mockQuery(phones);
-    const res = await phonesHandler(makeReq('GET', 'http://localhost/api/admin/phones'));
+    const res = await phonesHandler(
+      makeReq('GET', 'http://localhost/api/admin/phones'),
+    );
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.phones).toEqual(phones);
