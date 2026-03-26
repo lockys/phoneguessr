@@ -5,6 +5,10 @@
   "rewrites": [
     { "source": "/api/puzzle/:action", "destination": "/api/puzzle?action=:action" },
     { "source": "/api/leaderboard/:period", "destination": "/api/leaderboard?period=:period" },
+    { "source": "/api/auth/login", "destination": "/api/auth?action=login" },
+    { "source": "/api/auth/logout", "destination": "/api/auth?action=logout" },
+    { "source": "/api/auth/me", "destination": "/api/auth?action=me" },
+    { "source": "/api/auth/callback", "destination": "/api/auth?action=callback" },
     { "source": "/api/auth/passkey/:action", "destination": "/api/auth/passkey?action=:action" },
     { "source": "/api/profile/:path*", "destination": "/api/profile" },
     { "source": "/api/admin/phones", "destination": "/api/admin?resource=phones" },

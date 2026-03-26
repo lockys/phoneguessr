@@ -21,7 +21,13 @@ vi.mock('../src/lib/auth.js', () => ({
   verifySessionToken: mockVerifySessionToken,
 }));
 
-const { GET } = await import('../../api/auth/me.js');
+const { default: authHandler } = await import('../../api/auth.js');
+
+function meHandler(req: Request) {
+  const url = new URL(req.url);
+  url.searchParams.set('action', 'me');
+  return authHandler(new Request(url.toString(), req));
+}
 
 describe('GET /api/auth/me', () => {
   beforeEach(() => {
@@ -30,7 +36,7 @@ describe('GET /api/auth/me', () => {
   });
 
   it('returns null user when no cookie is present', async () => {
-    const res = await GET(new Request('http://localhost/api/auth/me'));
+    const res = await meHandler(new Request('http://localhost/api/auth/me'));
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ user: null });
     expect(mockVerifySessionToken).not.toHaveBeenCalled();
@@ -38,7 +44,7 @@ describe('GET /api/auth/me', () => {
 
   it('returns null user when session token is invalid', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(null);
-    const res = await GET(
+    const res = await meHandler(
       new Request('http://localhost/api/auth/me', {
         headers: { cookie: 'phoneguessr_session=invalid-token' },
       }),
@@ -63,7 +69,7 @@ describe('GET /api/auth/me', () => {
         isAdmin: false,
       },
     ]);
-    const res = await GET(
+    const res = await meHandler(
       new Request('http://localhost/api/auth/me', {
         headers: { cookie: 'phoneguessr_session=valid-token' },
       }),
@@ -87,7 +93,7 @@ describe('GET /api/auth/me', () => {
       displayName: 'JWT Fallback',
     });
     mockDb.mockQuery([]); // empty result
-    const res = await GET(
+    const res = await meHandler(
       new Request('http://localhost/api/auth/me', {
         headers: { cookie: 'phoneguessr_session=token' },
       }),
