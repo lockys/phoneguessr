@@ -148,6 +148,7 @@ body {
   max-width: 360px;
   width: calc(100% - 32px);
   position: relative;
+  margin: 0;
   animation: modal-slide-up 0.3s ease;
 }
 
