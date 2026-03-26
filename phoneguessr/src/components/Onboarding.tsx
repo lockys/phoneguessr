@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 const TOTAL_STEPS = 3;
@@ -77,7 +78,7 @@ export function Onboarding({ onDone }: OnboardingProps) {
 
   const isLast = step === TOTAL_STEPS - 1;
 
-  return (
+  return createPortal(
     <div className="onboarding-backdrop">
       {rect && (
         <div
@@ -121,7 +122,8 @@ export function Onboarding({ onDone }: OnboardingProps) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

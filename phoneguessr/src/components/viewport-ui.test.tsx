@@ -367,8 +367,9 @@ describe('Onboarding – viewport and resize behavior', () => {
   });
 
   it('spotlight updates on window resize', () => {
-    const { container } = render(<Onboarding onDone={onDone} />);
-    const spotlight = container.querySelector('.onboarding-spotlight');
+    render(<Onboarding onDone={onDone} />);
+    // Portal renders into document.body
+    const spotlight = document.querySelector('.onboarding-spotlight');
 
     // Simulate element moving after resize
     const cropWrapper = document.querySelector('.crop-wrapper') as HTMLElement;
@@ -391,13 +392,13 @@ describe('Onboarding – viewport and resize behavior', () => {
   });
 
   it('renders backdrop covering full viewport', () => {
-    const { container } = render(<Onboarding onDone={onDone} />);
-    expect(container.querySelector('.onboarding-backdrop')).toBeInTheDocument();
+    render(<Onboarding onDone={onDone} />);
+    expect(document.querySelector('.onboarding-backdrop')).toBeInTheDocument();
   });
 
   it('renders bottom-anchored card', () => {
-    const { container } = render(<Onboarding onDone={onDone} />);
-    expect(container.querySelector('.onboarding-card')).toBeInTheDocument();
+    render(<Onboarding onDone={onDone} />);
+    expect(document.querySelector('.onboarding-card')).toBeInTheDocument();
   });
 });
 
@@ -655,15 +656,16 @@ describe('Cross-browser CSS class coverage', () => {
     });
     document.body.appendChild(cropWrapper);
 
-    const { container } = render(<Onboarding onDone={vi.fn()} />);
+    render(<Onboarding onDone={vi.fn()} />);
+    // Portal renders into document.body
     // .onboarding-backdrop uses animation: modal-fade-in
     // CSS has @media (prefers-reduced-motion: reduce) to disable animations
-    expect(container.querySelector('.onboarding-backdrop')).toBeInTheDocument();
-    expect(
-      container.querySelector('.onboarding-spotlight'),
-    ).toBeInTheDocument();
-    expect(container.querySelector('.onboarding-card')).toBeInTheDocument();
+    expect(document.querySelector('.onboarding-backdrop')).toBeInTheDocument();
+    expect(document.querySelector('.onboarding-spotlight')).toBeInTheDocument();
+    expect(document.querySelector('.onboarding-card')).toBeInTheDocument();
 
+    // Unmount React tree before clearing DOM so portal nodes are properly removed
+    cleanup();
     document.body.innerHTML = '';
   });
 });
@@ -695,10 +697,11 @@ describe('Viewport-specific behavior', () => {
     });
     document.body.appendChild(cropWrapper);
 
-    const { container } = render(<Onboarding onDone={vi.fn()} />);
-    const card = container.querySelector('.onboarding-card') as HTMLElement;
+    render(<Onboarding onDone={vi.fn()} />);
+    const card = document.querySelector('.onboarding-card') as HTMLElement;
     expect(card).toBeInTheDocument();
 
+    cleanup();
     document.body.innerHTML = '';
   });
 
@@ -721,10 +724,11 @@ describe('Viewport-specific behavior', () => {
     });
     document.body.appendChild(cropWrapper);
 
-    const { container } = render(<Onboarding onDone={vi.fn()} />);
-    const card = container.querySelector('.onboarding-card') as HTMLElement;
+    render(<Onboarding onDone={vi.fn()} />);
+    const card = document.querySelector('.onboarding-card') as HTMLElement;
     expect(card).toBeInTheDocument();
 
+    cleanup();
     document.body.innerHTML = '';
   });
 
