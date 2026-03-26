@@ -85,7 +85,7 @@ export function PhoneAutocomplete({
 
   // Pin the input just above the virtual keyboard using the Visual Viewport API
   useEffect(() => {
-    if (!isFocused || !isTouch) return;
+    if (!isFocused || !isTouchRef.current) return;
     const vv = window.visualViewport;
     if (!vv) return;
     const update = () => {
@@ -194,6 +194,7 @@ export function PhoneAutocomplete({
               key={phone.id}
               className={`autocomplete-item ${i === selectedIndex ? 'selected' : ''}`}
               onClick={() => handleSelect(phone)}
+              onKeyDown={e => e.key === 'Enter' && handleSelect(phone)}
             >
               <span className="autocomplete-brand">{phone.brand}</span>{' '}
               {phone.model}
