@@ -210,6 +210,7 @@ export function PhoneAutocomplete({
             <li
               key={phone.id}
               className={`autocomplete-item ${i === selectedIndex ? 'selected' : ''}`}
+              onMouseDown={e => e.preventDefault()}
               onClick={() => handleSelect(phone)}
               onKeyDown={e => e.key === 'Enter' && handleSelect(phone)}
             >
