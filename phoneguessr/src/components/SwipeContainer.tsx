@@ -21,6 +21,12 @@ const VELOCITY_THRESHOLD = 0.3;
 // A slow drag past this fraction of page width triggers a page turn
 const DIST_THRESHOLD = 0.25;
 
+/**
+ * When `activeIndex` and `onActiveIndexChange` are provided, SwipeContainer
+ * operates as a controlled component — the parent must update `activeIndex`
+ * in response to `onActiveIndexChange` for swipe gestures to persist visually.
+ * When omitted, the component defaults to panel 1 (Game) with no-op callbacks.
+ */
 interface SwipeContainerProps {
   children: ReactNode[];
   activeIndex?: number;
@@ -109,7 +115,6 @@ export function SwipeContainer({
     const width = container.clientWidth;
     const fromPx = -activeIndexRef.current * width;
     snapTo(fromPx, resolvedIndex, 1.0);
-    activeIndexRef.current = resolvedIndex;
   }, [resolvedIndex, snapTo]);
 
   useEffect(() => {

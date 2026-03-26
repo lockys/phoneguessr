@@ -135,6 +135,9 @@ describe('SwipeContainer – viewport and structure', () => {
     fireEvent.touchStart(container, {
       touches: [{ clientX: 300, clientY: 0 }],
     });
+    fireEvent.touchMove(container, {
+      touches: [{ clientX: 50, clientY: 0 }],
+    });
     fireEvent.touchEnd(container, { changedTouches: [{ clientX: 50 }] });
     expect(onchange).not.toHaveBeenCalled();
   });
