@@ -99,6 +99,45 @@ describe('SwipeContainer – viewport and structure', () => {
     // PageIndicator returns null when show=false (before first swipe)
     expect(container.querySelector('.page-indicator')).not.toBeInTheDocument();
   });
+
+  it('calls onActiveIndexChange when swiped to next panel', () => {
+    const onchange = vi.fn();
+    render(
+      <SwipeContainer activeIndex={0} onActiveIndexChange={onchange}>
+        <div>A</div>
+        <div>B</div>
+      </SwipeContainer>,
+    );
+    const container = document.querySelector('.swipe-container') as HTMLElement;
+    fireEvent.touchStart(container, {
+      touches: [{ clientX: 300, clientY: 0 }],
+    });
+    fireEvent.touchMove(container, {
+      touches: [{ clientX: 50, clientY: 0 }],
+    });
+    fireEvent.touchEnd(container, { changedTouches: [{ clientX: 50 }] });
+    expect(onchange).toHaveBeenCalledWith(1);
+  });
+
+  it('does not fire onActiveIndexChange when disableSwipe is true', () => {
+    const onchange = vi.fn();
+    render(
+      <SwipeContainer
+        activeIndex={0}
+        onActiveIndexChange={onchange}
+        disableSwipe
+      >
+        <div>A</div>
+        <div>B</div>
+      </SwipeContainer>,
+    );
+    const container = document.querySelector('.swipe-container') as HTMLElement;
+    fireEvent.touchStart(container, {
+      touches: [{ clientX: 300, clientY: 0 }],
+    });
+    fireEvent.touchEnd(container, { changedTouches: [{ clientX: 50 }] });
+    expect(onchange).not.toHaveBeenCalled();
+  });
 });
 
 // ---------- ResultModal ----------

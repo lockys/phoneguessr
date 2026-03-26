@@ -15,7 +15,6 @@ const PANEL_KEYS = [
   'nav.leaderboard',
   'nav.about',
 ] as const;
-const DEFAULT_INDEX = 1; // Game panel
 
 // A flick faster than this (px/ms) triggers a page turn regardless of distance
 const VELOCITY_THRESHOLD = 0.3;
@@ -24,15 +23,31 @@ const DIST_THRESHOLD = 0.25;
 
 interface SwipeContainerProps {
   children: ReactNode[];
+  activeIndex?: number;
+  onActiveIndexChange?: (i: number) => void;
+  disableSwipe?: boolean;
 }
 
-export function SwipeContainer({ children }: SwipeContainerProps) {
+export function SwipeContainer({
+  children,
+  activeIndex,
+  onActiveIndexChange,
+  disableSwipe,
+}: SwipeContainerProps) {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(DEFAULT_INDEX);
-  const activeIndexRef = useRef(DEFAULT_INDEX);
-  activeIndexRef.current = activeIndex;
+
+  const resolvedIndex = activeIndex ?? 1;
+  const notifyChangeRef = useRef(onActiveIndexChange ?? (() => {}));
+  notifyChangeRef.current = onActiveIndexChange ?? (() => {});
+  const notifyChange = useCallback(
+    (i: number) => notifyChangeRef.current(i),
+    [],
+  );
+
+  const activeIndexRef = useRef(resolvedIndex);
+  activeIndexRef.current = resolvedIndex;
 
   const [swipeCount, setSwipeCount] = useState(0);
   const isInitialRef = useRef(true);
@@ -79,10 +94,27 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    setTrackX(-DEFAULT_INDEX * container.clientWidth);
-  }, [setTrackX]);
+    setTrackX(-activeIndexRef.current * container.clientWidth);
+  }, [setTrackX]); // fires once on mount; activeIndexRef holds the initial prop value
+
+  // Animate to new index when controlled prop changes
+  const hasMountedRef = useRef(false);
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+    const container = containerRef.current;
+    if (!container) return;
+    const width = container.clientWidth;
+    const fromPx = -activeIndexRef.current * width;
+    snapTo(fromPx, resolvedIndex, 1.0);
+    activeIndexRef.current = resolvedIndex;
+  }, [resolvedIndex, snapTo]);
 
   useEffect(() => {
+    if (disableSwipe) return;
+
     const el = containerRef.current;
     if (!el) return;
 
@@ -158,7 +190,7 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
 
       if (target !== start.index) {
         isInitialRef.current = false;
-        setActiveIndex(target);
+        notifyChange(target);
         setSwipeCount(c => c + 1);
       }
 
@@ -175,7 +207,7 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
       el.removeEventListener('touchmove', onTouchMove);
       el.removeEventListener('touchend', onTouchEnd);
     };
-  }, [children.length, setTrackX, snapTo]);
+  }, [children.length, disableSwipe, notifyChange, setTrackX, snapTo]);
 
   return (
     <>
@@ -189,18 +221,18 @@ export function SwipeContainer({ children }: SwipeContainerProps) {
         </div>
       </div>
       <PageIndicator
-        name={t(PANEL_KEYS[activeIndex] ?? 'nav.game')}
+        name={t(PANEL_KEYS[resolvedIndex] ?? 'nav.game')}
         show={!isInitialRef.current}
       />
       <SwipeHints
         leftLabel={
-          PANEL_KEYS[activeIndex - 1]
-            ? t(PANEL_KEYS[activeIndex - 1])
+          PANEL_KEYS[resolvedIndex - 1]
+            ? t(PANEL_KEYS[resolvedIndex - 1])
             : undefined
         }
         rightLabel={
-          PANEL_KEYS[activeIndex + 1]
-            ? t(PANEL_KEYS[activeIndex + 1])
+          PANEL_KEYS[resolvedIndex + 1]
+            ? t(PANEL_KEYS[resolvedIndex + 1])
             : undefined
         }
         trigger={swipeCount}
