@@ -6,6 +6,7 @@ export interface SessionData {
   displayName: string;
   avatarUrl?: string;
   email?: string;
+  isAdmin?: boolean;
 }
 
 function getSessionSecret(): Uint8Array {
