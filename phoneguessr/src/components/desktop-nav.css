@@ -1,0 +1,43 @@
+.desktop-nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktop-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    border-bottom: 1px solid var(--border, #2a2a4a);
+    margin-bottom: 8px;
+    width: 100%;
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  .desktop-nav-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 10px 20px;
+    transition: color 0.15s, border-color 0.15s;
+    text-decoration: none;
+  }
+
+  .desktop-nav-tab:hover {
+    color: #e2e8f0;
+  }
+
+  .desktop-nav-tab.active {
+    color: var(--accent, #e94560);
+    border-bottom-color: var(--accent, #e94560);
+  }
+
+  /* Hide mobile-only chrome at desktop widths */
+  .swipe-hint,
+  .page-indicator {
+    display: none;
+  }
+}
