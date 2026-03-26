@@ -20,6 +20,7 @@ Add a horizontal top navbar that appears on screens ≥ 768px wide, allowing des
 - Add `activeIndex`, `onActiveIndexChange`, `disableSwipe` props to `SwipeContainer`
 - `useMediaQuery` hook in `page.tsx` to drive `disableSwipe`
 - Hide `SwipeHints` and `PageIndicator` at 768px+ via CSS
+- Add `nav.admin` key to all 5 locale files
 
 **Out of scope:**
 - Routing changes (stays single `/` route)
@@ -73,11 +74,59 @@ interface SwipeContainerProps {
 ```
 
 **Changes:**
-- Remove internal `activeIndex` state and `DEFAULT_INDEX` default — driven by prop
-- Keep internal `activeIndexRef` (synced to prop) for use inside touch handlers
-- When `disableSwipe` is true: skip registering `touchstart`/`touchmove`/`touchend` listeners (guard inside the `useEffect` that registers them)
-- On prop `activeIndex` change: animate track to new position via `snapTo` (use a fixed speed of `1.0` for programmatic nav)
-- `SwipeHints` and `PageIndicator` keep rendering — hidden at 768px+ via CSS class or their own media query
+- Remove internal `activeIndex` / `setActiveIndex` state and `DEFAULT_INDEX` constant — driven by prop
+- Keep internal `activeIndexRef` (synced to prop value) for use inside touch handlers
+- **Initial placement `useEffect`**: Replace `DEFAULT_INDEX` with the `activeIndex` prop. Use a `useEffect([])` that reads `activeIndex` from a ref so it fires exactly once on mount using the correct starting index:
+  ```ts
+  const activeIndexRef = useRef(activeIndex);
+  activeIndexRef.current = activeIndex; // keep in sync on every render
+  // ...
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    setTrackX(-activeIndexRef.current * container.clientWidth);
+  }, [setTrackX]); // fires once on mount
+  ```
+- **Prop-driven navigation**: Add a separate `useEffect([activeIndex])` that animates the track when the prop changes programmatically (e.g. from DesktopNav click). Compute `fromPx` from the current rendered position before calling `snapTo`:
+  ```ts
+  useEffect(() => {
+    const container = containerRef.current;
+    const track = trackRef.current;
+    if (!container || !track) return;
+    const width = container.clientWidth;
+    // Read current transform to get fromPx
+    const currentX = -(activeIndexRef.current) * width;
+    snapTo(currentX, activeIndex, 1.0);
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex, snapTo]);
+  ```
+  Note: this effect must not run on the initial mount render (it would conflict with the initial placement effect). Guard with a `hasMountedRef`:
+  ```ts
+  const hasMountedRef = useRef(false);
+  useEffect(() => {
+    if (!hasMountedRef.current) { hasMountedRef.current = true; return; }
+    // ... snapTo logic above
+  }, [activeIndex, snapTo]);
+  ```
+- **`disableSwipe` guard**: Inside the `useEffect` that registers `touchstart`/`touchmove`/`touchend`, return early if `disableSwipe` is true:
+  ```ts
+  useEffect(() => {
+    if (disableSwipe) return;
+    const el = containerRef.current;
+    // ... register listeners
+  }, [children.length, disableSwipe, setTrackX, snapTo]);
+  ```
+- **Existing tests**: `SwipeContainer` in existing tests passes no `activeIndex`/`onActiveIndexChange` props. Make these props optional with safe defaults so existing tests continue to pass without modification:
+  ```ts
+  interface SwipeContainerProps {
+    children: ReactNode[];
+    activeIndex?: number;           // default: 1 (Game)
+    onActiveIndexChange?: (i: number) => void;  // default: noop
+    disableSwipe?: boolean;         // default: false
+  }
+  ```
+  Internal logic uses `activeIndex ?? 1` and `onActiveIndexChange ?? (() => {})`.
+- `SwipeHints` and `PageIndicator` keep rendering — hidden at 768px+ via CSS
 
 ---
 
@@ -94,7 +143,7 @@ Panel order and indices (matching `PANEL_KEYS` in SwipeContainer):
 | 2 | `nav.leaderboard` | Leaderboard |
 | 3 | `nav.about` | About |
 
-Admin tab (index `4` — reserved, rendered as a link to `/admin`) shown only when `user?.isAdmin === true`. Uses React Router or `<a href="/admin">` — not a panel switch.
+Admin tab rendered as `<a href="/admin">` (not a panel switch) and shown only when `user?.isAdmin === true`. `DesktopNav` calls `useAuth()` directly (same pattern as `AuthButton`) — no `user` prop.
 
 ```tsx
 interface DesktopNavProps {
@@ -103,7 +152,7 @@ interface DesktopNavProps {
 }
 ```
 
-Renders a `<nav className="desktop-nav">` with `<button>` per tab. Active tab gets `className="desktop-nav-tab active"`.
+Renders a `<nav className="desktop-nav">` with `<button>` per tab. Active tab gets `className="desktop-nav-tab active"`. Admin link gets `className="desktop-nav-tab desktop-nav-admin"` (never active state).
 
 ---
 
@@ -137,6 +186,7 @@ Renders a `<nav className="desktop-nav">` with `<button>` per tab. Active tab ge
     font-size: 14px;
     padding: 10px 20px;
     transition: color 0.15s, border-color 0.15s;
+    text-decoration: none;
   }
 
   .desktop-nav-tab:hover {
@@ -149,7 +199,7 @@ Renders a `<nav className="desktop-nav">` with `<button>` per tab. Active tab ge
   }
 
   /* Hide mobile-only chrome at desktop widths */
-  .swipe-hints,
+  .swipe-hint,
   .page-indicator {
     display: none;
   }
@@ -160,9 +210,15 @@ Renders a `<nav className="desktop-nav">` with `<button>` per tab. Active tab ge
 
 ## i18n
 
-`nav.*` translation keys already exist in all locale files (`nav.profile`, `nav.game`, `nav.leaderboard`, `nav.about`). `DesktopNav` uses `useTranslation()` to render labels.
+`nav.*` translation keys already exist in all locale files. `DesktopNav` uses `useTranslation()` to render labels. Add `"admin": "Admin"` (and translations) unconditionally to the `nav` section of all 5 locale files:
 
-An `nav.admin` key may not exist — add `"admin": "Admin"` to all 5 locale files if absent.
+| Locale | Key | Value |
+|--------|-----|-------|
+| `en.json` | `nav.admin` | `"Admin"` |
+| `zh-TW.json` | `nav.admin` | `"管理"` |
+| `zh-CN.json` | `nav.admin` | `"管理"` |
+| `ja.json` | `nav.admin` | `"管理"` |
+| `ko.json` | `nav.admin` | `"관리"` |
 
 ---
 
@@ -171,7 +227,12 @@ An `nav.admin` key may not exist — add `"admin": "Admin"` to all 5 locale file
 | Action | File | Change |
 |--------|------|--------|
 | Modify | `phoneguessr/src/routes/page.tsx` | Lift `activeIndex` state, add `isDesktop` media query, render `DesktopNav` |
-| Modify | `phoneguessr/src/components/SwipeContainer.tsx` | Accept `activeIndex`/`onActiveIndexChange`/`disableSwipe` props, remove internal state |
+| Modify | `phoneguessr/src/components/SwipeContainer.tsx` | Accept `activeIndex`/`onActiveIndexChange`/`disableSwipe` props, remove internal state, make optional with defaults |
+| Modify | `phoneguessr/src/locales/en.json` | Add `nav.admin` |
+| Modify | `phoneguessr/src/locales/zh-TW.json` | Add `nav.admin` |
+| Modify | `phoneguessr/src/locales/zh-CN.json` | Add `nav.admin` |
+| Modify | `phoneguessr/src/locales/ja.json` | Add `nav.admin` |
+| Modify | `phoneguessr/src/locales/ko.json` | Add `nav.admin` |
 | Create | `phoneguessr/src/components/DesktopNav.tsx` | Desktop tab navbar component |
 | Create | `phoneguessr/src/components/desktop-nav.css` | Navbar styles, hidden below 768px |
 
