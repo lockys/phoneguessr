@@ -271,7 +271,7 @@ export default function AdminPage() {
                         : 'admin-cell-active-no'
                     }
                   >
-                    {phone.active ? 'Yes' : 'No'}
+                    {phone.active ? '✓' : '—'}
                   </span>
                   <div className="admin-actions">
                     <button
