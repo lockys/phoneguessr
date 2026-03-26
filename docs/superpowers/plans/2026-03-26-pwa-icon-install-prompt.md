@@ -47,9 +47,11 @@ Create `phoneguessr/scripts/generate-icons.ts`:
 
 ```ts
 import sharp from 'sharp';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const OUT = resolve(import.meta.dirname, '../config/public/icons');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const OUT = resolve(__dirname, '../config/public/icons');
 
 // Standard icon SVG — full bleed, designed for iOS (clips its own corners)
 const svgStandard = `
@@ -379,6 +381,11 @@ describe('InstallPrompt', () => {
   afterEach(() => {
     cleanup();
     localStorage.clear();
+    // Reset userAgent in case an iOS test set it
+    Object.defineProperty(navigator, 'userAgent', {
+      configurable: true,
+      value: 'Mozilla/5.0',
+    });
   });
 
   it('does not render when phoneguessr_install_eligible is not set', () => {
@@ -441,17 +448,12 @@ describe('InstallPrompt', () => {
     mockGetDeferredPrompt.mockReturnValue(null);
     // Simulate iOS userAgent
     Object.defineProperty(navigator, 'userAgent', {
-      writable: true,
+      configurable: true,
       value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)',
     });
     render(<InstallPrompt />);
     expect(screen.getByText(/add to home screen/i)).toBeDefined();
     expect(screen.queryByRole('button', { name: /install/i })).toBeNull();
-    // Reset userAgent
-    Object.defineProperty(navigator, 'userAgent', {
-      writable: true,
-      value: 'Mozilla/5.0',
-    });
   });
 });
 ```
@@ -678,7 +680,7 @@ export default function Layout() {
 cd /Users/calvinjeng/Documents/projects/guess-game/phoneguessr && npx vitest run src/components/InstallPrompt.test.tsx --reporter=verbose 2>&1 | grep -E "✓|✗|PASS|FAIL"
 ```
 
-Expected: all 7 tests pass.
+Expected: all 6 tests pass.
 
 - [ ] **Step 4.7: Run full test suite**
 
