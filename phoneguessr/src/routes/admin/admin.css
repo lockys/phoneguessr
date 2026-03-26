@@ -1,8 +1,6 @@
-/* phoneguessr/src/routes/admin/admin.css */
-
 .admin-page {
   min-height: 100vh;
-  background: #0d1117;
+  background: var(--bg);
   color: var(--text);
   padding: 24px;
   font-family: system-ui, sans-serif;
@@ -59,7 +57,7 @@
 
 .admin-search:focus {
   outline: none;
-  border-color: var(--accent, #1f6feb);
+  border-color: var(--accent);
 }
 
 .admin-table {
@@ -89,9 +87,9 @@
 }
 
 .admin-row-editing {
-  background: #0d1117;
-  border-top: 2px solid var(--accent, #1f6feb);
-  border-bottom: 2px solid var(--accent, #1f6feb);
+  background: var(--bg);
+  border-top: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
   padding: 12px;
 }
 
@@ -113,8 +111,8 @@
 .admin-input {
   width: 100%;
   box-sizing: border-box;
-  background: #0d1117;
-  border: 1px solid var(--accent, #1f6feb);
+  background: var(--bg);
+  border: 1px solid var(--accent);
   border-radius: 4px;
   padding: 5px 8px;
   color: var(--text);
@@ -137,7 +135,7 @@
   width: 44px;
   height: 32px;
   border-radius: 4px;
-  background: #21262d;
+  background: var(--surface-hover);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,7 +144,7 @@
 }
 
 .admin-cell-url {
-  color: #58a6ff;
+  color: var(--text-muted);
   font-size: 11px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -154,7 +152,7 @@
 }
 
 .admin-cell-active-yes {
-  color: #3fb950;
+  color: var(--green);
   font-size: 12px;
 }
 
@@ -170,7 +168,7 @@
 }
 
 .admin-btn {
-  background: #21262d;
+  background: var(--surface-hover);
   border: 1px solid var(--border);
   border-radius: 5px;
   padding: 3px 10px;
@@ -179,25 +177,39 @@
   cursor: pointer;
 }
 
+.admin-btn:hover:not(:disabled) {
+  border-color: var(--text-muted);
+}
+
 .admin-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
 .admin-btn-save {
-  background: #1f6feb;
-  border-color: #1f6feb;
+  background: var(--accent);
+  border-color: var(--accent);
   color: #fff;
+}
+
+.admin-btn-save:hover:not(:disabled) {
+  opacity: 0.85;
+  border-color: var(--accent);
 }
 
 .admin-btn-delete {
   background: transparent;
-  border-color: rgba(248, 81, 73, 0.3);
-  color: #f85149;
+  border-color: rgba(248, 113, 113, 0.3);
+  color: var(--red);
+}
+
+.admin-btn-delete:hover:not(:disabled) {
+  border-color: var(--red);
+  background: rgba(248, 113, 113, 0.08);
 }
 
 .admin-row-error {
-  color: #f85149;
+  color: var(--red);
   font-size: 12px;
   padding: 4px 12px 8px;
   border-bottom: 1px solid var(--border);
@@ -210,11 +222,11 @@
 }
 
 .admin-error-banner {
-  background: rgba(248, 81, 73, 0.1);
-  border: 1px solid rgba(248, 81, 73, 0.3);
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.3);
   border-radius: 6px;
   padding: 12px;
-  color: #f85149;
+  color: var(--red);
   font-size: 14px;
   margin-bottom: 16px;
   display: flex;
@@ -230,7 +242,7 @@
 }
 
 .admin-page-btn {
-  background: #21262d;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 5px;
   padding: 4px 12px;
@@ -239,9 +251,14 @@
   cursor: pointer;
 }
 
+.admin-page-btn:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
 .admin-page-btn-active {
-  background: #1f6feb;
-  border-color: #1f6feb;
+  background: var(--accent);
+  border-color: var(--accent);
   color: #fff;
 }
 
