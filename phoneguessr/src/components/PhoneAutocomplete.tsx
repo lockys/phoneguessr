@@ -193,7 +193,7 @@ export function PhoneAutocomplete({
             <li
               key={phone.id}
               className={`autocomplete-item ${i === selectedIndex ? 'selected' : ''}`}
-              onPointerDown={() => handleSelect(phone)}
+              onClick={() => handleSelect(phone)}
             >
               <span className="autocomplete-brand">{phone.brand}</span>{' '}
               {phone.model}
