@@ -19,6 +19,7 @@ export default function Page() {
         <meta name="description" content={t('game.meta.description')} />
       </Helmet>
       <header className="app-header">
+        <h1 className="app-title">{t('game.title')}</h1>
         <AuthButton />
       </header>
       <SwipeContainer>
