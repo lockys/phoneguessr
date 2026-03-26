@@ -953,6 +953,7 @@ body {
 
 .admin-reset-row {
   display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
@@ -965,8 +966,7 @@ body {
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
+  width: 100%;
 }
 
 .admin-reset-btn:disabled {
