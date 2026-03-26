@@ -14,16 +14,13 @@ A dedicated admin-only page at `/admin` that lets administrators browse the full
 ## Scope
 
 **In scope:**
-- List all phones (paginated, 20 per page)
-- Search/filter by brand or model (client-side, instant)
+- List all phones (loaded in full, paginated client-side at 20 per page)
+- Search/filter — single input, substring match on `brand + " " + model`, case-insensitive, resets to page 1
 - Inline row edit: brand, model, imageUrl
-- Delete a phone (with confirmation)
+- Delete a phone (with window.confirm, English-only — admin pages have no i18n requirement)
 - Auth guard: non-admin users redirected to `/`
 
-**Out of scope:**
-- Adding new phones (use existing seed pipeline)
-- Managing daily puzzle assignments (`daily_puzzles` table)
-- Editing other phone fields (releaseYear, priceTier, difficulty, active toggle)
+**Out of scope:** Adding new phones, managing daily puzzle assignments, editing other fields (active, difficulty, etc.), bulk operations.
 
 ---
 
@@ -33,24 +30,34 @@ A dedicated admin-only page at `/admin` that lets administrators browse the full
 
 | File | Purpose |
 |------|---------|
-| `phoneguessr/src/routes/admin/page.tsx` | React page component, admin guard, table UI |
-| `api/admin/phones.ts` | Serverless function: GET list, PATCH update, DELETE |
+| `phoneguessr/src/routes/admin/page.tsx` | React page, admin guard, table UI |
+| `phoneguessr/src/routes/admin/admin.css` | Admin-specific styles |
+| `api/admin/phones.ts` | GET / PATCH / DELETE handler |
 
 ### Modified Files
 
-None. The admin route is fully additive.
+None. `vercel.json` does not need changes — a single `api/admin/phones.ts` file handles all HTTP methods via `req.method` dispatch.
+
+### Route Registration
+
+Modern.js auto-registers `/admin` from `routes/admin/page.tsx` with no config changes. No `layout.tsx` is created — the admin page intentionally sits outside the game layout (no swipe panels, no app header). The existing `routes/layout.tsx` wraps only routes under `routes/`, and adding a sub-directory `routes/admin/` without its own `layout.tsx` inherits no layout.
 
 ---
 
 ## API — `api/admin/phones.ts`
 
-All endpoints require a valid session with `isAdmin = true`. Returns `403` otherwise.
+### Admin Auth Pattern
+
+Copy the pattern used in `api/admin/reset.ts`:
+1. Parse the `phoneguessr_session` JWT cookie using `verifySessionToken()` from `phoneguessr/src/lib/auth.ts`.
+2. Look up `users.isAdmin` in the database using the `userId` from the JWT payload (Drizzle query).
+3. If the user is not found or `isAdmin !== true`, return `403 { error: "Forbidden" }`.
 
 ### GET `/api/admin/phones`
 
-Returns the full phone catalog.
+Returns the **full** phone catalog (no server-side pagination).
 
-**Response:**
+**Response 200:**
 ```json
 {
   "phones": [
@@ -62,22 +69,26 @@ Returns the full phone catalog.
 
 ### PATCH `/api/admin/phones?id=<phoneId>`
 
-Updates brand, model, and/or imageUrl for a single phone.
+**Merge semantics:** Only the provided fields are updated; omitted fields are left unchanged in the database.
 
-**Request body:**
+**Request body:** `{ brand?: string, model?: string, imageUrl?: string }` — at least one field required; any present field must be a non-empty string.
+
+**Validation error → 400:** `{ "error": "brand must be a non-empty string" }`
+
+**Success → 200:** Returns the full updated phone row (same shape as GET list item):
 ```json
-{ "brand": "Apple", "model": "iPhone 15 Pro Max", "imageUrl": "https://…" }
+{ "success": true, "phone": { "id": 1, "brand": "Apple", "model": "iPhone 15 Pro Max", "imageUrl": "https://…", "active": true } }
 ```
-
-**Response:** `{ "success": true, "phone": { …updated fields… } }`
-
-**Validation:** All three fields are optional strings; at least one must be present.
 
 ### DELETE `/api/admin/phones?id=<phoneId>`
 
-Deletes a phone record. Returns `409` if the phone is referenced by an active daily puzzle.
+**Hard-deletes** the row from the `phones` table.
 
-**Response:** `{ "success": true }` or `{ "error": "Phone is used in a daily puzzle" }`
+Before deleting, checks whether any row in `daily_puzzles` references this `phoneId`. If found, returns 409.
+
+**Success → 200:** `{ "success": true }`
+
+**Blocked → 409:** `{ "error": "Phone is used in a daily puzzle" }`
 
 ---
 
@@ -85,78 +96,104 @@ Deletes a phone record. Returns `409` if the phone is referenced by an active da
 
 ### Auth Guard
 
-On mount, fetches `/api/auth/me`. If the response has `isAdmin !== true` or returns an error, redirects to `/`.
+Uses the existing `useAuth()` hook from `phoneguessr/src/lib/auth-context.tsx`. On mount (after auth context resolves), if `user === null || user.isAdmin !== true`, call `window.location.href = "/"`. Show a neutral loading indicator until auth state is known (prevents flash of admin content).
 
 ### State
 
 ```ts
-phones: Phone[]          // full list from API
-filtered: Phone[]        // after search filter applied
-page: number             // current page (1-indexed)
-editingId: number | null // which row is in edit mode
-editDraft: { brand, model, imageUrl } | null
+phones: Phone[]             // full list from GET, shape: {id, brand, model, imageUrl, active}
+page: number                // current page (1-indexed)
 searchQuery: string
-loading: boolean
-error: string | null
+editingId: number | null    // id of row currently open for editing; null = none
+editDraft: { brand: string; model: string; imageUrl: string } | null
+                            // initialized from the row's current values when Edit is clicked
+mutating: boolean           // true while any PATCH or DELETE is in flight
+globalLoading: boolean      // true only during initial GET
+loadError: string | null    // error from initial GET
+editError: string | null    // error from a PATCH; shown below the open edit row; cleared when editingId changes
+deleteError: { id: number; message: string } | null
+                            // error from a DELETE 409; shown below that row; auto-clears after 4s
+```
+
+`editError` and `deleteError` are **separate fields** to avoid ambiguity when both a delete error and an edit operation are active simultaneously. `editError` is cleared whenever `editingId` changes (i.e., when the user cancels or opens a different row).
+
+### Computed
+
+```ts
+filtered = phones.filter(p =>
+  `${p.brand} ${p.model}`.toLowerCase().includes(searchQuery.toLowerCase())
+)
+paginated = filtered.slice((page - 1) * 20, page * 20)
+totalPages = Math.ceil(filtered.length / 20)
 ```
 
 ### Layout
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│ 📱 Phone Catalog        130 phones    ← Back to game │
+│ 📱 Phone Catalog   <total> phones   ← Back to game  │
 ├─────────────────────────────────────────────────────┤
 │ 🔍 Search by brand or model…                         │
-├──────┬────────┬──────────┬──────────────┬──────┬────┤
-│ IMG  │ Brand  │ Model    │ Image URL    │Active│    │
-├──────┼────────┼──────────┼──────────────┼──────┼────┤
-│ 🖼   │ Apple  │ iPhone…  │ https://…    │ ✓    │Edit│
-├──────┴────────┴──────────┴──────────────┴──────┴────┤
-│  [Editing row — inline inputs for brand/model/url]  │
+├──────┬──────────┬──────────────┬────────────┬───┬───┤
+│ IMG  │ Brand    │ Model        │ Image URL  │Act│   │
+├──────┼──────────┼──────────────┼────────────┼───┼───┤
+│ 🖼   │ Apple    │ iPhone 15 Pro│ https://…  │ ✓ │Edit Del│
+├──────┴──────────┴──────────────┴────────────┴───┴───┤
+│  Brand: [_______]  Model: [_______]  URL: [________]│
+│  editError shown here (if any)                      │
 │                                     [Save]  [Cancel]│
-├──────┬────────┬──────────┬──────────────┬──────┬────┤
-│ 🖼   │ Google │ Pixel 9  │ https://…    │  —   │Edit│
-└──────┴────────┴──────────┴──────────────┴──────┴────┘
+├──────┬──────────┬──────────────┬────────────┬───┬───┤
+│ 🖼   │ Google   │ Pixel 9      │ https://…  │ — │Edit Del│
+│  deleteError shown here (if DELETE 409 on this row) │
+└──────┴──────────┴──────────────┴────────────┴───┴───┘
 │  ← Prev   [1] 2  3  Next →                          │
 └─────────────────────────────────────────────────────┘
 ```
 
-### Interactions
+**`active` column:** Display-only. "✓" in green if `active = true`; "—" in muted color if false. Not editable.
 
-**Search:** `searchQuery` filters `phones` on `brand + model` (case-insensitive, client-side). Resets to page 1 on change.
+### Interaction Details
 
-**Edit:** Clicking **Edit** sets `editingId` and populates `editDraft` with the row's current values. Only one row can be in edit mode at a time — clicking Edit on another row cancels the current edit. Clicking **Save** calls `PATCH /api/admin/phones?id=X`, updates the local array on success, collapses the row. Clicking **✕** cancels without saving.
+**Search:** Live substring filter on `brand + " " + model`. Resets `page = 1` on every keystroke.
 
-**Delete:** Clicking **Del** shows `window.confirm("Delete [Brand Model]? This cannot be undone.")`. On confirm, calls `DELETE /api/admin/phones?id=X`. On `409` (phone in active puzzle), shows an inline error message instead of deleting.
+**Edit:**
+1. Click **Edit** → `editingId = phone.id`, `editDraft = { brand, model, imageUrl }` from that row. Clears any open `editError`. Opening a different row closes the previous one without prompting.
+2. Click **Save** → `mutating = true`. Call `PATCH`. On success: splice updated phone into `phones[]`, `editingId = null`, `editDraft = null`, `editError = null`, `mutating = false`. On error: `editError = message`, `mutating = false` (row stays open).
+3. Click **Cancel** → `editingId = null`, `editDraft = null`, `editError = null`.
+4. Save and Cancel buttons are disabled while `mutating = true`.
 
-**Pagination:** 20 phones per page. Applied after search filtering.
+**Delete:**
+1. `window.confirm("Delete [Brand] [Model]? This cannot be undone.")` — synchronous, no request yet.
+2. On confirm: `mutating = true`. Call `DELETE`.
+3. On `200`: splice phone out of `phones[]`. `mutating = false`.
+4. On `409`: `deleteError = { id: phone.id, message: "This phone is used in a scheduled puzzle" }`. `mutating = false`. Auto-clear `deleteError` after 4 seconds.
+5. All Edit and Del buttons in the table are disabled while `mutating = true`.
 
-### Styling
+**Pagination:** Prev/Next buttons and numbered page buttons. Prev disabled on page 1, Next disabled on last page.
 
-Uses the same CSS variables (`--surface`, `--text`, `--text-muted`, `--border`, etc.) already defined in `index.css`. Admin page gets its own `admin.css` file co-located in `routes/admin/`.
+### Loading States
+
+- **`globalLoading = true`** (initial GET only): render a single "Loading…" line in place of the table.
+- **`mutating = true`** (PATCH or DELETE in flight): table renders normally but all Edit/Del/Save/Cancel buttons are disabled. No full-page spinner.
+
+### Styling (`admin.css`)
+
+- Dark background matching the app: `background: #0d1117`, `color: var(--text)`
+- Table: CSS grid layout (not `<table>` element) — columns `56px 1fr 1fr 2fr 60px 120px`
+- Edit row: highlighted with a left border `3px solid var(--accent)` and slightly lighter background
+- Buttons: reuse app button styles from `index.css` where possible; add admin-specific overrides in `admin.css`
+- Error text: `color: var(--red)`, `font-size: 12px`
+- Active ✓: `color: var(--green)` / muted `—`: `color: var(--text-muted)`
 
 ---
 
-## Auth Pattern
-
-Reuses the existing `requireAdmin()` helper from `api/admin/reset.ts` (copy the pattern — check JWT cookie, verify `isAdmin` in DB, return 403 if not). No shared utility needed to keep changes minimal.
-
----
-
-## Error Handling
+## Error Handling Summary
 
 | Scenario | Behaviour |
 |----------|-----------|
-| Not admin | Redirect to `/` on page load |
-| API fetch fails | Show inline error banner, retry button |
-| PATCH fails | Show error message below the editing row |
-| DELETE blocked (409) | Show "This phone is used in a scheduled puzzle" inline |
-| Network error | Show error, row stays in edit mode |
-
----
-
-## Out-of-Scope Guardrails
-
-- No create-new-phone form (phones added via seed pipeline)
-- No bulk operations
-- No daily puzzle scheduling UI
+| Not admin / not logged in | Redirect to `/` after auth resolves |
+| Initial GET fails | `loadError` banner with retry button |
+| PATCH validation (400) | `editError` below edit row; row stays open |
+| PATCH server error (500) | Same as 400 |
+| DELETE blocked (409) | `deleteError` below that row, auto-clears 4s |
+| Network error on PATCH/DELETE | Same as server error; `mutating` reset to false |
