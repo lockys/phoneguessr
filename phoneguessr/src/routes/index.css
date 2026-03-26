@@ -523,16 +523,21 @@ body {
   z-index: 10;
   max-height: min(300px, 50dvh);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .autocomplete-item {
   padding: 14px 16px;
   cursor: pointer;
   font-size: 16px;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .autocomplete-item:hover,
-.autocomplete-item.selected {
+.autocomplete-item.selected,
+.autocomplete-item:active {
   background: var(--surface-hover);
 }
 
@@ -1434,6 +1439,20 @@ body {
   letter-spacing: 0.03em;
 }
 
+/* Holds space while the input is fixed above the keyboard */
+.autocomplete-placeholder {
+  height: 60px; /* matches the input height including wrapper padding */
+}
+
+/* Pinned above virtual keyboard (applied via JS when input is focused on touch) */
+.autocomplete--pinned {
+  z-index: 100;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 8px 12px 12px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+}
+
 /* Mobile Layout */
 @media (max-width: 480px) {
   .guess-history {
@@ -1452,5 +1471,9 @@ body {
     z-index: 10;
     background: var(--bg);
     padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .autocomplete-item {
+    padding: 18px 16px;
   }
 }
