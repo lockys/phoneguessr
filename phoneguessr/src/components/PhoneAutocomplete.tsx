@@ -61,11 +61,6 @@ function useTypingPlaceholder(active: boolean) {
   return text;
 }
 
-// True once, never stale — pointer type doesn't change mid-session
-const isTouch =
-  typeof window !== 'undefined' &&
-  window.matchMedia('(pointer: coarse)').matches;
-
 export function PhoneAutocomplete({
   phones,
   onSelect,
@@ -78,6 +73,13 @@ export function PhoneAutocomplete({
   const [isFocused, setIsFocused] = useState(false);
   const [fixedBottom, setFixedBottom] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Evaluated once per mount; pointer type doesn't change mid-session
+  const isTouchRef = useRef(
+    typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(pointer: coarse)').matches,
+  );
+  const isTouch = isTouchRef.current;
   const typingText = useTypingPlaceholder(!disabled && query.length === 0);
 
   // Pin the input just above the virtual keyboard using the Visual Viewport API
