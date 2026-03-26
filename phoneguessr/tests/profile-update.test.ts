@@ -51,6 +51,7 @@ describe('POST /api/profile — region field', () => {
     mockDb.mockQuery([]);
     const res = await POST(makeReq({ region: 'tw' }));
     expect(res.status).toBe(200);
+    expect(mockDb.update).toHaveBeenCalledOnce();
   });
 
   it('clears region when null is sent', async () => {
@@ -64,6 +65,7 @@ describe('POST /api/profile — region field', () => {
     mockDb.mockQuery([]);
     const res = await POST(makeReq({ region: '' }));
     expect(res.status).toBe(200);
+    expect(mockDb.update).toHaveBeenCalledOnce();
   });
 
   it('returns 400 for invalid region code', async () => {
