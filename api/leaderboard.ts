@@ -1,6 +1,6 @@
-import { eq, and, sql, desc, gte, asc } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, sql } from 'drizzle-orm';
 import { db } from '../phoneguessr/src/db/index.js';
-import { results, users, dailyPuzzles } from '../phoneguessr/src/db/schema.js';
+import { dailyPuzzles, results, users } from '../phoneguessr/src/db/schema.js';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -35,6 +35,7 @@ async function getDailyLeaderboard() {
     .select({
       displayName: users.displayName,
       avatarUrl: users.avatarUrl,
+      region: users.region,
       score: results.score,
       guessCount: results.guessCount,
     })
@@ -49,6 +50,7 @@ async function getDailyLeaderboard() {
       rank: i + 1,
       displayName: e.displayName,
       avatarUrl: e.avatarUrl,
+      region: e.region,
       score: e.score,
       guessCount: e.guessCount,
     })),
@@ -84,12 +86,13 @@ async function getAggregateLeaderboard(startDate: Date) {
     .select({
       displayName: users.displayName,
       avatarUrl: users.avatarUrl,
+      region: users.region,
       totalWins: sql<number>`count(*)`.as('total_wins'),
     })
     .from(results)
     .innerJoin(users, eq(results.userId, users.id))
     .where(whereClause)
-    .groupBy(users.id, users.displayName, users.avatarUrl)
+    .groupBy(users.id, users.displayName, users.avatarUrl, users.region)
     .orderBy(desc(sql`total_wins`))
     .limit(50);
 
@@ -98,6 +101,7 @@ async function getAggregateLeaderboard(startDate: Date) {
       rank: i + 1,
       displayName: e.displayName,
       avatarUrl: e.avatarUrl,
+      region: e.region,
       totalWins: e.totalWins,
     })),
   });
