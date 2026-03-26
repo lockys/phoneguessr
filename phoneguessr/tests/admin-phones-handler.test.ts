@@ -11,7 +11,15 @@ vi.mock('../src/lib/auth.js', () => ({
   verifySessionToken: mockVerifySessionToken,
 }));
 
-const { GET, PATCH, DELETE: DEL } = await import('../../api/admin/phones.js');
+const { default: adminHandler } = await import('../../api/admin.js');
+
+// Wrap requests to add ?resource=phones so the merged handler routes correctly
+function phonesHandler(req: Request): Promise<Response> {
+  const url = new URL(req.url);
+  url.searchParams.set('resource', 'phones');
+  const patched = new Request(url.toString(), req);
+  return adminHandler(patched);
+}
 
 const ADMIN_USER = { userId: 1, googleId: 'g1', displayName: 'Admin' };
 const ADMIN_DB_ROW = { isAdmin: true, email: 'admin@test.com' };
@@ -36,7 +44,7 @@ describe('GET /api/admin/phones', () => {
 
   it('returns 403 when no session cookie', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(null);
-    const res = await GET(new Request('http://localhost/api/admin/phones'));
+    const res = await phonesHandler(new Request('http://localhost/api/admin/phones'));
     expect(res.status).toBe(403);
   });
 
@@ -44,7 +52,7 @@ describe('GET /api/admin/phones', () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     // Queue: 1) requireAdmin user lookup (array, as drizzle select returns)
     mockDb.mockQuery([NON_ADMIN_DB_ROW]);
-    const res = await GET(makeReq('GET', 'http://localhost/api/admin/phones'));
+    const res = await phonesHandler(makeReq('GET', 'http://localhost/api/admin/phones'));
     expect(res.status).toBe(403);
   });
 
@@ -62,7 +70,7 @@ describe('GET /api/admin/phones', () => {
     // Queue: 1) requireAdmin user lookup, 2) phones SELECT
     mockDb.mockQuery([ADMIN_DB_ROW]);
     mockDb.mockQuery(phones);
-    const res = await GET(makeReq('GET', 'http://localhost/api/admin/phones'));
+    const res = await phonesHandler(makeReq('GET', 'http://localhost/api/admin/phones'));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.phones).toEqual(phones);
@@ -79,7 +87,7 @@ describe('PATCH /api/admin/phones', () => {
   it('returns 403 for non-admin', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([NON_ADMIN_DB_ROW]);
-    const res = await PATCH(
+    const res = await phonesHandler(
       makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', {
         brand: 'Apple',
       }),
@@ -90,7 +98,7 @@ describe('PATCH /api/admin/phones', () => {
   it('returns 400 when no fields provided', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([ADMIN_DB_ROW]);
-    const res = await PATCH(
+    const res = await phonesHandler(
       makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', {}),
     );
     expect(res.status).toBe(400);
@@ -99,7 +107,7 @@ describe('PATCH /api/admin/phones', () => {
   it('returns 400 when a field is an empty string', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([ADMIN_DB_ROW]);
-    const res = await PATCH(
+    const res = await phonesHandler(
       makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', { brand: '' }),
     );
     expect(res.status).toBe(400);
@@ -109,7 +117,7 @@ describe('PATCH /api/admin/phones', () => {
   it('returns 400 when id is missing from URL', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([ADMIN_DB_ROW]);
-    const res = await PATCH(
+    const res = await phonesHandler(
       makeReq('PATCH', 'http://localhost/api/admin/phones', { brand: 'Apple' }),
     );
     expect(res.status).toBe(400);
@@ -127,7 +135,7 @@ describe('PATCH /api/admin/phones', () => {
     // Queue: 1) requireAdmin user lookup, 2) UPDATE returning
     mockDb.mockQuery([ADMIN_DB_ROW]);
     mockDb.mockQuery([updated]);
-    const res = await PATCH(
+    const res = await phonesHandler(
       makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', {
         model: 'iPhone 15 Pro Max',
       }),
@@ -148,7 +156,7 @@ describe('DELETE /api/admin/phones', () => {
   it('returns 400 when id is missing', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([ADMIN_DB_ROW]);
-    const res = await DEL(
+    const res = await phonesHandler(
       makeReq('DELETE', 'http://localhost/api/admin/phones'),
     );
     expect(res.status).toBe(400);
@@ -159,7 +167,7 @@ describe('DELETE /api/admin/phones', () => {
     // Queue: 1) requireAdmin user lookup, 2) dailyPuzzles guard SELECT (found)
     mockDb.mockQuery([ADMIN_DB_ROW]);
     mockDb.mockQuery([{ id: 5 }]);
-    const res = await DEL(
+    const res = await phonesHandler(
       makeReq('DELETE', 'http://localhost/api/admin/phones?id=1'),
     );
     expect(res.status).toBe(409);
@@ -172,7 +180,7 @@ describe('DELETE /api/admin/phones', () => {
     mockDb.mockQuery([ADMIN_DB_ROW]);
     mockDb.mockQuery([]);
     mockDb.mockQuery([{ id: 1 }]);
-    const res = await DEL(
+    const res = await phonesHandler(
       makeReq('DELETE', 'http://localhost/api/admin/phones?id=1'),
     );
     expect(res.status).toBe(200);
