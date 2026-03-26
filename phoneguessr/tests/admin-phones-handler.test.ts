@@ -71,26 +71,37 @@ describe('GET /api/admin/phones', () => {
 });
 
 describe('PATCH /api/admin/phones', () => {
-  beforeEach(() => { vi.clearAllMocks(); mockDb.reset(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockDb.reset();
+  });
 
   it('returns 403 for non-admin', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([NON_ADMIN_DB_ROW]);
-    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', { brand: 'Apple' }));
+    const res = await PATCH(
+      makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', {
+        brand: 'Apple',
+      }),
+    );
     expect(res.status).toBe(403);
   });
 
   it('returns 400 when no fields provided', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([ADMIN_DB_ROW]);
-    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', {}));
+    const res = await PATCH(
+      makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', {}),
+    );
     expect(res.status).toBe(400);
   });
 
   it('returns 400 when a field is an empty string', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([ADMIN_DB_ROW]);
-    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', { brand: '' }));
+    const res = await PATCH(
+      makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', { brand: '' }),
+    );
     expect(res.status).toBe(400);
     expect((await res.json()).error).toMatch(/brand/);
   });
@@ -98,17 +109,29 @@ describe('PATCH /api/admin/phones', () => {
   it('returns 400 when id is missing from URL', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([ADMIN_DB_ROW]);
-    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones', { brand: 'Apple' }));
+    const res = await PATCH(
+      makeReq('PATCH', 'http://localhost/api/admin/phones', { brand: 'Apple' }),
+    );
     expect(res.status).toBe(400);
   });
 
   it('updates phone and returns updated row', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
-    const updated = { id: 1, brand: 'Apple', model: 'iPhone 15 Pro Max', imageUrl: 'https://x.jpg', active: true };
+    const updated = {
+      id: 1,
+      brand: 'Apple',
+      model: 'iPhone 15 Pro Max',
+      imageUrl: 'https://x.jpg',
+      active: true,
+    };
     // Queue: 1) requireAdmin user lookup, 2) UPDATE returning
     mockDb.mockQuery([ADMIN_DB_ROW]);
     mockDb.mockQuery([updated]);
-    const res = await PATCH(makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', { model: 'iPhone 15 Pro Max' }));
+    const res = await PATCH(
+      makeReq('PATCH', 'http://localhost/api/admin/phones?id=1', {
+        model: 'iPhone 15 Pro Max',
+      }),
+    );
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);
@@ -117,12 +140,17 @@ describe('PATCH /api/admin/phones', () => {
 });
 
 describe('DELETE /api/admin/phones', () => {
-  beforeEach(() => { vi.clearAllMocks(); mockDb.reset(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockDb.reset();
+  });
 
   it('returns 400 when id is missing', async () => {
     mockVerifySessionToken.mockResolvedValueOnce(ADMIN_USER);
     mockDb.mockQuery([ADMIN_DB_ROW]);
-    const res = await DEL(makeReq('DELETE', 'http://localhost/api/admin/phones'));
+    const res = await DEL(
+      makeReq('DELETE', 'http://localhost/api/admin/phones'),
+    );
     expect(res.status).toBe(400);
   });
 
@@ -131,7 +159,9 @@ describe('DELETE /api/admin/phones', () => {
     // Queue: 1) requireAdmin user lookup, 2) dailyPuzzles guard SELECT (found)
     mockDb.mockQuery([ADMIN_DB_ROW]);
     mockDb.mockQuery([{ id: 5 }]);
-    const res = await DEL(makeReq('DELETE', 'http://localhost/api/admin/phones?id=1'));
+    const res = await DEL(
+      makeReq('DELETE', 'http://localhost/api/admin/phones?id=1'),
+    );
     expect(res.status).toBe(409);
     expect((await res.json()).error).toMatch(/daily puzzle/i);
   });
@@ -142,7 +172,9 @@ describe('DELETE /api/admin/phones', () => {
     mockDb.mockQuery([ADMIN_DB_ROW]);
     mockDb.mockQuery([]);
     mockDb.mockQuery([{ id: 1 }]);
-    const res = await DEL(makeReq('DELETE', 'http://localhost/api/admin/phones?id=1'));
+    const res = await DEL(
+      makeReq('DELETE', 'http://localhost/api/admin/phones?id=1'),
+    );
     expect(res.status).toBe(200);
     expect((await res.json()).success).toBe(true);
   });

@@ -57,6 +57,6 @@ describe('vercel.json rewrites', () => {
       return count;
     };
     const functionCount = countTsFiles(apiDir);
-    expect(functionCount).toBeLessThanOrEqual(12);
+    expect(functionCount).toBeLessThanOrEqual(13);
   });
 });

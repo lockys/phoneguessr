@@ -9,9 +9,14 @@ interface Guess {
 interface GuessHistoryProps {
   guesses: Guess[];
   pendingGuessName?: string | null;
+  maxGuesses?: number;
 }
 
-export function GuessHistory({ guesses, pendingGuessName }: GuessHistoryProps) {
+export function GuessHistory({
+  guesses,
+  pendingGuessName,
+  maxGuesses,
+}: GuessHistoryProps) {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const prevCountRef = useRef(guesses.length);
@@ -75,8 +80,16 @@ export function GuessHistory({ guesses, pendingGuessName }: GuessHistoryProps) {
     correct: { label: t('guess.correct'), className: 'guess-correct' },
   };
 
+  const remaining =
+    maxGuesses !== undefined ? maxGuesses - guesses.length : null;
+
   return (
     <div className="guess-history" ref={containerRef}>
+      {remaining !== null && remaining > 0 && (
+        <div className="guess-remaining-text">
+          {t('guess.remaining', { count: remaining })}
+        </div>
+      )}
       {guesses.map((guess, i) => {
         const config =
           FEEDBACK_CONFIG[guess.feedback] ?? FEEDBACK_CONFIG.wrong_brand;
