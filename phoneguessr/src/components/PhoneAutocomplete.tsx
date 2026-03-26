@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -99,6 +99,14 @@ export function PhoneAutocomplete({
       for (const p of panels) p.style.overflowY = '';
     };
   }, [showDropdown]);
+
+  // Re-focus the input after it's moved into the portal on first tap.
+  // Without this, the browser cancels the keyboard because the DOM node is
+  // unmounted from its original position and remounted inside document.body.
+  useLayoutEffect(() => {
+    if (!isFocused || !isTouchRef.current) return;
+    inputRef.current?.focus();
+  }, [isFocused]);
 
   // Pin the input just above the virtual keyboard using the Visual Viewport API
   useEffect(() => {
