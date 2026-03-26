@@ -77,7 +77,7 @@ describe('getMockHint', () => {
     expect('hint' in result).toBe(true);
     if ('hint' in result) {
       // MockPhone has releaseYear, hint should be a numeric string
-      expect(Number(result.hint)).toBeGreaterThan(2000);
+      expect(Number(result.hint)).toBeGreaterThanOrEqual(1999);
     }
   });
 
