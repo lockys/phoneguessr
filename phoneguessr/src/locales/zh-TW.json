@@ -37,6 +37,7 @@
   "profile.editName": "輸入顯示名稱",
   "profile.displayName": "顯示名稱",
   "profile.language": "語言",
+  "profile.region": "地區",
   "profile.save": "儲存",
   "profile.saved": "已儲存！",
   "profile.guessDistribution": "猜測分佈",

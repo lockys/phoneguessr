@@ -37,6 +37,7 @@
   "profile.editName": "表示名を入力",
   "profile.displayName": "表示名",
   "profile.language": "言語",
+  "profile.region": "地域",
   "profile.save": "保存",
   "profile.saved": "保存しました！",
   "profile.guessDistribution": "推測回数の分布",

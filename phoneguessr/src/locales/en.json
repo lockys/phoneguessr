@@ -38,6 +38,7 @@
   "profile.editName": "Enter display name",
   "profile.displayName": "Display Name",
   "profile.language": "Language",
+  "profile.region": "Region",
   "profile.save": "Save",
   "profile.saved": "Saved!",
   "profile.guessDistribution": "Guess Distribution",

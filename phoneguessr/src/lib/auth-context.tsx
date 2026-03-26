@@ -10,6 +10,7 @@ interface User {
   avatarUrl?: string;
   email?: string | null;
   isAdmin?: boolean;
+  region?: string | null;
 }
 
 interface AuthContextValue {

@@ -37,6 +37,7 @@
   "profile.editName": "표시 이름 입력",
   "profile.displayName": "표시 이름",
   "profile.language": "언어",
+  "profile.region": "지역",
   "profile.save": "저장",
   "profile.saved": "저장됨!",
   "profile.guessDistribution": "추측 분포",
