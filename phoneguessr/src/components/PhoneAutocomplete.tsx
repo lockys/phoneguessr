@@ -83,6 +83,23 @@ export function PhoneAutocomplete({
   const isTouch = isTouchRef.current;
   const typingText = useTypingPlaceholder(!disabled && query.length === 0);
 
+  // Lock scroll on .swipe-panel while the dropdown is open so that touch
+  // events on the dropdown items are not swallowed by the panel's native scroll
+  // (which would suppress click and make selection impossible on mobile).
+  useEffect(() => {
+    const panels = Array.from(
+      document.querySelectorAll<HTMLElement>('.swipe-panel'),
+    );
+    if (showDropdown) {
+      for (const p of panels) p.style.overflowY = 'hidden';
+    } else {
+      for (const p of panels) p.style.overflowY = '';
+    }
+    return () => {
+      for (const p of panels) p.style.overflowY = '';
+    };
+  }, [showDropdown]);
+
   // Pin the input just above the virtual keyboard using the Visual Viewport API
   useEffect(() => {
     if (!isFocused || !isTouchRef.current) return;
