@@ -1,3 +1,4 @@
+import { countryCodeToFlag } from '@/lib/region';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,14 +7,18 @@ type Tab = 'daily' | 'weekly' | 'all-time';
 interface DailyEntry {
   rank: number;
   displayName: string;
+  region: string | null;
   score: number;
   guessCount: number;
+  avatarUrl: string | null;
 }
 
 interface AggregateEntry {
   rank: number;
   displayName: string;
+  region: string | null;
   totalWins: number;
+  avatarUrl: string | null;
 }
 
 export function Leaderboard() {
@@ -76,6 +81,9 @@ export function Leaderboard() {
                       : `#${entry.rank}`}
               </span>
               <span className="lb-name">
+                {countryCodeToFlag(entry.region)
+                  ? `${countryCodeToFlag(entry.region)} `
+                  : ''}
                 {entry.displayName}
                 {tab === 'all-time' && entry.rank === 1 && (
                   <span className="lb-title"> · {t('leaderboard.title1')}</span>
