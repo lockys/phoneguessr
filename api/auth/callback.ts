@@ -113,6 +113,7 @@ export async function GET(request: Request) {
       displayName: user.displayName,
       avatarUrl: user.avatarUrl ?? undefined,
       email: user.email ?? undefined,
+      isAdmin: user.isAdmin,
     });
 
     const proto =

@@ -7,6 +7,7 @@
     { "source": "/api/leaderboard/:period", "destination": "/api/leaderboard?period=:period" },
     { "source": "/api/auth/passkey/:action", "destination": "/api/auth/passkey?action=:action" },
     { "source": "/api/profile/:path*", "destination": "/api/profile" },
+    { "source": "/api/admin/reset/:action", "destination": "/api/admin/reset?action=:action" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "functions": {
