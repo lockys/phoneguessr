@@ -24,7 +24,7 @@
   "guess.remaining": "{{count}}번 남음",
 
   "input.placeholder": "이 스마트폰은 뭘까요?",
-  "input.keyboardHint": "⌨ 키보드로 폰 이름을 입력하세요",
+  "input.keyboardHint": "⌨ 폰 이름을 입력해서 맞춰보세요!",
 
   "crop.alt": "미스터리 스마트폰",
 
