@@ -10,9 +10,7 @@ interface CropRevealProps {
   onRevealComplete?: () => void;
 }
 
-const BLUR_SCALE = 12; // downscale factor for blur effect
-const RING_WIDTH = 2; // circle border width in CSS pixels
-const RING_COLOR = 'rgba(255, 255, 255, 0.45)';
+const BLUR_RADIUS = 20; // Gaussian blur radius for glossy background
 
 function easeOutCubic(t: number) {
   return 1 - (1 - t) ** 3;
@@ -48,9 +46,36 @@ function drawImageOnCanvas(
   ctx.restore();
 }
 
+/** Deterministic hash of a string to a number in [0, 1). */
+function hashString01(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = Math.imul(31, h) + s.charCodeAt(i);
+    h |= 0;
+  }
+  return ((h >>> 0) % 10000) / 10000;
+}
+
 /**
- * Create an offscreen canvas with a blurred version of the image.
- * Uses downscale+upscale with smoothing enabled (Safari-compatible).
+ * Compute a deterministic random circle center for a given image.
+ * Returns (cx, cy) in pixel coordinates, constrained to the center 60%.
+ */
+function getCircleCenter(
+  imageSrc: string,
+  w: number,
+  h: number,
+): { cx: number; cy: number } {
+  const margin = 0.2;
+  const rx = hashString01(`${imageSrc}:x`);
+  const ry = hashString01(`${imageSrc}:y`);
+  return {
+    cx: w * (margin + rx * (1 - 2 * margin)),
+    cy: h * (margin + ry * (1 - 2 * margin)),
+  };
+}
+
+/**
+ * Create an offscreen canvas with a glossy blurred version of the image.
  */
 function createBlurredCanvas(
   img: HTMLImageElement,
@@ -61,48 +86,19 @@ function createBlurredCanvas(
   const pw = Math.round(w * dpr);
   const ph = Math.round(h * dpr);
 
-  // Tiny canvas for downscaled version
-  const smallW = Math.max(1, Math.ceil(pw / BLUR_SCALE));
-  const smallH = Math.max(1, Math.ceil(ph / BLUR_SCALE));
-
-  const tiny = document.createElement('canvas');
-  tiny.width = smallW;
-  tiny.height = smallH;
-  const tCtx = tiny.getContext('2d')!;
-  tCtx.imageSmoothingEnabled = true;
-  tCtx.imageSmoothingQuality = 'medium';
-
-  // Draw image cover-fitted into tiny canvas
-  const imgAspect = img.naturalWidth / img.naturalHeight;
-  const tinyAspect = smallW / smallH;
-  let drawW: number;
-  let drawH: number;
-  if (imgAspect > tinyAspect) {
-    drawH = smallH;
-    drawW = smallH * imgAspect;
-  } else {
-    drawW = smallW;
-    drawH = smallW / imgAspect;
-  }
-  tCtx.drawImage(img, (smallW - drawW) / 2, (smallH - drawH) / 2, drawW, drawH);
-
-  // Upscale to full size with smoothing → blurred result
   const blur = document.createElement('canvas');
   blur.width = pw;
   blur.height = ph;
-  const bCtx = blur.getContext('2d')!;
-  bCtx.imageSmoothingEnabled = true;
-  bCtx.imageSmoothingQuality = 'medium';
-  bCtx.drawImage(tiny, 0, 0, pw, ph);
-
+  const ctx = blur.getContext('2d')!;
+  ctx.filter = `blur(${BLUR_RADIUS}px)`;
+  drawImageOnCanvas(ctx, img, w, h, dpr);
   return blur;
 }
 
 /**
  * Draw the circle reveal composite:
  * 1. Blurred background (from pre-computed canvas)
- * 2. Sharp image clipped to circle
- * 3. Circle border ring
+ * 2. Sharp image clipped to circle (randomly positioned per image)
  */
 function drawCircleReveal(
   ctx: CanvasRenderingContext2D,
@@ -112,11 +108,11 @@ function drawCircleReveal(
   canvasHeight: number,
   dpr: number,
   radiusFraction: number,
+  imageSrc: string,
 ) {
   const w = canvasWidth * dpr;
   const h = canvasHeight * dpr;
-  const cx = w / 2;
-  const cy = h / 2;
+  const { cx, cy } = getCircleCenter(imageSrc, w, h);
 
   // Half-diagonal so fraction 1.0 covers the entire square
   const halfDiag = Math.sqrt(w * w + h * h) / 2;
@@ -132,17 +128,6 @@ function drawCircleReveal(
   ctx.clip();
   drawImageOnCanvas(ctx, img, canvasWidth, canvasHeight, dpr);
   ctx.restore();
-
-  // 3. Circle border ring
-  if (radiusFraction < 1.0) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = RING_COLOR;
-    ctx.lineWidth = RING_WIDTH * dpr;
-    ctx.stroke();
-    ctx.restore();
-  }
 }
 
 function getRadiusForLevel(level: number): number {
@@ -227,6 +212,7 @@ export function CropReveal({
           rect.height,
           dpr,
           targetRadius,
+          imageSrc,
         );
         return;
       }
@@ -247,7 +233,16 @@ export function CropReveal({
         currentRadiusRef.current = r;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawCircleReveal(ctx, img, blurCanvas, rect.width, rect.height, dpr, r);
+        drawCircleReveal(
+          ctx,
+          img,
+          blurCanvas,
+          rect.width,
+          rect.height,
+          dpr,
+          r,
+          imageSrc,
+        );
 
         if (t < 1) {
           animFrameRef.current = requestAnimationFrame(animate);
@@ -294,7 +289,16 @@ export function CropReveal({
       currentRadiusRef.current = r;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawCircleReveal(ctx, img, blurCanvas, rect.width, rect.height, dpr, r);
+      drawCircleReveal(
+        ctx,
+        img,
+        blurCanvas,
+        rect.width,
+        rect.height,
+        dpr,
+        r,
+        imageSrc,
+      );
 
       if (t < 1) {
         animFrameRef.current = requestAnimationFrame(animate);
@@ -315,6 +319,7 @@ export function CropReveal({
   }, [revealed]);
 
   // Reveal animation: circle expands to full coverage
+  // biome-ignore lint/correctness/useExhaustiveDependencies: imageSrc is stable during reveal
   useEffect(() => {
     if (!revealAnimating || !imgObjRef.current) return;
 
@@ -342,7 +347,16 @@ export function CropReveal({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (blurCanvas && r < 1.0) {
-        drawCircleReveal(ctx, img, blurCanvas, rect.width, rect.height, dpr, r);
+        drawCircleReveal(
+          ctx,
+          img,
+          blurCanvas,
+          rect.width,
+          rect.height,
+          dpr,
+          r,
+          imageSrc,
+        );
       } else {
         drawImageOnCanvas(ctx, img, rect.width, rect.height, dpr);
       }
