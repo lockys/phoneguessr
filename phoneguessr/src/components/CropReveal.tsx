@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CIRCLE_RADII } from '../lib/zoom-levels';
 
 interface CropRevealProps {
   imageSrc: string;
@@ -9,16 +10,18 @@ interface CropRevealProps {
   onRevealComplete?: () => void;
 }
 
-const MAX_PIXEL_SIZE = 32;
+const BLUR_SCALE = 12; // downscale factor for blur effect
+const RING_WIDTH = 2; // circle border width in CSS pixels
+const RING_COLOR = 'rgba(255, 255, 255, 0.45)';
 
 function easeOutCubic(t: number) {
   return 1 - (1 - t) ** 3;
 }
 
-// Draw image centered and covering the canvas (object-fit: cover). Does NOT clear — caller is responsible.
+// Draw image centered and covering the canvas (object-fit: cover).
 function drawImageOnCanvas(
   ctx: CanvasRenderingContext2D,
-  img: HTMLImageElement,
+  img: HTMLImageElement | HTMLCanvasElement,
   canvasWidth: number,
   canvasHeight: number,
   dpr: number,
@@ -28,8 +31,9 @@ function drawImageOnCanvas(
   ctx.save();
   ctx.translate(w / 2, h / 2);
 
-  // Draw image covering the canvas (object-fit: cover equivalent)
-  const imgAspect = img.naturalWidth / img.naturalHeight;
+  const imgW = img instanceof HTMLImageElement ? img.naturalWidth : img.width;
+  const imgH = img instanceof HTMLImageElement ? img.naturalHeight : img.height;
+  const imgAspect = imgW / imgH;
   const canvasAspect = w / h;
   let drawW: number;
   let drawH: number;
@@ -44,51 +48,106 @@ function drawImageOnCanvas(
   ctx.restore();
 }
 
-// Draw image with pixelation effect. pixelSize=1 means sharp; higher = blockier.
-function drawPixelated(
-  ctx: CanvasRenderingContext2D,
+/**
+ * Create an offscreen canvas with a blurred version of the image.
+ * Uses downscale+upscale with smoothing enabled (Safari-compatible).
+ */
+function createBlurredCanvas(
   img: HTMLImageElement,
-  canvasWidth: number,
-  canvasHeight: number,
+  w: number,
+  h: number,
   dpr: number,
-  pixelSize: number,
-) {
-  if (pixelSize <= 1) {
-    drawImageOnCanvas(ctx, img, canvasWidth, canvasHeight, dpr);
-    return;
-  }
+): HTMLCanvasElement {
+  const pw = Math.round(w * dpr);
+  const ph = Math.round(h * dpr);
 
-  const w = canvasWidth * dpr;
-  const h = canvasHeight * dpr;
+  // Tiny canvas for downscaled version
+  const smallW = Math.max(1, Math.ceil(pw / BLUR_SCALE));
+  const smallH = Math.max(1, Math.ceil(ph / BLUR_SCALE));
 
-  // Step 1: Draw image into a small region (top-left corner) clipped
-  const smallW = Math.max(1, Math.ceil(w / pixelSize));
-  const smallH = Math.max(1, Math.ceil(h / pixelSize));
+  const tiny = document.createElement('canvas');
+  tiny.width = smallW;
+  tiny.height = smallH;
+  const tCtx = tiny.getContext('2d')!;
+  tCtx.imageSmoothingEnabled = true;
+  tCtx.imageSmoothingQuality = 'medium';
 
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(0, 0, smallW, smallH);
-  ctx.clip();
-
+  // Draw image cover-fitted into tiny canvas
   const imgAspect = img.naturalWidth / img.naturalHeight;
-  const canvasAspect = smallW / smallH;
+  const tinyAspect = smallW / smallH;
   let drawW: number;
   let drawH: number;
-  if (imgAspect > canvasAspect) {
+  if (imgAspect > tinyAspect) {
     drawH = smallH;
     drawW = smallH * imgAspect;
   } else {
     drawW = smallW;
     drawH = smallW / imgAspect;
   }
-  ctx.drawImage(img, (smallW - drawW) / 2, (smallH - drawH) / 2, drawW, drawH);
+  tCtx.drawImage(img, (smallW - drawW) / 2, (smallH - drawH) / 2, drawW, drawH);
+
+  // Upscale to full size with smoothing → blurred result
+  const blur = document.createElement('canvas');
+  blur.width = pw;
+  blur.height = ph;
+  const bCtx = blur.getContext('2d')!;
+  bCtx.imageSmoothingEnabled = true;
+  bCtx.imageSmoothingQuality = 'medium';
+  bCtx.drawImage(tiny, 0, 0, pw, ph);
+
+  return blur;
+}
+
+/**
+ * Draw the circle reveal composite:
+ * 1. Blurred background (from pre-computed canvas)
+ * 2. Sharp image clipped to circle
+ * 3. Circle border ring
+ */
+function drawCircleReveal(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  blurCanvas: HTMLCanvasElement,
+  canvasWidth: number,
+  canvasHeight: number,
+  dpr: number,
+  radiusFraction: number,
+) {
+  const w = canvasWidth * dpr;
+  const h = canvasHeight * dpr;
+  const cx = w / 2;
+  const cy = h / 2;
+
+  // Half-diagonal so fraction 1.0 covers the entire square
+  const halfDiag = Math.sqrt(w * w + h * h) / 2;
+  const radius = halfDiag * radiusFraction;
+
+  // 1. Draw blurred background
+  ctx.drawImage(blurCanvas, 0, 0, w, h);
+
+  // 2. Sharp image clipped to circle
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.clip();
+  drawImageOnCanvas(ctx, img, canvasWidth, canvasHeight, dpr);
   ctx.restore();
 
-  // Step 2: Upscale the small region to full canvas with no smoothing
-  const prevSmoothing = ctx.imageSmoothingEnabled;
-  ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(ctx.canvas, 0, 0, smallW, smallH, 0, 0, w, h);
-  ctx.imageSmoothingEnabled = prevSmoothing;
+  // 3. Circle border ring
+  if (radiusFraction < 1.0) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = RING_COLOR;
+    ctx.lineWidth = RING_WIDTH * dpr;
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function getRadiusForLevel(level: number): number {
+  const clamped = Math.min(Math.max(level, 0), CIRCLE_RADII.length - 1);
+  return CIRCLE_RADII[clamped];
 }
 
 export function CropReveal({
@@ -101,12 +160,12 @@ export function CropReveal({
   const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgObjRef = useRef<HTMLImageElement | null>(null);
+  const blurCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameRef = useRef(0);
   const prevRevealedRef = useRef(revealed);
+  const currentRadiusRef = useRef(getRadiusForLevel(level));
   const [revealAnimating, setRevealAnimating] = useState(false);
 
-  // Resize canvas only when dimensions change. Setting canvas.width/height clears the canvas,
-  // so skipping unnecessary resizes prevents micro-flickers during animation.
   const ensureCanvasSize = useCallback(
     (canvas: HTMLCanvasElement, dpr: number) => {
       const rect = canvas.getBoundingClientRect();
@@ -121,7 +180,7 @@ export function CropReveal({
     [],
   );
 
-  // Redraw current image at scale 1 (clears first)
+  // Redraw current image sharp (no blur/circle) for revealed state
   const drawAtScale = useCallback(() => {
     const canvas = canvasRef.current;
     const img = imgObjRef.current;
@@ -134,8 +193,7 @@ export function CropReveal({
     drawImageOnCanvas(ctx, img, rect.width, rect.height, dpr);
   }, [ensureCanvasSize]);
 
-  // Load image and crossfade from previous to new when src changes
-  // level and revealed are captured intentionally at src-change time — not stale bugs
+  // Load image, create blur canvas, and draw or animate transition
   // biome-ignore lint/correctness/useExhaustiveDependencies: level/revealed/ensureCanvasSize captured at src-change time
   useEffect(() => {
     if (!imageSrc) return;
@@ -152,38 +210,44 @@ export function CropReveal({
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
+      // Create pre-computed blur canvas
+      const blurCanvas = createBlurredCanvas(img, rect.width, rect.height, dpr);
+      blurCanvasRef.current = blurCanvas;
+
       if (!prevImg) {
-        // First load: draw immediately at scale 1 (server provides correctly cropped region)
+        // First load: draw circle reveal at current level
+        const targetRadius = getRadiusForLevel(level);
+        currentRadiusRef.current = targetRadius;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawImageOnCanvas(ctx, img, rect.width, rect.height, dpr);
+        drawCircleReveal(
+          ctx,
+          img,
+          blurCanvas,
+          rect.width,
+          rect.height,
+          dpr,
+          targetRadius,
+        );
         return;
       }
 
-      // Subsequent load: pixelation dissolve from old to new over 400ms
+      // Subsequent load: animate circle from old radius to new
       cancelAnimationFrame(animFrameRef.current);
 
+      const startRadius = currentRadiusRef.current;
+      const endRadius = getRadiusForLevel(level);
       const duration = 400;
       const startTime = performance.now();
 
       const animate = (now: number) => {
         const elapsed = now - startTime;
         const t = Math.min(elapsed / duration, 1);
+        const eased = easeOutCubic(t);
+        const r = startRadius + (endRadius - startRadius) * eased;
+        currentRadiusRef.current = r;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (t < 0.5) {
-          // Phase 1: Old image pixelates (sharp → blocky)
-          const phaseT = t / 0.5;
-          const eased = easeOutCubic(phaseT);
-          const pixelSize = 1 + (MAX_PIXEL_SIZE - 1) * eased;
-          drawPixelated(ctx, prevImg, rect.width, rect.height, dpr, pixelSize);
-        } else {
-          // Phase 2: New image depixelates (blocky → sharp)
-          const phaseT = (t - 0.5) / 0.5;
-          const eased = easeOutCubic(phaseT);
-          const pixelSize = MAX_PIXEL_SIZE - (MAX_PIXEL_SIZE - 1) * eased;
-          drawPixelated(ctx, img, rect.width, rect.height, dpr, pixelSize);
-        }
+        drawCircleReveal(ctx, img, blurCanvas, rect.width, rect.height, dpr, r);
 
         if (t < 1) {
           animFrameRef.current = requestAnimationFrame(animate);
@@ -199,6 +263,49 @@ export function CropReveal({
     };
   }, [imageSrc]);
 
+  // Animate circle radius when level changes (without image src change)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ensureCanvasSize is stable
+  useEffect(() => {
+    const img = imgObjRef.current;
+    const blurCanvas = blurCanvasRef.current;
+    const canvas = canvasRef.current;
+    if (!img || !blurCanvas || !canvas || revealed) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = ensureCanvasSize(canvas, dpr);
+
+    cancelAnimationFrame(animFrameRef.current);
+
+    const startRadius = currentRadiusRef.current;
+    const endRadius = getRadiusForLevel(level);
+
+    if (Math.abs(startRadius - endRadius) < 0.001) return;
+
+    const duration = 400;
+    const startTime = performance.now();
+
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = easeOutCubic(t);
+      const r = startRadius + (endRadius - startRadius) * eased;
+      currentRadiusRef.current = r;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawCircleReveal(ctx, img, blurCanvas, rect.width, rect.height, dpr, r);
+
+      if (t < 1) {
+        animFrameRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    animFrameRef.current = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animFrameRef.current);
+  }, [level, revealed]);
+
   // Detect revealed transitioning from false → true
   useEffect(() => {
     if (revealed && !prevRevealedRef.current) {
@@ -207,14 +314,16 @@ export function CropReveal({
     prevRevealedRef.current = revealed;
   }, [revealed]);
 
-  // Reveal animation: depixelate from blocky to sharp
+  // Reveal animation: circle expands to full coverage
   useEffect(() => {
     if (!revealAnimating || !imgObjRef.current) return;
 
-    const duration = isWin ? 1200 : 500;
-    const startPixelSize = isWin ? 48 : MAX_PIXEL_SIZE;
-    const startTime = performance.now();
     const img = imgObjRef.current;
+    const blurCanvas = blurCanvasRef.current;
+    const duration = isWin ? 1200 : 500;
+    const startRadius = currentRadiusRef.current;
+    const endRadius = 1.0;
+    const startTime = performance.now();
 
     const animate = (now: number) => {
       const canvas = canvasRef.current;
@@ -227,10 +336,16 @@ export function CropReveal({
       const elapsed = now - startTime;
       const t = Math.min(elapsed / duration, 1);
       const eased = easeOutCubic(t);
-      const pixelSize = startPixelSize - (startPixelSize - 1) * eased;
+      const r = startRadius + (endRadius - startRadius) * eased;
+      currentRadiusRef.current = r;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawPixelated(ctx, img, rect.width, rect.height, dpr, pixelSize);
+
+      if (blurCanvas && r < 1.0) {
+        drawCircleReveal(ctx, img, blurCanvas, rect.width, rect.height, dpr, r);
+      } else {
+        drawImageOnCanvas(ctx, img, rect.width, rect.height, dpr);
+      }
 
       if (t < 1) {
         animFrameRef.current = requestAnimationFrame(animate);
@@ -246,7 +361,7 @@ export function CropReveal({
     return () => cancelAnimationFrame(animFrameRef.current);
   }, [revealAnimating, isWin, onRevealComplete, ensureCanvasSize]);
 
-  // Draw at scale 1 when already revealed on mount (loaded from localStorage)
+  // Draw sharp when already revealed on mount
   useEffect(() => {
     if (revealed && !revealAnimating && imgObjRef.current) {
       drawAtScale();

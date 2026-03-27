@@ -22,9 +22,14 @@ let mockCtx: {
   beginPath: ReturnType<typeof vi.fn>;
   rect: ReturnType<typeof vi.fn>;
   clip: ReturnType<typeof vi.fn>;
+  arc: ReturnType<typeof vi.fn>;
+  stroke: ReturnType<typeof vi.fn>;
   drawImage: ReturnType<typeof vi.fn>;
   globalAlpha: number;
   imageSmoothingEnabled: boolean;
+  imageSmoothingQuality: ImageSmoothingQuality;
+  strokeStyle: string;
+  lineWidth: number;
 };
 
 /** Pending RAF callbacks, keyed by RAF ID for proper cancellation support */
@@ -57,18 +62,23 @@ function setupMocks() {
     beginPath: vi.fn(),
     rect: vi.fn(),
     clip: vi.fn(),
+    arc: vi.fn(),
+    stroke: vi.fn(),
     drawImage: vi.fn(() => {
       alphaAtDraw.push(mockCtx.globalAlpha);
     }),
     globalAlpha: 1,
     imageSmoothingEnabled: true,
+    imageSmoothingQuality: 'medium' as ImageSmoothingQuality,
+    strokeStyle: '',
+    lineWidth: 1,
   };
 
   vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(
     mockCtx as unknown as CanvasRenderingContext2D,
   );
 
-  // drawPixelated reads ctx.canvas for the self-copy upscale step
+  // ctx.canvas may be read during rendering
   Object.defineProperty(mockCtx, 'canvas', {
     get: () => document.querySelector('canvas'),
     configurable: true,
@@ -177,7 +187,7 @@ describe('CropReveal', () => {
     expect(alphaAtDraw.every(a => a === 1)).toBe(true);
   });
 
-  it('pixelation dissolve when imageSrc changes: drawImage is called with smoothing toggled', async () => {
+  it('circle transition when imageSrc changes: drawImage is called', async () => {
     const { rerender } = render(
       <CropReveal
         imageSrc="data:image/png;base64,src1"
@@ -206,7 +216,7 @@ describe('CropReveal', () => {
       triggerImageLoad();
     });
 
-    // Pixelation dissolve RAF should be queued
+    // Circle transition RAF should be queued
     expect(pendingRafs.size).toBeGreaterThan(0);
 
     // Run a mid-animation frame (100ms into 400ms → phase 1, pixelating old image)
@@ -214,11 +224,11 @@ describe('CropReveal', () => {
       flushRafs(100);
     });
 
-    // During pixelation, drawImage should be called for the pixelated rendering
+    // During circle transition, drawImage should be called for the blurred + sharp rendering
     expect(mockCtx.drawImage).toHaveBeenCalled();
   });
 
-  it('restores imageSmoothingEnabled after each pixelation frame', async () => {
+  it('restores imageSmoothingEnabled after each circle reveal frame', async () => {
     const { rerender } = render(
       <CropReveal
         imageSrc="data:image/png;base64,src1"
@@ -252,7 +262,7 @@ describe('CropReveal', () => {
     expect(mockCtx.imageSmoothingEnabled).toBe(true);
   });
 
-  it('only pixelation dissolve RAF is active when imageSrc and level change together', async () => {
+  it('only circle transition RAF is active when imageSrc and level change together', async () => {
     const { rerender } = render(
       <CropReveal
         imageSrc="data:image/png;base64,src1"
@@ -281,7 +291,7 @@ describe('CropReveal', () => {
       triggerImageLoad();
     });
 
-    // Only the crossfade RAF should be active
+    // Only the circle transition RAF should be active
     expect(pendingRafs.size).toBe(1);
   });
 
