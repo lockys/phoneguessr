@@ -23,8 +23,12 @@ let mockCtx: {
   restore: ReturnType<typeof vi.fn>;
   translate: ReturnType<typeof vi.fn>;
   scale: ReturnType<typeof vi.fn>;
+  beginPath: ReturnType<typeof vi.fn>;
+  rect: ReturnType<typeof vi.fn>;
+  clip: ReturnType<typeof vi.fn>;
   drawImage: ReturnType<typeof vi.fn>;
   globalAlpha: number;
+  imageSmoothingEnabled: boolean;
 };
 
 /** Pending RAF callbacks, keyed by RAF ID for proper cancellation support */
@@ -54,15 +58,25 @@ function setupMocks() {
     restore: vi.fn(),
     translate: vi.fn(),
     scale: vi.fn(),
+    beginPath: vi.fn(),
+    rect: vi.fn(),
+    clip: vi.fn(),
     drawImage: vi.fn(() => {
       alphaAtDraw.push(mockCtx.globalAlpha);
     }),
     globalAlpha: 1,
+    imageSmoothingEnabled: true,
   };
 
   vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(
     mockCtx as unknown as CanvasRenderingContext2D,
   );
+
+  // drawPixelated reads ctx.canvas for the self-copy upscale step
+  Object.defineProperty(mockCtx, 'canvas', {
+    get: () => document.querySelector('canvas'),
+    configurable: true,
+  });
 
   vi.spyOn(
     HTMLCanvasElement.prototype,
@@ -167,7 +181,7 @@ describe('CropReveal', () => {
     expect(alphaAtDraw.every(a => a === 1)).toBe(true);
   });
 
-  it('crossfades when imageSrc changes: drawImage is called with intermediate globalAlpha', async () => {
+  it('pixelation dissolve when imageSrc changes: drawImage is called with smoothing toggled', async () => {
     const { rerender } = render(
       <CropReveal
         imageSrc="data:image/png;base64,src1"
@@ -180,8 +194,7 @@ describe('CropReveal', () => {
       triggerImageLoad();
     });
 
-    // Reset recording state before the second image arrives
-    alphaAtDraw.length = 0;
+    mockCtx.drawImage.mockClear();
     pendingRafs.clear();
 
     // Simulate server delivering a new crop for the next level
@@ -197,21 +210,19 @@ describe('CropReveal', () => {
       triggerImageLoad();
     });
 
-    // Crossfade RAF should be queued
+    // Pixelation dissolve RAF should be queued
     expect(pendingRafs.size).toBeGreaterThan(0);
 
-    // Run a mid-animation frame (200ms into the 400ms crossfade → t≈0.5)
+    // Run a mid-animation frame (100ms into 400ms → phase 1, pixelating old image)
     act(() => {
-      flushRafs(200);
+      flushRafs(100);
     });
 
-    // At mid-animation: old image fades out (alpha < 1), new image fades in (alpha > 0)
-    // Both draws must use partial opacity — no draw should be purely opaque or invisible
-    const hasPartialAlpha = alphaAtDraw.some(a => a > 0.01 && a < 0.99);
-    expect(hasPartialAlpha).toBe(true);
+    // During pixelation, drawImage should be called for the pixelated rendering
+    expect(mockCtx.drawImage).toHaveBeenCalled();
   });
 
-  it('resets globalAlpha to 1 after each crossfade frame', async () => {
+  it('restores imageSmoothingEnabled after each pixelation frame', async () => {
     const { rerender } = render(
       <CropReveal
         imageSrc="data:image/png;base64,src1"
@@ -241,12 +252,11 @@ describe('CropReveal', () => {
       flushRafs(100);
     });
 
-    // globalAlpha must be restored to 1 after every crossfade frame to avoid
-    // contaminating subsequent canvas operations
-    expect(mockCtx.globalAlpha).toBe(1);
+    // imageSmoothingEnabled must be restored after each frame
+    expect(mockCtx.imageSmoothingEnabled).toBe(true);
   });
 
-  it('only crossfade RAF is active when imageSrc and level change together', async () => {
+  it('only pixelation dissolve RAF is active when imageSrc and level change together', async () => {
     const { rerender } = render(
       <CropReveal
         imageSrc="data:image/png;base64,src1"

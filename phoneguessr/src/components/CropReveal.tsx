@@ -10,6 +10,8 @@ interface CropRevealProps {
   onRevealComplete?: () => void;
 }
 
+const MAX_PIXEL_SIZE = 32;
+
 function easeOutCubic(t: number) {
   return 1 - (1 - t) ** 3;
 }
@@ -41,6 +43,53 @@ function drawImageOnCanvas(
   }
   ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
   ctx.restore();
+}
+
+// Draw image with pixelation effect. pixelSize=1 means sharp; higher = blockier.
+function drawPixelated(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  canvasWidth: number,
+  canvasHeight: number,
+  dpr: number,
+  pixelSize: number,
+) {
+  if (pixelSize <= 1) {
+    drawImageOnCanvas(ctx, img, canvasWidth, canvasHeight, dpr);
+    return;
+  }
+
+  const w = canvasWidth * dpr;
+  const h = canvasHeight * dpr;
+
+  // Step 1: Draw image into a small region (top-left corner) clipped
+  const smallW = Math.max(1, Math.ceil(w / pixelSize));
+  const smallH = Math.max(1, Math.ceil(h / pixelSize));
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, 0, smallW, smallH);
+  ctx.clip();
+
+  const imgAspect = img.naturalWidth / img.naturalHeight;
+  const canvasAspect = smallW / smallH;
+  let drawW: number;
+  let drawH: number;
+  if (imgAspect > canvasAspect) {
+    drawH = smallH;
+    drawW = smallH * imgAspect;
+  } else {
+    drawW = smallW;
+    drawH = smallW / imgAspect;
+  }
+  ctx.drawImage(img, (smallW - drawW) / 2, (smallH - drawH) / 2, drawW, drawH);
+  ctx.restore();
+
+  // Step 2: Upscale the small region to full canvas with no smoothing
+  const prevSmoothing = ctx.imageSmoothingEnabled;
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(ctx.canvas, 0, 0, smallW, smallH, 0, 0, w, h);
+  ctx.imageSmoothingEnabled = prevSmoothing;
 }
 
 export function CropReveal({
@@ -111,7 +160,7 @@ export function CropReveal({
         return;
       }
 
-      // Subsequent load: crossfade from old to new image over 400ms
+      // Subsequent load: pixelation dissolve from old to new over 400ms
       cancelAnimationFrame(animFrameRef.current);
 
       const duration = 400;
@@ -120,19 +169,22 @@ export function CropReveal({
       const animate = (now: number) => {
         const elapsed = now - startTime;
         const t = Math.min(elapsed / duration, 1);
-        const eased = easeOutCubic(t);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Old image fades out
-        ctx.globalAlpha = 1 - eased;
-        drawImageOnCanvas(ctx, prevImg, rect.width, rect.height, dpr);
-
-        // New image fades in
-        ctx.globalAlpha = eased;
-        drawImageOnCanvas(ctx, img, rect.width, rect.height, dpr);
-
-        ctx.globalAlpha = 1;
+        if (t < 0.5) {
+          // Phase 1: Old image pixelates (sharp → blocky)
+          const phaseT = t / 0.5;
+          const eased = easeOutCubic(phaseT);
+          const pixelSize = 1 + (MAX_PIXEL_SIZE - 1) * eased;
+          drawPixelated(ctx, prevImg, rect.width, rect.height, dpr, pixelSize);
+        } else {
+          // Phase 2: New image depixelates (blocky → sharp)
+          const phaseT = (t - 0.5) / 0.5;
+          const eased = easeOutCubic(phaseT);
+          const pixelSize = MAX_PIXEL_SIZE - (MAX_PIXEL_SIZE - 1) * eased;
+          drawPixelated(ctx, img, rect.width, rect.height, dpr, pixelSize);
+        }
 
         if (t < 1) {
           animFrameRef.current = requestAnimationFrame(animate);
@@ -156,17 +208,31 @@ export function CropReveal({
     prevRevealedRef.current = revealed;
   }, [revealed]);
 
-  // Reveal animation (win or loss)
+  // Reveal animation: depixelate from blocky to sharp
   useEffect(() => {
     if (!revealAnimating || !imgObjRef.current) return;
 
     const duration = isWin ? 1200 : 500;
+    const startPixelSize = isWin ? 48 : MAX_PIXEL_SIZE;
     const startTime = performance.now();
+    const img = imgObjRef.current;
 
     const animate = (now: number) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = ensureCanvasSize(canvas, dpr);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
       const elapsed = now - startTime;
       const t = Math.min(elapsed / duration, 1);
-      drawAtScale();
+      const eased = easeOutCubic(t);
+      const pixelSize = startPixelSize - (startPixelSize - 1) * eased;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPixelated(ctx, img, rect.width, rect.height, dpr, pixelSize);
+
       if (t < 1) {
         animFrameRef.current = requestAnimationFrame(animate);
       } else {
@@ -179,7 +245,7 @@ export function CropReveal({
     animFrameRef.current = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animFrameRef.current);
-  }, [revealAnimating, isWin, onRevealComplete, drawAtScale]);
+  }, [revealAnimating, isWin, onRevealComplete, ensureCanvasSize]);
 
   // Draw at scale 1 when already revealed on mount (loaded from localStorage)
   useEffect(() => {
