@@ -15,7 +15,7 @@
 }
 
 .admin-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--text);
   margin: 0;
@@ -36,11 +36,28 @@
   padding: 6px 12px;
   cursor: pointer;
   background: none;
+  transition: color 0.15s, border-color 0.15s;
 }
 
 .admin-back-link:hover {
   color: var(--text);
   border-color: var(--text-muted);
+}
+
+/* Search */
+
+.admin-search-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.admin-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
 }
 
 .admin-search {
@@ -49,16 +66,18 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: 8px 12px 8px 36px;
   color: var(--text);
   font-size: 14px;
-  margin-bottom: 16px;
+  transition: border-color 0.15s;
 }
 
 .admin-search:focus {
   outline: none;
   border-color: var(--accent);
 }
+
+/* Table */
 
 .admin-table {
   background: var(--surface);
@@ -69,14 +88,31 @@
 
 .admin-row {
   display: grid;
-  grid-template-columns: 56px 1fr 1fr 2fr 60px 120px;
+  grid-template-columns: 76px 1fr 1fr 2fr 72px 120px;
   align-items: center;
   padding: 8px 12px;
   border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
 }
 
 .admin-row:last-child {
   border-bottom: none;
+}
+
+.admin-row:not(.admin-row-header):hover {
+  background: var(--surface-hover);
+}
+
+.admin-table > div:nth-child(even) > .admin-row {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.admin-table > div:nth-child(even) > .admin-row:hover {
+  background: var(--surface-hover);
+}
+
+.admin-row-info {
+  display: contents;
 }
 
 .admin-row-header {
@@ -86,11 +122,25 @@
   letter-spacing: 0.05em;
 }
 
+/* Edit mode */
+
 .admin-row-editing {
   background: var(--bg);
   border-top: 2px solid var(--accent);
   border-bottom: 2px solid var(--accent);
   padding: 12px;
+  animation: admin-edit-in 0.15s ease-out;
+}
+
+@keyframes admin-edit-in {
+  from {
+    opacity: 0.7;
+    transform: scaleY(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }
 
 .admin-edit-label {
@@ -123,17 +173,19 @@
   outline: none;
 }
 
+/* Thumbnails */
+
 .admin-thumb {
-  width: 44px;
-  height: 32px;
+  width: 64px;
+  height: 48px;
   border-radius: 4px;
   object-fit: cover;
   display: block;
 }
 
 .admin-thumb-placeholder {
-  width: 44px;
-  height: 32px;
+  width: 64px;
+  height: 48px;
   border-radius: 4px;
   background: var(--surface-hover);
   display: flex;
@@ -143,6 +195,8 @@
   font-size: 9px;
 }
 
+/* Cells */
+
 .admin-cell-url {
   color: var(--text-muted);
   font-size: 11px;
@@ -151,15 +205,27 @@
   white-space: nowrap;
 }
 
-.admin-cell-active-yes {
-  color: var(--green);
-  font-size: 12px;
+.admin-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-align: center;
+  letter-spacing: 0.02em;
 }
 
-.admin-cell-active-no {
-  color: var(--text-muted);
-  font-size: 12px;
+.admin-badge-active {
+  background: rgba(74, 222, 128, 0.12);
+  color: var(--green);
 }
+
+.admin-badge-inactive {
+  background: rgba(139, 139, 158, 0.1);
+  color: var(--text-muted);
+}
+
+/* Actions & buttons */
 
 .admin-actions {
   display: flex;
@@ -175,6 +241,7 @@
   color: var(--text);
   font-size: 12px;
   cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
 }
 
 .admin-btn:hover:not(:disabled) {
@@ -208,6 +275,8 @@
   background: rgba(248, 113, 113, 0.08);
 }
 
+/* Error & loading */
+
 .admin-row-error {
   color: var(--red);
   font-size: 12px;
@@ -234,6 +303,8 @@
   align-items: center;
 }
 
+/* Pagination */
+
 .admin-pagination {
   display: flex;
   justify-content: center;
@@ -249,6 +320,7 @@
   color: var(--text-muted);
   font-size: 12px;
   cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 
 .admin-page-btn:hover:not(:disabled) {
@@ -265,4 +337,83 @@
 .admin-page-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* Responsive: card layout on mobile */
+
+@media (max-width: 639px) {
+  .admin-page {
+    padding: 16px;
+  }
+
+  .admin-row-header {
+    display: none;
+  }
+
+  .admin-table {
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .admin-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .admin-row-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-row-info span:first-child {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .admin-row-info span:last-child {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .admin-cell-url {
+    display: none;
+  }
+
+  .admin-badge {
+    margin-left: auto;
+  }
+
+  .admin-actions {
+    width: 100%;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+
+  .admin-edit-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-row-editing {
+    border-radius: var(--radius);
+    border: 2px solid var(--accent);
+  }
+
+  .admin-page-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
 }

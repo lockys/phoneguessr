@@ -165,15 +165,31 @@ export default function AdminPage() {
         </div>
       )}
 
-      <input
-        className="admin-search"
-        placeholder="Search by brand or model..."
-        value={searchQuery}
-        onChange={e => {
-          setSearchQuery(e.target.value);
-          setPage(1);
-        }}
-      />
+      <div className="admin-search-wrap">
+        <svg
+          className="admin-search-icon"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          width="16"
+          height="16"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+            clipRule="evenodd"
+          />
+        </svg>
+        <input
+          className="admin-search"
+          placeholder="Search by brand or model..."
+          value={searchQuery}
+          onChange={e => {
+            setSearchQuery(e.target.value);
+            setPage(1);
+          }}
+        />
+      </div>
 
       {globalLoading ? (
         <div className="admin-loading">Loading phones…</div>
@@ -237,7 +253,7 @@ export default function AdminPage() {
                         onClick={cancelEdit}
                         disabled={mutating}
                       >
-                        X
+                        Cancel
                       </button>
                     </div>
                   </div>
@@ -259,19 +275,21 @@ export default function AdminPage() {
                   ) : (
                     <div className="admin-thumb-placeholder">IMG</div>
                   )}
-                  <span>{phone.brand}</span>
-                  <span>{phone.model}</span>
+                  <div className="admin-row-info">
+                    <span>{phone.brand}</span>
+                    <span>{phone.model}</span>
+                  </div>
                   <span className="admin-cell-url" title={phone.imageUrl}>
                     {phone.imageUrl}
                   </span>
                   <span
-                    className={
+                    className={`admin-badge ${
                       phone.active
-                        ? 'admin-cell-active-yes'
-                        : 'admin-cell-active-no'
-                    }
+                        ? 'admin-badge-active'
+                        : 'admin-badge-inactive'
+                    }`}
                   >
-                    {phone.active ? '✓' : '—'}
+                    {phone.active ? 'Active' : 'Inactive'}
                   </span>
                   <div className="admin-actions">
                     <button
