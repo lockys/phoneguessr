@@ -24,6 +24,7 @@
   "guess.remaining": "残り {{count}} 回",
 
   "input.placeholder": "このスマホは何？",
+  "input.keyboardHint": "⌨ スマホ名を入力して当てよう!",
 
   "crop.alt": "謎のスマホ",
 

@@ -25,6 +25,7 @@
   "guess.remaining": "{{count}} guesses left",
 
   "input.placeholder": "Guess the phone...",
+  "input.keyboardHint": "⌨ Type a phone name to start guessing!",
 
   "crop.alt": "Mystery phone",
 
