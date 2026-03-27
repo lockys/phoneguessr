@@ -228,6 +228,11 @@ export function PhoneAutocomplete({
           ))}
         </ul>
       )}
+      {!disabled && query.length === 0 && !isFocused && (
+        <p className="autocomplete-keyboard-hint">
+          {t('input.keyboardHint')}
+        </p>
+      )}
     </div>
   );
 
