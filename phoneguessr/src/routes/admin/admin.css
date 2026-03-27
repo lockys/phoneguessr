@@ -1,4 +1,14 @@
 .admin-page {
+  /* Admin-scoped color overrides */
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --bg: #0f1117;
+  --surface: #1a1d2e;
+  --surface-hover: #242838;
+  --border: #2e3348;
+  --text-muted: #9094a6;
+  --green: #34d399;
+
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
@@ -75,6 +85,7 @@
 .admin-search:focus {
   outline: none;
   border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
 }
 
 /* Table */
@@ -104,7 +115,7 @@
 }
 
 .admin-table > div:nth-child(even) > .admin-row {
-  background: rgba(255, 255, 255, 0.015);
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .admin-table > div:nth-child(even) > .admin-row:hover {
@@ -125,7 +136,7 @@
 /* Edit mode */
 
 .admin-row-editing {
-  background: var(--bg);
+  background: #141825;
   border-top: 2px solid var(--accent);
   border-bottom: 2px solid var(--accent);
   padding: 12px;
@@ -171,6 +182,8 @@
 
 .admin-input:focus {
   outline: none;
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
 }
 
 /* Thumbnails */
@@ -216,7 +229,7 @@
 }
 
 .admin-badge-active {
-  background: rgba(74, 222, 128, 0.12);
+  background: rgba(52, 211, 153, 0.12);
   color: var(--green);
 }
 
@@ -260,8 +273,8 @@
 }
 
 .admin-btn-save:hover:not(:disabled) {
-  opacity: 0.85;
-  border-color: var(--accent);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .admin-btn-delete {
