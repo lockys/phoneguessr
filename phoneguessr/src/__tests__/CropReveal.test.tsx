@@ -8,10 +8,6 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-vi.mock('../components/BlockGrid', () => ({
-  BlockGrid: () => null,
-}));
-
 // ── Shared test state ─────────────────────────────────────────────────────────
 
 /** globalAlpha values recorded each time ctx.drawImage is called */

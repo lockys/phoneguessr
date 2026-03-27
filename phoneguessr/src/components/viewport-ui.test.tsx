@@ -35,7 +35,6 @@ vi.mock('web-haptics/react', () => ({
   useWebHaptics: () => ({ trigger: vi.fn() }),
 }));
 
-import { BlockGrid } from './BlockGrid';
 import { GuessHistory } from './GuessHistory';
 import { Leaderboard } from './Leaderboard';
 import { Onboarding } from './Onboarding';
@@ -402,70 +401,6 @@ describe('Onboarding – viewport and resize behavior', () => {
   });
 });
 
-// ---------- BlockGrid – percentage-based layout ----------
-
-describe('BlockGrid – viewport-independent percentage layout', () => {
-  it('renders 36 block cells (6x6 grid)', () => {
-    const { container } = render(<BlockGrid level={0} revealed={false} />);
-    const cells = container.querySelectorAll('.block-cell');
-    expect(cells).toHaveLength(36);
-  });
-
-  it('positions blocks using percentage values (viewport-independent)', () => {
-    const { container } = render(<BlockGrid level={0} revealed={false} />);
-    const cells = container.querySelectorAll('.block-cell');
-    // All cells should have percentage-based left/top/width/height
-    for (const cell of Array.from(cells)) {
-      const style = (cell as HTMLElement).style;
-      expect(style.left).toMatch(/%$/);
-      expect(style.top).toMatch(/%$/);
-      expect(style.width).toMatch(/%$/);
-      expect(style.height).toMatch(/%$/);
-    }
-  });
-
-  it('removes blocks progressively as level increases', () => {
-    const { container: container0 } = render(
-      <BlockGrid level={0} revealed={false} />,
-    );
-    const removed0 = container0.querySelectorAll('.block-removed').length;
-
-    cleanup();
-
-    const { container: container3 } = render(
-      <BlockGrid level={3} revealed={false} />,
-    );
-    const removed3 = container3.querySelectorAll('.block-removed').length;
-
-    expect(removed3).toBeGreaterThan(removed0);
-  });
-
-  it('applies win cascade animation on reveal (after gameplay)', () => {
-    // Must start with revealed=false, then re-render with revealed=true
-    // because initialRevealedRef skips rendering if revealed from start
-    const { container, rerender } = render(
-      <BlockGrid level={2} revealed={false} isWin={true} />,
-    );
-    rerender(<BlockGrid level={2} revealed={true} isWin={true} />);
-    const cascadeWin = container.querySelectorAll('.block-cascade-win');
-    expect(cascadeWin.length).toBeGreaterThan(0);
-  });
-
-  it('applies loss cascade animation on reveal (after gameplay)', () => {
-    const { container, rerender } = render(
-      <BlockGrid level={2} revealed={false} isWin={false} />,
-    );
-    rerender(<BlockGrid level={2} revealed={true} isWin={false} />);
-    const cascadeLoss = container.querySelectorAll('.block-cascade-loss');
-    expect(cascadeLoss.length).toBeGreaterThan(0);
-  });
-
-  it('returns null when revealed from start (loaded from localStorage)', () => {
-    const { container } = render(<BlockGrid level={6} revealed={true} />);
-    expect(container.querySelector('.block-grid')).not.toBeInTheDocument();
-  });
-});
-
 // ---------- PageIndicator – fixed positioning ----------
 
 describe('PageIndicator – overlay positioning', () => {
@@ -730,20 +665,5 @@ describe('Viewport-specific behavior', () => {
 
     cleanup();
     document.body.innerHTML = '';
-  });
-
-  it('BlockGrid blocks always use percentage sizing regardless of viewport', () => {
-    setViewportWidth(320);
-    const { container } = render(<BlockGrid level={1} revealed={false} />);
-    const cells = container.querySelectorAll('.block-cell');
-
-    // Verify percentage-based dimensions
-    const firstCell = cells[0] as HTMLElement;
-    expect(firstCell.style.width).toContain('%');
-    expect(firstCell.style.height).toContain('%');
-
-    // Cell dimensions should be 100/6 ≈ 16.666...%
-    expect(Number.parseFloat(firstCell.style.width)).toBeCloseTo(16.667, 0);
-    expect(Number.parseFloat(firstCell.style.height)).toBeCloseTo(16.667, 0);
   });
 });

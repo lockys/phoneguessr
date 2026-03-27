@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BlockGrid } from './BlockGrid';
 
 interface CropRevealProps {
   imageSrc: string;
@@ -262,7 +261,6 @@ export function CropReveal({
         aria-label={t('crop.alt')}
         className="crop-canvas"
       />
-      <BlockGrid level={level} revealed={revealed} isWin={isWin} />
     </div>
   );
 }
