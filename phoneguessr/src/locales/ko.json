@@ -4,6 +4,7 @@
   "game.meta.title": "PhoneGuessr",
   "game.meta.description": "잘린 사진에서 스마트폰을 맞춰보세요. 매일 하나의 퍼즐.",
   "game.start": "시작",
+  "game.resume": "계속",
 
   "auth.signIn": "Google로 로그인",
   "auth.signOut": "로그아웃",

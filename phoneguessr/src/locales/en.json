@@ -4,6 +4,7 @@
   "game.meta.title": "PhoneGuessr",
   "game.meta.description": "Identify phones from cropped photos. One puzzle per day.",
   "game.start": "Start",
+  "game.resume": "Resume",
 
   "auth.signIn": "Sign in with Google",
   "auth.signOut": "Sign out",

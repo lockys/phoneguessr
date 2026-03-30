@@ -32,7 +32,7 @@ interface PuzzleData {
   _mockAnswerBrand?: string;
 }
 
-type GameState = 'loading' | 'ready' | 'playing' | 'won' | 'lost';
+type GameState = 'loading' | 'ready' | 'resuming' | 'playing' | 'won' | 'lost';
 
 export function Game() {
   const { t } = useTranslation();
@@ -49,6 +49,8 @@ export function Game() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const elapsedRef = useRef(0);
+  const gameStateRef = useRef<GameState>('loading');
+  const guessesRef = useRef<Guess[]>([]);
 
   useEffect(() => {
     Promise.all([
@@ -97,6 +99,22 @@ export function Game() {
         }
       }
 
+      // Check for saved mid-game progress
+      if (!restored) {
+        const progress = localStorage.getItem(
+          `phoneguessr_progress_${puzzleData.puzzleDate}`,
+        );
+        if (progress) {
+          const saved = JSON.parse(progress);
+          setGuesses(saved.guesses);
+          guessesRef.current = saved.guesses;
+          elapsedRef.current = saved.elapsed;
+          setGameState('resuming');
+          gameStateRef.current = 'resuming';
+          restored = true;
+        }
+      }
+
       if (!restored) {
         setGameState('ready');
         if (!isOnboarded()) {
@@ -106,6 +124,37 @@ export function Game() {
     });
   }, []);
 
+  // Keep refs in sync for the save-on-leave listener
+  useEffect(() => {
+    gameStateRef.current = gameState;
+  }, [gameState]);
+  useEffect(() => {
+    guessesRef.current = guesses;
+  }, [guesses]);
+
+  // Save mid-game progress when user leaves the page
+  useEffect(() => {
+    const saveProgress = () => {
+      if (gameStateRef.current !== 'playing' || !puzzle) return;
+      localStorage.setItem(
+        `phoneguessr_progress_${puzzle.puzzleDate}`,
+        JSON.stringify({
+          guesses: guessesRef.current,
+          elapsed: elapsedRef.current,
+        }),
+      );
+    };
+    const onVisChange = () => {
+      if (document.visibilityState === 'hidden') saveProgress();
+    };
+    window.addEventListener('beforeunload', saveProgress);
+    document.addEventListener('visibilitychange', onVisChange);
+    return () => {
+      window.removeEventListener('beforeunload', saveProgress);
+      document.removeEventListener('visibilitychange', onVisChange);
+    };
+  }, [puzzle]);
+
   const handleTick = useCallback((secs: number) => {
     elapsedRef.current = secs;
   }, []);
@@ -113,6 +162,12 @@ export function Game() {
   const handleRevealComplete = useCallback(() => setShowModal(true), []);
 
   const handleStart = () => {
+    haptic.trigger('medium');
+    setGameState('playing');
+    setTimerRunning(true);
+  };
+
+  const handleResume = () => {
     haptic.trigger('medium');
     setGameState('playing');
     setTimerRunning(true);
@@ -224,6 +279,8 @@ export function Game() {
         JSON.stringify({ guesses: finalGuesses, elapsed, won }),
       );
     }
+    // Clean up mid-game progress since game is complete
+    localStorage.removeItem(`phoneguessr_progress_${puzzle.puzzleDate}`);
     // Signal to InstallPrompt that the user has completed a game
     localStorage.setItem('phoneguessr_install_eligible', 'true');
   };
@@ -239,7 +296,11 @@ export function Game() {
       <div className="game-header">
         <div className="game-meta">
           #{puzzle.puzzleNumber}
-          <Timer running={timerRunning} onTick={handleTick} />
+          <Timer
+            running={timerRunning}
+            initialElapsed={elapsedRef.current}
+            onTick={handleTick}
+          />
         </div>
         {gameState === 'playing' && !pendingGuessName && (
           <div className="guess-remaining-text">
@@ -266,6 +327,13 @@ export function Game() {
           <div className="start-overlay">
             <button type="button" className="start-btn" onClick={handleStart}>
               {t('game.start')}
+            </button>
+          </div>
+        )}
+        {gameState === 'resuming' && (
+          <div className="start-overlay">
+            <button type="button" className="start-btn" onClick={handleResume}>
+              {t('game.resume')}
             </button>
           </div>
         )}

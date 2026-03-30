@@ -4,6 +4,7 @@
   "game.meta.title": "PhoneGuessr",
   "game.meta.description": "从裁剪的照片中辨识手机。每天一道谜题。",
   "game.start": "开始",
+  "game.resume": "继续",
 
   "auth.signIn": "使用 Google 登录",
   "auth.signOut": "退出登录",

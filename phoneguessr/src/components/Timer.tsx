@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 
 interface TimerProps {
   running: boolean;
+  initialElapsed?: number;
   onTick?: (seconds: number) => void;
 }
 
-export function Timer({ running, onTick }: TimerProps) {
-  const [elapsed, setElapsed] = useState(0);
+export function Timer({ running, initialElapsed = 0, onTick }: TimerProps) {
+  const [elapsed, setElapsed] = useState(initialElapsed);
+  const initialRef = useRef(initialElapsed);
   const startRef = useRef<number | null>(null);
   const rafRef = useRef<number>(0);
 
@@ -17,7 +19,7 @@ export function Timer({ running, onTick }: TimerProps) {
     }
 
     if (!startRef.current) {
-      startRef.current = performance.now();
+      startRef.current = performance.now() - initialRef.current * 1000;
     }
 
     const tick = () => {
