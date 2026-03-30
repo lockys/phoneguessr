@@ -4,6 +4,7 @@
   "game.meta.title": "PhoneGuessr",
   "game.meta.description": "切り抜き写真からスマホを当てよう。毎日1問出題。",
   "game.start": "スタート",
+  "game.resume": "再開",
 
   "auth.signIn": "Googleでログイン",
   "auth.signOut": "ログアウト",
