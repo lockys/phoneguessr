@@ -41,7 +41,7 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  padding: 16px 16px 8px;
+  padding: 12px 16px 4px;
 }
 
 .app-title {
@@ -67,7 +67,7 @@ body {
   flex: 0 0 100%;
   min-height: 0;
   overflow-y: auto;
-  padding: 0 16px 16px;
+  padding: 0 16px 8px;
   contain: paint;
 }
 
@@ -393,7 +393,7 @@ body {
 .game {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .game-loading {
@@ -677,7 +677,7 @@ body {
 /* Game Over */
 .game-over {
   text-align: center;
-  padding: 20px 0;
+  padding: 12px 0;
 }
 
 .already-played-notice {
@@ -746,7 +746,7 @@ body {
 
 /* Leaderboard */
 .leaderboard {
-  padding-top: 8px;
+  padding-top: 0;
 }
 
 .leaderboard-title {
@@ -833,7 +833,7 @@ body {
 
 /* Profile Panel */
 .profile-panel {
-  padding-top: 8px;
+  padding-top: 0;
 }
 
 .profile-title {
@@ -1232,7 +1232,7 @@ body {
 
 /* About Panel */
 .about-panel {
-  padding-top: 8px;
+  padding-top: 0;
 }
 
 .about-title {
