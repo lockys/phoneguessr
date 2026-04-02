@@ -286,7 +286,31 @@ export function Game() {
   };
 
   if (gameState === 'loading' || !puzzle) {
-    return <div className="game-loading">{t('game.loading')}</div>;
+    return (
+      <div className="game-skeleton">
+        <div className="game-header">
+          <div className="game-skeleton-header">
+            <div className="skeleton skeleton-text" style={{ width: 48 }} />
+            <div className="skeleton skeleton-text" style={{ width: 56 }} />
+          </div>
+        </div>
+        <div className="crop-wrapper">
+          <div className="skeleton game-skeleton-image" />
+        </div>
+        <div className="game-skeleton-rows">
+          <div className="skeleton game-skeleton-row" />
+          <div
+            className="skeleton game-skeleton-row"
+            style={{ opacity: 0.7 }}
+          />
+          <div
+            className="skeleton game-skeleton-row"
+            style={{ opacity: 0.4 }}
+          />
+        </div>
+        <div className="skeleton game-skeleton-input" />
+      </div>
+    );
   }
 
   const isFinished = gameState === 'won' || gameState === 'lost';

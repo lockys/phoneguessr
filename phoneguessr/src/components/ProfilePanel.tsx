@@ -187,7 +187,20 @@ export function ProfilePanel() {
           </div>
         </div>
       ) : (
-        <p className="profile-loading">{t('profile.loading')}</p>
+        <div className="profile-skeleton-stats">
+          {Array.from({ length: 5 }, (_, i) => (
+            <div key={i} className="profile-skeleton-stat">
+              <div
+                className="skeleton skeleton-text-lg"
+                style={{ width: 40 }}
+              />
+              <div
+                className="skeleton skeleton-text-sm"
+                style={{ width: 56 }}
+              />
+            </div>
+          ))}
+        </div>
       )}
 
       <GuessDistribution />
