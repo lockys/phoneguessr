@@ -64,7 +64,15 @@ export function Leaderboard() {
       </div>
 
       {loading ? (
-        <p className="leaderboard-empty">{t('leaderboard.loading')}</p>
+        <div className="leaderboard-skeleton">
+          {Array.from({ length: 5 }, (_, i) => (
+            <div
+              key={i}
+              className="skeleton leaderboard-skeleton-row"
+              style={{ opacity: 1 - i * 0.15 }}
+            />
+          ))}
+        </div>
       ) : entries.length === 0 ? (
         <p className="leaderboard-empty">{t('leaderboard.empty')}</p>
       ) : (

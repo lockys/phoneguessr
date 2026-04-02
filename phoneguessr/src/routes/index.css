@@ -1552,6 +1552,103 @@ body {
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
 }
 
+/* Skeleton / Shimmer Loaders */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    #1e2d50 37%,
+    var(--surface) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+
+.skeleton-text {
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skeleton-text-sm {
+  height: 11px;
+  border-radius: 4px;
+}
+
+.skeleton-text-lg {
+  height: 20px;
+  border-radius: 4px;
+}
+
+.game-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.game-skeleton-header {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.game-skeleton-image {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.game-skeleton-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.game-skeleton-row {
+  height: 33px;
+}
+
+.game-skeleton-input {
+  height: 50px;
+}
+
+.leaderboard-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.leaderboard-skeleton-row {
+  height: 38px;
+}
+
+.profile-skeleton-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.profile-skeleton-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
 /* Mobile Layout */
 @media (max-width: 480px) {
   .guess-history {
