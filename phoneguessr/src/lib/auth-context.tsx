@@ -23,6 +23,8 @@ interface AuthContextValue {
   user: User | null;
   loading: boolean;
   isTelegram: boolean;
+  telegramDisplayName: string | null;
+  telegramAuthError: boolean;
   webAuthnSupported: boolean;
   login: () => void;
   logout: () => void;
@@ -35,6 +37,8 @@ const AuthContext = createContext<AuthContextValue>({
   user: null,
   loading: true,
   isTelegram: false,
+  telegramDisplayName: null,
+  telegramAuthError: false,
   webAuthnSupported: false,
   login: () => {},
   logout: () => {},
@@ -50,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [webAuthnSupported] = useState(() => browserSupportsWebAuthn());
+  const [telegramAuthError, setTelegramAuthError] = useState(false);
 
   const refreshUser = async () => {
     const res = await fetch('/api/auth/me');
@@ -84,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           try {
             await loginWithTelegram();
           } catch {
-            // silent — user stays unauthenticated
+            setTelegramAuthError(true);
           }
           setLoading(false);
         } else {
@@ -122,12 +127,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(data.user);
   };
 
+  const telegramDisplayName: string | null = isTelegramEnv
+    ? (() => {
+        const u = window.Telegram?.WebApp?.initDataUnsafe?.user;
+        if (!u) return null;
+        return [u.first_name, u.last_name].filter(Boolean).join(' ') || null;
+      })()
+    : null;
+
   return (
     <AuthContext.Provider
       value={{
         user,
         loading,
         isTelegram: isTelegramEnv,
+        telegramDisplayName,
+        telegramAuthError,
         webAuthnSupported,
         login,
         logout,
