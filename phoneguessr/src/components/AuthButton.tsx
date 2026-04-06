@@ -4,7 +4,10 @@ import { useAuth } from '../lib/auth-context';
 
 export function AuthButton() {
   const { t } = useTranslation();
-  const { user, loading, login, logout } = useAuth();
+  const { user, loading, isTelegram, login, logout } = useAuth();
+
+  // In Telegram, auth is automatic — no manual sign-in button needed
+  if (isTelegram) return null;
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {

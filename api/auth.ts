@@ -15,6 +15,8 @@ import {
   serializeCookie,
 } from '../phoneguessr/src/lib/cookies.js';
 
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
+
 interface GoogleTokenResponse {
   access_token: string;
   id_token: string;
@@ -216,6 +218,137 @@ async function handleCallback(request: Request) {
   }
 }
 
+async function handleTelegramAuth(request: Request): Promise<Response> {
+  const body = await request.json().catch(() => null);
+  const initData: string | undefined = body?.initData;
+  if (!initData) {
+    return Response.json({ error: 'Missing initData' }, { status: 400 });
+  }
+
+  if (!TELEGRAM_BOT_TOKEN) {
+    return Response.json({ error: 'Telegram not configured' }, { status: 500 });
+  }
+
+  const params = new URLSearchParams(initData);
+  const hash = params.get('hash');
+  if (!hash) {
+    return Response.json({ error: 'Missing hash in initData' }, { status: 400 });
+  }
+  params.delete('hash');
+
+  const dataCheckString = [...params.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, v]) => `${k}=${v}`)
+    .join('\n');
+
+  const encoder = new TextEncoder();
+  const secretKey = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode('WebAppData'),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const secretKeyBytes = await crypto.subtle.sign(
+    'HMAC',
+    secretKey,
+    encoder.encode(TELEGRAM_BOT_TOKEN),
+  );
+  const verifyKey = await crypto.subtle.importKey(
+    'raw',
+    secretKeyBytes,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const computedHashBytes = await crypto.subtle.sign(
+    'HMAC',
+    verifyKey,
+    encoder.encode(dataCheckString),
+  );
+  const computedHash = [...new Uint8Array(computedHashBytes)]
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+
+  if (computedHash !== hash) {
+    return Response.json({ error: 'Invalid initData signature' }, { status: 401 });
+  }
+
+  const userParam = params.get('user');
+  if (!userParam) {
+    return Response.json({ error: 'No user in initData' }, { status: 400 });
+  }
+
+  let tgUser: {
+    id: number;
+    first_name: string;
+    last_name?: string;
+    username?: string;
+    photo_url?: string;
+  };
+  try {
+    tgUser = JSON.parse(userParam);
+  } catch {
+    return Response.json({ error: 'Invalid user JSON' }, { status: 400 });
+  }
+
+  const telegramId = String(tgUser.id);
+  const displayName = [tgUser.first_name, tgUser.last_name]
+    .filter(Boolean)
+    .join(' ');
+  const avatarUrl = tgUser.photo_url ?? null;
+
+  let [user] = await db
+    .select()
+    .from(users)
+    .where(eq(users.telegramId, telegramId))
+    .limit(1);
+
+  if (user) {
+    [user] = await db
+      .update(users)
+      .set({ displayName, avatarUrl })
+      .where(eq(users.telegramId, telegramId))
+      .returning();
+  } else {
+    [user] = await db
+      .insert(users)
+      .values({ telegramId, displayName, avatarUrl })
+      .returning();
+  }
+
+  const token = await createSessionToken({
+    userId: user.id,
+    telegramId,
+    displayName: user.displayName,
+    avatarUrl: user.avatarUrl ?? undefined,
+    isAdmin: user.isAdmin,
+  });
+
+  const url = new URL(request.url);
+  const proto =
+    request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
+  const cookieOpts = getSessionCookieOptions();
+  const setCookieHeader = serializeCookie(cookieOpts.name, token, {
+    httpOnly: cookieOpts.httpOnly,
+    secure: proto === 'https',
+    sameSite: cookieOpts.sameSite,
+    path: cookieOpts.path,
+    maxAge: cookieOpts.maxAge,
+  });
+
+  return Response.json(
+    {
+      user: {
+        id: user.id,
+        displayName: user.displayName,
+        avatarUrl: user.avatarUrl,
+      },
+    },
+    { headers: { 'Set-Cookie': setCookieHeader } },
+  );
+}
+
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const action = url.searchParams.get('action');
@@ -224,6 +357,15 @@ export async function GET(request: Request): Promise<Response> {
   if (action === 'logout') return handleLogout(request);
   if (action === 'me') return handleMe(request);
   if (action === 'callback') return handleCallback(request);
+
+  return Response.json({ error: 'Unknown action' }, { status: 400 });
+}
+
+export async function POST(request: Request): Promise<Response> {
+  const url = new URL(request.url);
+  const action = url.searchParams.get('action');
+
+  if (action === 'telegram') return handleTelegramAuth(request);
 
   return Response.json({ error: 'Unknown action' }, { status: 400 });
 }

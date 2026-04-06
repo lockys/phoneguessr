@@ -14,6 +14,10 @@ export default defineConfig({
   plugins: [appTools()],
   html: {
     tags: [
+      {
+        tag: 'script',
+        attrs: { src: 'https://telegram.org/js/telegram-web-app.js' },
+      },
       { tag: 'link', attrs: { rel: 'manifest', href: '/manifest.json' } },
       { tag: 'meta', attrs: { name: 'theme-color', content: '#1a1a2e' } },
       {

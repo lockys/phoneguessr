@@ -2,7 +2,8 @@ import { SignJWT, jwtVerify } from 'jose';
 
 export interface SessionData {
   userId: number;
-  googleId: string;
+  googleId?: string;
+  telegramId?: string;
   displayName: string;
   avatarUrl?: string;
   email?: string;
