@@ -26,6 +26,9 @@ const mockLogout = vi.fn();
 let mockAuth = {
   user: null as { id: number; displayName: string; avatarUrl?: string } | null,
   loading: false,
+  isTelegram: false,
+  telegramDisplayName: null as string | null,
+  telegramAuthError: false,
   login: mockLogin,
   logout: mockLogout,
 };
@@ -43,6 +46,9 @@ describe('AuthButton', () => {
     mockAuth = {
       user: null,
       loading: false,
+      isTelegram: false,
+      telegramDisplayName: null,
+      telegramAuthError: false,
       login: mockLogin,
       logout: mockLogout,
     };
@@ -138,6 +144,28 @@ describe('AuthButton', () => {
       });
 
       expect(screen.queryByText('Login failed')).toBeNull();
+    });
+  });
+
+  describe('Telegram environment', () => {
+    it('shows Telegram display name when user is null but telegramDisplayName is set', () => {
+      mockAuth.isTelegram = true;
+      mockAuth.telegramDisplayName = 'Anna Kowalski';
+      render(<AuthButton />);
+      expect(screen.getByText('Anna Kowalski')).toBeInTheDocument();
+    });
+
+    it('shows nothing when isTelegram and both user and telegramDisplayName are null', () => {
+      mockAuth.isTelegram = true;
+      const { container } = render(<AuthButton />);
+      expect(container.innerHTML).toBe('');
+    });
+
+    it('does not show sign-out button when in Telegram', () => {
+      mockAuth.isTelegram = true;
+      mockAuth.telegramDisplayName = 'Anna Kowalski';
+      render(<AuthButton />);
+      expect(screen.queryByRole('button', { name: 'Sign out' })).toBeNull();
     });
   });
 });

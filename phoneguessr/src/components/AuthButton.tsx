@@ -4,7 +4,8 @@ import { useAuth } from '../lib/auth-context';
 
 export function AuthButton() {
   const { t } = useTranslation();
-  const { user, loading, isTelegram, login, logout } = useAuth();
+  const { user, loading, isTelegram, telegramDisplayName, login, logout } =
+    useAuth();
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -12,7 +13,6 @@ export function AuthButton() {
     const error = params.get('error');
     if (error) {
       setAuthError(error);
-      // Clean up URL
       window.history.replaceState({}, '', window.location.pathname);
       const timer = setTimeout(() => setAuthError(null), 5000);
       return () => clearTimeout(timer);
@@ -23,6 +23,7 @@ export function AuthButton() {
     return null;
   }
 
+  // Authenticated user (any provider)
   if (user) {
     return (
       <div className="auth-user">
@@ -44,9 +45,17 @@ export function AuthButton() {
     );
   }
 
-  // In Telegram, auth is automatic — no manual sign-in button needed
-  if (isTelegram) return null;
+  // In Telegram: show optimistic name from initDataUnsafe while server auth runs
+  if (isTelegram) {
+    if (!telegramDisplayName) return null;
+    return (
+      <div className="auth-user">
+        <span className="auth-name">{telegramDisplayName}</span>
+      </div>
+    );
+  }
 
+  // Web: show sign-in button
   return (
     <>
       {authError && <span className="auth-error">{t('auth.error')}</span>}
