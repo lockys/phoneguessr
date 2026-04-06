@@ -1,6 +1,8 @@
 /// <reference types='@modern-js/app-tools/types' />
 
 interface TelegramWebApp {
+  version: string;
+  platform: string;
   initData: string;
   initDataUnsafe: {
     user?: {

@@ -27,6 +27,7 @@
     "@neondatabase/serverless": "^1.0.2",
     "@simplewebauthn/browser": "^13.2.2",
     "canvas-confetti": "^1.9.4",
+    "core-js": "^3.49.0",
     "countries-list": "^3.3.0",
     "drizzle-orm": "^0.45.1",
     "i18next": "^25.8.14",
