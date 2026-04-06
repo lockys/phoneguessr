@@ -13,12 +13,20 @@ export default function DebugLog() {
   const { user, loading, isTelegram } = useAuth();
   const [apiResults, setApiResults] = useState<ApiResult[]>([]);
 
-  const devMode = typeof localStorage !== 'undefined'
-    && localStorage.getItem(DEV_MODE_KEY) === 'true';
+  const devMode =
+    typeof localStorage !== 'undefined' &&
+    localStorage.getItem(DEV_MODE_KEY) === 'true';
 
   if (!devMode) {
     return (
-      <div style={{ fontFamily: 'monospace', padding: '16px', textAlign: 'center', color: '#666' }}>
+      <div
+        style={{
+          fontFamily: 'monospace',
+          padding: '16px',
+          textAlign: 'center',
+          color: '#666',
+        }}
+      >
         Enable dev mode first: tap the version number on the About page 3 times.
       </div>
     );
@@ -29,13 +37,18 @@ export default function DebugLog() {
     Promise.all(
       endpoints.map(url =>
         fetch(url)
-          .then(async res => ({ url, status: res.status, body: await res.json() }))
+          .then(async res => ({
+            url,
+            status: res.status,
+            body: await res.json(),
+          }))
           .catch(err => ({ url, status: 'error', body: String(err) })),
       ),
     ).then(setApiResults);
   }, []);
 
-  const twa = typeof window !== 'undefined' ? window.Telegram?.WebApp : undefined;
+  const twa =
+    typeof window !== 'undefined' ? window.Telegram?.WebApp : undefined;
 
   const sections: { label: string; value: unknown }[] = [
     { label: 'Auth loading', value: loading },
@@ -53,22 +66,52 @@ export default function DebugLog() {
       label: 'Telegram.WebApp.initDataUnsafe',
       value: twa?.initDataUnsafe ?? null,
     },
-    { label: 'navigator.userAgent', value: typeof navigator !== 'undefined' ? navigator.userAgent : null },
-    { label: 'document.cookie (keys)', value: typeof document !== 'undefined'
-        ? document.cookie.split(';').map(c => c.trim().split('=')[0]).filter(Boolean)
-        : [] },
+    {
+      label: 'navigator.userAgent',
+      value: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+    },
+    {
+      label: 'document.cookie (keys)',
+      value:
+        typeof document !== 'undefined'
+          ? document.cookie
+              .split(';')
+              .map(c => c.trim().split('=')[0])
+              .filter(Boolean)
+          : [],
+    },
   ];
 
   return (
-    <div style={{ fontFamily: 'monospace', padding: '16px', maxWidth: '900px', margin: '0 auto' }}>
+    <div
+      style={{
+        fontFamily: 'monospace',
+        padding: '16px',
+        maxWidth: '900px',
+        margin: '0 auto',
+      }}
+    >
       <h2 style={{ marginBottom: '16px' }}>Debug Log</h2>
 
       <h3>State</h3>
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '24px' }}>
+      <table
+        style={{
+          width: '100%',
+          borderCollapse: 'collapse',
+          marginBottom: '24px',
+        }}
+      >
         <tbody>
           {sections.map(({ label, value }) => (
             <tr key={label} style={{ borderBottom: '1px solid #333' }}>
-              <td style={{ padding: '6px 12px 6px 0', color: '#aaa', whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+              <td
+                style={{
+                  padding: '6px 12px 6px 0',
+                  color: '#aaa',
+                  whiteSpace: 'nowrap',
+                  verticalAlign: 'top',
+                }}
+              >
                 {label}
               </td>
               <td style={{ padding: '6px 0', wordBreak: 'break-all' }}>
@@ -90,7 +133,15 @@ export default function DebugLog() {
             <div style={{ color: '#aaa', marginBottom: '4px' }}>
               {r.url} — HTTP {r.status}
             </div>
-            <pre style={{ background: '#111', padding: '10px', borderRadius: '4px', fontSize: '12px', overflow: 'auto' }}>
+            <pre
+              style={{
+                background: '#111',
+                padding: '10px',
+                borderRadius: '4px',
+                fontSize: '12px',
+                overflow: 'auto',
+              }}
+            >
               {JSON.stringify(r.body, null, 2)}
             </pre>
           </div>
