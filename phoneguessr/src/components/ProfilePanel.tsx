@@ -74,7 +74,7 @@ function getLocalStats(): Stats {
 
 export function ProfilePanel() {
   const { t } = useTranslation();
-  const { user, login, refreshUser } = useAuth();
+  const { user, login, loginWithTelegram, isTelegram, refreshUser } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
   const [displayName, setDisplayName] = useState('');
   const [regionValue, setRegionValue] = useState('');
@@ -154,9 +154,11 @@ export function ProfilePanel() {
           )}
           <div className="profile-user-info">
             <h2 className="profile-title">{user.displayName}</h2>
-            <span className="profile-email">
-              {user.email || t('profile.emailNotAvailable')}
-            </span>
+            {!isTelegram && (
+              <span className="profile-email">
+                {user.email || t('profile.emailNotAvailable')}
+              </span>
+            )}
           </div>
         </div>
       ) : (
@@ -352,13 +354,23 @@ export function ProfilePanel() {
       {!user && (
         <div className="profile-auth-prompt">
           <p>{t('profile.signInPrompt')}</p>
-          <button
-            type="button"
-            className="auth-btn auth-btn-login"
-            onClick={login}
-          >
-            {t('auth.signIn')}
-          </button>
+          {isTelegram ? (
+            <button
+              type="button"
+              className="auth-btn auth-btn-login"
+              onClick={loginWithTelegram}
+            >
+              {t('auth.retry')}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="auth-btn auth-btn-login"
+              onClick={login}
+            >
+              {t('auth.signIn')}
+            </button>
+          )}
         </div>
       )}
 
