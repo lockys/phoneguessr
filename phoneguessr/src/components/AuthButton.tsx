@@ -5,9 +5,6 @@ import { useAuth } from '../lib/auth-context';
 export function AuthButton() {
   const { t } = useTranslation();
   const { user, loading, isTelegram, login, logout } = useAuth();
-
-  // In Telegram, auth is automatic — no manual sign-in button needed
-  if (isTelegram) return null;
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,12 +35,17 @@ export function AuthButton() {
           />
         )}
         <span className="auth-name">{user.displayName}</span>
-        <button type="button" className="auth-btn" onClick={logout}>
-          {t('auth.signOut')}
-        </button>
+        {!isTelegram && (
+          <button type="button" className="auth-btn" onClick={logout}>
+            {t('auth.signOut')}
+          </button>
+        )}
       </div>
     );
   }
+
+  // In Telegram, auth is automatic — no manual sign-in button needed
+  if (isTelegram) return null;
 
   return (
     <>

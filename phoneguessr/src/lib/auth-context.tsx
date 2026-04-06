@@ -38,7 +38,8 @@ const AuthContext = createContext<AuthContextValue>({
 });
 
 const isTelegramEnv =
-  typeof window !== 'undefined' && !!window.Telegram?.WebApp?.initData;
+  typeof window !== 'undefined' &&
+  (!!window.Telegram?.WebApp?.initData || !!window.Telegram?.WebApp);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
