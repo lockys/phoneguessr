@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProfilePanel } from './ProfilePanel';
 
@@ -18,20 +18,37 @@ vi.mock('react-i18next', () => ({
         'profile.guessDistribution': 'Guess Distribution',
         'profile.noDataYet': 'No data yet',
         'auth.signIn': 'Sign in with Google',
+        'profile.connectingTelegram': 'Connecting Telegram account…',
+        'auth.retry': 'Retry sign in',
       };
       return translations[key] || key;
     },
   }),
 }));
 
-// Mock auth context (unauthenticated user)
+type UserType = {
+  id: number;
+  displayName: string;
+  avatarUrl?: string;
+  email?: string | null;
+  isAdmin?: boolean;
+  region?: string | null;
+};
+
+let mockAuthState = {
+  user: null as UserType | null,
+  loading: false,
+  isTelegram: false,
+  telegramDisplayName: null as string | null,
+  telegramAuthError: false,
+  login: vi.fn(),
+  logout: vi.fn(),
+  loginWithTelegram: vi.fn(),
+  refreshUser: vi.fn(),
+};
+
 vi.mock('../lib/auth-context', () => ({
-  useAuth: () => ({
-    user: null,
-    loading: false,
-    login: vi.fn(),
-    logout: vi.fn(),
-  }),
+  useAuth: () => mockAuthState,
 }));
 
 function setLocalStorage(entries: Record<string, unknown>) {
@@ -48,6 +65,17 @@ function setLocalStorage(entries: Record<string, unknown>) {
 describe('ProfilePanel', () => {
   beforeEach(() => {
     localStorage.clear();
+    mockAuthState = {
+      user: null,
+      loading: false,
+      isTelegram: false,
+      telegramDisplayName: null,
+      telegramAuthError: false,
+      login: vi.fn(),
+      logout: vi.fn(),
+      loginWithTelegram: vi.fn(),
+      refreshUser: vi.fn(),
+    };
   });
 
   afterEach(() => {
@@ -111,5 +139,42 @@ describe('ProfilePanel', () => {
 
     const statValues = document.querySelectorAll('.profile-stat-value');
     expect(statValues[0].textContent).toBe('0'); // gamesPlayed
+  });
+
+  describe('Telegram environment', () => {
+    it('shows connecting message while loading in Telegram', () => {
+      mockAuthState.isTelegram = true;
+      mockAuthState.loading = true;
+      render(<ProfilePanel />);
+      expect(
+        screen.getByText('Connecting Telegram account…'),
+      ).toBeInTheDocument();
+    });
+
+    it('shows retry button when Telegram auth failed', () => {
+      mockAuthState.isTelegram = true;
+      mockAuthState.loading = false;
+      mockAuthState.telegramAuthError = true;
+      render(<ProfilePanel />);
+      expect(
+        screen.getByRole('button', { name: 'Retry sign in' }),
+      ).toBeInTheDocument();
+    });
+
+    it('calls loginWithTelegram when retry button clicked', () => {
+      mockAuthState.isTelegram = true;
+      mockAuthState.loading = false;
+      mockAuthState.telegramAuthError = true;
+      render(<ProfilePanel />);
+      fireEvent.click(screen.getByRole('button', { name: 'Retry sign in' }));
+      expect(mockAuthState.loginWithTelegram).toHaveBeenCalledOnce();
+    });
+
+    it('does not show standard sign-in prompt in Telegram', () => {
+      mockAuthState.isTelegram = true;
+      mockAuthState.loading = false;
+      render(<ProfilePanel />);
+      expect(screen.queryByText('Sign in to sync')).toBeNull();
+    });
   });
 });
