@@ -343,6 +343,8 @@ async function handleTelegramAuth(request: Request): Promise<Response> {
         id: user.id,
         displayName: user.displayName,
         avatarUrl: user.avatarUrl,
+        isAdmin: user.isAdmin,
+        region: user.region ?? null,
       },
     },
     { headers: { 'Set-Cookie': setCookieHeader } },
