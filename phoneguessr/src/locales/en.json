@@ -9,6 +9,7 @@
   "auth.signIn": "Sign in with Google",
   "auth.signOut": "Sign out",
   "auth.error": "Login failed",
+  "auth.retry": "Retry sign in",
 
   "result.win": "You got it!",
   "result.loss": "Better luck tomorrow!",

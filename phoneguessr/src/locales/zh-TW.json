@@ -9,6 +9,7 @@
   "auth.signIn": "使用 Google 登入",
   "auth.signOut": "登出",
   "auth.error": "登入失敗",
+  "auth.retry": "重試登入",
 
   "result.win": "答對了！",
   "result.loss": "明天再接再厲！",

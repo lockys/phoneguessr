@@ -9,6 +9,7 @@
   "auth.signIn": "Googleでログイン",
   "auth.signOut": "ログアウト",
   "auth.error": "ログインに失敗しました",
+  "auth.retry": "再度ログイン",
 
   "result.win": "正解！",
   "result.loss": "また明日挑戦しよう！",

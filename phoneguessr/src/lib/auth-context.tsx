@@ -61,8 +61,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       body: JSON.stringify({ initData }),
     });
     if (!res.ok) throw new Error('Telegram auth failed');
-    const data = await res.json();
-    setUser(data.user ?? null);
+    // Use refreshUser() so we get the full user object (isAdmin, region, etc.)
+    // matching what Google users receive via /api/auth/me on page load.
+    await refreshUser();
   };
 
   useEffect(() => {
