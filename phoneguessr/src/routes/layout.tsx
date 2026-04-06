@@ -27,6 +27,12 @@ export default function Layout() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(() => {});
     }
+
+    const twa = window.Telegram?.WebApp;
+    if (twa) {
+      twa.ready();
+      twa.expand();
+    }
   }, []);
 
   return (

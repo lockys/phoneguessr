@@ -10,6 +10,7 @@
     { "source": "/api/auth/me", "destination": "/api/auth?action=me" },
     { "source": "/api/auth/callback", "destination": "/api/auth?action=callback" },
     { "source": "/api/auth/passkey/:action", "destination": "/api/auth/passkey?action=:action" },
+    { "source": "/api/auth/telegram", "destination": "/api/auth?action=telegram" },
     { "source": "/api/profile/:path*", "destination": "/api/profile" },
     { "source": "/api/admin/phones", "destination": "/api/admin?resource=phones" },
     { "source": "/api/admin/reset", "destination": "/api/admin?resource=reset" },
