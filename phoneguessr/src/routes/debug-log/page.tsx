@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../lib/auth-context';
 
+const DEV_MODE_KEY = 'phoneguessr_dev_mode';
+
 interface ApiResult {
   url: string;
   status: number | string;
@@ -10,6 +12,17 @@ interface ApiResult {
 export default function DebugLog() {
   const { user, loading, isTelegram } = useAuth();
   const [apiResults, setApiResults] = useState<ApiResult[]>([]);
+
+  const devMode = typeof localStorage !== 'undefined'
+    && localStorage.getItem(DEV_MODE_KEY) === 'true';
+
+  if (!devMode) {
+    return (
+      <div style={{ fontFamily: 'monospace', padding: '16px', textAlign: 'center', color: '#666' }}>
+        Enable dev mode first: tap the version number on the About page 3 times.
+      </div>
+    );
+  }
 
   useEffect(() => {
     const endpoints = ['/api/auth/me'];
