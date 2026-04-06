@@ -46,6 +46,7 @@
   "profile.guessDistribution": "猜测分布",
   "profile.noDataYet": "暂无数据",
   "profile.signInPrompt": "登录以跨设备同步你的统计数据",
+  "profile.connectingTelegram": "正在连接 Telegram 账户…",
 
   "leaderboard.title": "排行榜",
   "leaderboard.daily": "每日",

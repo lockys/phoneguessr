@@ -46,6 +46,7 @@
   "profile.guessDistribution": "추측 분포",
   "profile.noDataYet": "아직 데이터가 없습니다",
   "profile.signInPrompt": "로그인하여 기기 간 통계를 동기화하세요",
+  "profile.connectingTelegram": "Telegram 계정 연결 중…",
 
   "leaderboard.title": "리더보드",
   "leaderboard.daily": "일간",

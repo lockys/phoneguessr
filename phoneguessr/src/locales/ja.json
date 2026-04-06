@@ -46,6 +46,7 @@
   "profile.guessDistribution": "推測回数の分布",
   "profile.noDataYet": "データがありません",
   "profile.signInPrompt": "ログインしてデバイス間で統計を同期",
+  "profile.connectingTelegram": "Telegramアカウントに接続中…",
 
   "leaderboard.title": "リーダーボード",
   "leaderboard.daily": "デイリー",
