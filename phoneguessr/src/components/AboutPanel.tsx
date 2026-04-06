@@ -60,13 +60,25 @@ export function AboutPanel() {
         <p className="about-muted">{t('about.imageSource')}</p>
       </section>
 
-      <p className="about-muted" style={{ textAlign: 'center', marginTop: '24px' }}>
-        <span
+      <p
+        className="about-muted"
+        style={{ textAlign: 'center', marginTop: '24px' }}
+      >
+        <button
+          type="button"
           onClick={handleVersionClick}
-          style={{ cursor: 'default', userSelect: 'none' }}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'default',
+            userSelect: 'none',
+            font: 'inherit',
+            color: 'inherit',
+          }}
         >
           v{VERSION}
-        </span>
+        </button>
       </p>
     </div>
   );

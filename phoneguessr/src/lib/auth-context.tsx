@@ -2,7 +2,13 @@ import {
   browserSupportsWebAuthn,
   startAuthentication,
 } from '@simplewebauthn/browser';
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 interface User {
   id: number;
@@ -51,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(data.user ?? null);
   };
 
-  const loginWithTelegram = async () => {
+  const loginWithTelegram = useCallback(async () => {
     const initData = window.Telegram?.WebApp?.initData;
     if (!initData) throw new Error('Not running inside Telegram');
     const res = await fetch('/api/auth/telegram', {
@@ -65,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // before the next fetch fires, causing /api/auth/me to return null.
     const data = await res.json();
     setUser(data.user ?? null);
-  };
+  }, []);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -86,7 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [loginWithTelegram]);
 
   const login = () => {
     window.location.href = '/api/auth/login';
