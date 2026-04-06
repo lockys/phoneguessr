@@ -38,8 +38,7 @@ const AuthContext = createContext<AuthContextValue>({
 });
 
 const isTelegramEnv =
-  typeof window !== 'undefined' &&
-  (!!window.Telegram?.WebApp?.initData || !!window.Telegram?.WebApp);
+  typeof window !== 'undefined' && !!window.Telegram?.WebApp?.initData;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -61,9 +60,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       body: JSON.stringify({ initData }),
     });
     if (!res.ok) throw new Error('Telegram auth failed');
-    // Use refreshUser() so we get the full user object (isAdmin, region, etc.)
-    // matching what Google users receive via /api/auth/me on page load.
-    await refreshUser();
+    // Use the response body directly instead of calling refreshUser(), because
+    // Telegram's WebView (especially on Android) may not flush the Set-Cookie
+    // before the next fetch fires, causing /api/auth/me to return null.
+    const data = await res.json();
+    setUser(data.user ?? null);
   };
 
   useEffect(() => {
