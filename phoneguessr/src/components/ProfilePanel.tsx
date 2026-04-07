@@ -364,7 +364,7 @@ export function ProfilePanel() {
             <>
               {telegramAuthError ? (
                 <>
-                  <p>{t('profile.signInPrompt')}</p>
+                  <p>{t('profile.telegramAuthError')}</p>
                   <button
                     type="button"
                     className="auth-btn auth-btn-login"

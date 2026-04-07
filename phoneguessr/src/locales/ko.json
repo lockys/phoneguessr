@@ -47,6 +47,7 @@
   "profile.noDataYet": "아직 데이터가 없습니다",
   "profile.signInPrompt": "로그인하여 기기 간 통계를 동기화하세요",
   "profile.connectingTelegram": "Telegram 계정 연결 중…",
+  "profile.telegramAuthError": "Telegram 로그인에 실패했습니다. 다시 시도해 주세요.",
 
   "leaderboard.title": "리더보드",
   "leaderboard.daily": "일간",

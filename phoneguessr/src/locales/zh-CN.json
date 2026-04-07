@@ -47,6 +47,7 @@
   "profile.noDataYet": "暂无数据",
   "profile.signInPrompt": "登录以跨设备同步你的统计数据",
   "profile.connectingTelegram": "正在连接 Telegram 账户…",
+  "profile.telegramAuthError": "Telegram 登录失败，请再试一次。",
 
   "leaderboard.title": "排行榜",
   "leaderboard.daily": "每日",

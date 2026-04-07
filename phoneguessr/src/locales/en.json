@@ -48,6 +48,7 @@
   "profile.noDataYet": "No data yet",
   "profile.signInPrompt": "Sign in to sync your stats across devices",
   "profile.connectingTelegram": "Connecting Telegram account…",
+  "profile.telegramAuthError": "Telegram sign-in failed. Please try again.",
   "profile.email": "Email",
   "profile.emailNotAvailable": "Not available",
   "profile.gameHistory": "Game History",

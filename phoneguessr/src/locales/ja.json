@@ -47,6 +47,7 @@
   "profile.noDataYet": "データがありません",
   "profile.signInPrompt": "ログインしてデバイス間で統計を同期",
   "profile.connectingTelegram": "Telegramアカウントに接続中…",
+  "profile.telegramAuthError": "Telegramサインインに失敗しました。もう一度お試しください。",
 
   "leaderboard.title": "リーダーボード",
   "leaderboard.daily": "デイリー",
