@@ -127,6 +127,7 @@ export function Game() {
   // When Telegram auth completes after puzzle load, sync localStorage result to
   // DB and restore already-played state (race condition: puzzle was fetched
   // before the session cookie was established).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally keyed on identity only
   useEffect(() => {
     if (!user || !puzzle || puzzle._mockAnswerId) return;
 
@@ -173,7 +174,6 @@ export function Game() {
         })
         .catch(() => {});
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, puzzle?.puzzleId]);
 
   // Keep refs in sync for the save-on-leave listener
