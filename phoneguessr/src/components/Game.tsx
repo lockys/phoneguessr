@@ -261,17 +261,29 @@ export function Game() {
     const elapsed = elapsedRef.current;
 
     if (user && !puzzle._mockAnswerId) {
-      // Authenticated: save to database only
-      await fetch('/api/result', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          puzzleId: puzzle.puzzleId,
-          guessCount: finalGuesses.length,
-          isWin: won,
-          elapsedSeconds: elapsed,
-        }),
-      });
+      // Authenticated: save to database, fall back to localStorage on failure
+      try {
+        const res = await fetch('/api/result', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            puzzleId: puzzle.puzzleId,
+            guessCount: finalGuesses.length,
+            isWin: won,
+            elapsedSeconds: elapsed,
+          }),
+        });
+        if (!res.ok && res.status !== 409) {
+          // 409 = already submitted (duplicate), not an error
+          throw new Error(`HTTP ${res.status}`);
+        }
+      } catch {
+        // API save failed (e.g. cookie not sent in Telegram WebView) — persist locally
+        localStorage.setItem(
+          `phoneguessr_${puzzle.puzzleDate}`,
+          JSON.stringify({ guesses: finalGuesses, elapsed, won }),
+        );
+      }
     } else {
       // Anonymous or mock mode: save to localStorage
       localStorage.setItem(
