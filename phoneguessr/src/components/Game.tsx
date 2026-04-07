@@ -124,6 +124,58 @@ export function Game() {
     });
   }, []);
 
+  // When Telegram auth completes after puzzle load, sync localStorage result to
+  // DB and restore already-played state (race condition: puzzle was fetched
+  // before the session cookie was established).
+  useEffect(() => {
+    if (!user || !puzzle || puzzle._mockAnswerId) return;
+
+    // Sync any pending localStorage result to the DB (cookie may have failed earlier)
+    const localKey = `phoneguessr_${puzzle.puzzleDate}`;
+    const localRaw = localStorage.getItem(localKey);
+    if (localRaw) {
+      try {
+        const local = JSON.parse(localRaw);
+        if (typeof local.won === 'boolean') {
+          fetch('/api/result', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              puzzleId: puzzle.puzzleId,
+              guessCount: local.guesses?.length ?? 0,
+              isWin: local.won,
+              elapsedSeconds: local.elapsed ?? 0,
+            }),
+          }).catch(() => {});
+        }
+      } catch {}
+    }
+
+    // If game hasn't started yet, check the server to see if user already played
+    // (puzzle was loaded before Telegram auth cookie was available)
+    if (gameStateRef.current === 'ready') {
+      fetch('/api/puzzle/state')
+        .then(r => r.json())
+        .then(state => {
+          if (!state) return;
+          if (state.won != null) {
+            setGuesses(state.guesses || []);
+            if (state.elapsed != null) elapsedRef.current = state.elapsed;
+            setAlreadyPlayed(true);
+            setGameState(state.won ? 'won' : 'lost');
+            setShowModal(true);
+          } else if (state.guesses?.length > 0) {
+            setGuesses(state.guesses);
+            guessesRef.current = state.guesses;
+            setGameState('resuming');
+            gameStateRef.current = 'resuming';
+          }
+        })
+        .catch(() => {});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, puzzle?.puzzleId]);
+
   // Keep refs in sync for the save-on-leave listener
   useEffect(() => {
     gameStateRef.current = gameState;
