@@ -95,7 +95,7 @@ const routes: Record<
   },
 
   'GET /api/auth/me': (_req, res) => {
-    json(res, { user: MOCK_USER });
+    json(res, { user: MOCK_USER, hasPasskey: false });
   },
 
   'GET /api/auth/login': (_req, res) => {
@@ -172,7 +172,7 @@ const routes: Record<
   },
 
   'POST /api/auth/passkey/register': (_req, res) => {
-    json(res, { verified: true });
+    json(res, { success: true });
   },
 
   'POST /api/auth/passkey/login-options': (_req, res) => {

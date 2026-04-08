@@ -330,7 +330,7 @@ describe('mockApiMiddleware', () => {
   });
 
   describe('POST /api/auth/passkey/register', () => {
-    it('returns verified true', async () => {
+    it('returns success true', async () => {
       const res = await callMiddleware('POST', '/api/auth/passkey/register', {
         id: 'mock-credential-id',
         rawId: 'mock-raw-id',
@@ -338,7 +338,7 @@ describe('mockApiMiddleware', () => {
       });
       const data = parseBody(res);
       expect(res._status).toBe(200);
-      expect(data.verified).toBe(true);
+      expect(data.success).toBe(true);
     });
   });
 

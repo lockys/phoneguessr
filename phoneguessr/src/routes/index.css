@@ -327,6 +327,22 @@ body {
   opacity: 0.9;
 }
 
+.auth-btn-passkey {
+  background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+  border-color: #007aff;
+  color: white;
+  margin-right: 8px;
+}
+
+.auth-btn-passkey:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.auth-btn-passkey:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .auth-error {
   color: var(--red);
   font-size: 12px;
@@ -930,6 +946,79 @@ body {
   font-weight: 600;
   cursor: pointer;
   align-self: flex-end;
+}
+
+/* Passkey Section */
+.profile-passkey-section {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.profile-passkey-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.profile-passkey-registered {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.profile-passkey-icon {
+  color: var(--green);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.profile-passkey-text {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.profile-passkey-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-passkey-description {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.profile-passkey-btn {
+  background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.profile-passkey-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.profile-passkey-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.profile-passkey-error {
+  color: var(--red);
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 .profile-form-save:hover {

@@ -38,7 +38,7 @@ describe('GET /api/auth/me', () => {
   it('returns null user when no cookie is present', async () => {
     const res = await meHandler(new Request('http://localhost/api/auth/me'));
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ user: null });
+    expect(await res.json()).toEqual({ user: null, hasPasskey: false });
     expect(mockVerifySessionToken).not.toHaveBeenCalled();
   });
 
@@ -50,7 +50,7 @@ describe('GET /api/auth/me', () => {
       }),
     );
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ user: null });
+    expect(await res.json()).toEqual({ user: null, hasPasskey: false });
     expect(mockVerifySessionToken).toHaveBeenCalledWith('invalid-token');
   });
 
@@ -85,6 +85,7 @@ describe('GET /api/auth/me', () => {
         isAdmin: false,
         region: null,
       },
+      hasPasskey: false,
     });
   });
 
@@ -104,5 +105,6 @@ describe('GET /api/auth/me', () => {
     expect(body.user.displayName).toBe('JWT Fallback');
     expect(body.user.email).toBeNull();
     expect(body.user.avatarUrl).toBeUndefined();
+    expect(body.hasPasskey).toBe(false);
   });
 });

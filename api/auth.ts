@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../phoneguessr/src/db/index.js';
-import { users } from '../phoneguessr/src/db/schema.js';
+import { users, passkeyCredentials } from '../phoneguessr/src/db/schema.js';
 import {
   COOKIE_NAME,
   GOOGLE_CLIENT_ID,
@@ -68,10 +68,10 @@ async function handleLogout(request: Request) {
 
 async function handleMe(request: Request) {
   const token = parseCookies(request.headers.get('cookie'))[COOKIE_NAME];
-  if (!token) return Response.json({ user: null });
+  if (!token) return Response.json({ user: null, hasPasskey: false });
 
   const session = await verifySessionToken(token);
-  if (!session) return Response.json({ user: null });
+  if (!session) return Response.json({ user: null, hasPasskey: false });
 
   const [dbUser] = await db
     .select({
@@ -84,6 +84,12 @@ async function handleMe(request: Request) {
     .where(eq(users.id, session.userId))
     .limit(1);
 
+  // Check if user has any passkey credentials
+  const passkeyCount = await db
+    .select({ count: passkeyCredentials.id })
+    .from(passkeyCredentials)
+    .where(eq(passkeyCredentials.userId, session.userId));
+
   return Response.json({
     user: {
       id: session.userId,
@@ -93,6 +99,7 @@ async function handleMe(request: Request) {
       isAdmin: dbUser?.isAdmin ?? false,
       region: dbUser?.region ?? null,
     },
+    hasPasskey: passkeyCount.length > 0,
   });
 }
 

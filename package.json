@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
+    "@simplewebauthn/server": "^11.0.0",
     "countries-list": "^3.3.0",
     "drizzle-orm": "^0.45.1",
     "jose": "^6.1.3",
