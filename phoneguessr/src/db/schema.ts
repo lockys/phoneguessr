@@ -137,3 +137,12 @@ export const passkeyCredentials = pgTable('passkey_credentials', {
   transports: text('transports').array(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+export const webauthnChallenges = pgTable('webauthn_challenges', {
+  id: serial('id').primaryKey(),
+  challenge: text('challenge').notNull(),
+  userId: integer('user_id'),
+  action: varchar('action', { length: 20 }).notNull(), // 'register' or 'login'
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});

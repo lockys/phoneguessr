@@ -121,7 +121,7 @@ async function handleRegisterOptions(request: Request) {
   const registrationOptions = await generateRegistrationOptions(options);
 
   // Store challenge with userId as key
-  setChallenge(`register_${session.userId}`, registrationOptions.challenge);
+  await setChallenge(`register_${session.userId}`, registrationOptions.challenge, session.userId, 'register');
 
   return Response.json(registrationOptions);
 }
@@ -142,7 +142,7 @@ async function handleRegister(request: Request) {
   const body = await request.json();
 
   // Get the expected challenge
-  const expectedChallenge = getChallenge(`register_${session.userId}`);
+  const expectedChallenge = await getChallenge(`register_${session.userId}`);
   if (!expectedChallenge) {
     return Response.json({ error: 'Challenge not found or expired' }, { status: 400 });
   }
@@ -173,7 +173,7 @@ async function handleRegister(request: Request) {
     });
 
     // Clean up challenge
-    consumeChallenge(`register_${session.userId}`);
+    await consumeChallenge(`register_${session.userId}`);
 
     return Response.json({ success: true });
   } catch (error) {
@@ -216,7 +216,7 @@ async function handleLoginOptions(request: Request) {
   const authOptions = await generateAuthenticationOptions(options);
 
   // Store challenge with a temporary key (will be cleaned up after login)
-  setChallenge(`login_${authOptions.challenge}`, authOptions.challenge);
+  await setChallenge(`login_${authOptions.challenge}`, authOptions.challenge, undefined, 'login');
 
   return Response.json(authOptions);
 }
@@ -224,7 +224,7 @@ async function handleLoginOptions(request: Request) {
 async function handleLogin(request: Request) {
   const body = await request.json();
 
-  const expectedChallenge = getChallenge(`login_${body.challenge}`) || body.challenge;
+  const expectedChallenge = await getChallenge(`login_${body.challenge}`) || body.challenge;
 
   try {
     const verification = await verifyAuthenticationResponse({
@@ -271,7 +271,7 @@ async function handleLogin(request: Request) {
     const cookie = serializeCookie(COOKIE_NAME, token, cookieOptions);
 
     // Clean up challenge
-    consumeChallenge(`login_${body.challenge}`);
+    await consumeChallenge(`login_${body.challenge}`);
 
     return Response.json(
       { verified: true, user: sessionData },

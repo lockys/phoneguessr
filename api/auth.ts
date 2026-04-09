@@ -29,10 +29,16 @@ interface GoogleUserInfo {
   email?: string;
 }
 
-async function handleLogin() {
+async function handleLogin(request: Request) {
+  // Build redirect URI dynamically from request
+  const url = new URL(request.url);
+  const proto = request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
+  const host = request.headers.get('host') || url.host;
+  const redirectUri = `${proto}://${host}/api/auth/callback`;
+
   const params = new URLSearchParams({
     client_id: GOOGLE_CLIENT_ID,
-    redirect_uri: GOOGLE_REDIRECT_URI,
+    redirect_uri: redirectUri,
     response_type: 'code',
     scope: 'openid profile email',
     access_type: 'online',
@@ -114,6 +120,11 @@ async function handleCallback(request: Request) {
     });
   }
 
+  // Build redirect URI dynamically (must match what was used in handleLogin)
+  const proto = request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
+  const host = request.headers.get('host') || url.host;
+  const redirectUri = `${proto}://${host}/api/auth/callback`;
+
   try {
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
@@ -122,7 +133,7 @@ async function handleCallback(request: Request) {
         code,
         client_id: GOOGLE_CLIENT_ID,
         client_secret: GOOGLE_CLIENT_SECRET,
-        redirect_uri: GOOGLE_REDIRECT_URI,
+        redirect_uri: redirectUri,
         grant_type: 'authorization_code',
       }),
     });
@@ -362,7 +373,7 @@ export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const action = url.searchParams.get('action');
 
-  if (action === 'login') return handleLogin();
+  if (action === 'login') return handleLogin(request);
   if (action === 'logout') return handleLogout(request);
   if (action === 'me') return handleMe(request);
   if (action === 'callback') return handleCallback(request);
