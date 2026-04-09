@@ -33,6 +33,26 @@ function getBaseUrl(request: Request): string {
   return `${proto}://${host}`;
 }
 
+function getRpIdFromRequest(request: Request): string {
+  // Use env var if set (e.g., for local dev with custom domain)
+  if (process.env.WEBAUTHN_RP_ID) {
+    return process.env.WEBAUTHN_RP_ID;
+  }
+  // Extract domain from request host header (works in production)
+  const host = request.headers.get('host') || 'localhost';
+  // Remove port if present
+  return host.split(':')[0];
+}
+
+function getOriginFromRequest(request: Request): string {
+  if (process.env.WEBAUTHN_ORIGIN) {
+    return process.env.WEBAUTHN_ORIGIN;
+  }
+  const proto = request.headers.get('x-forwarded-proto') || 'https';
+  const host = request.headers.get('host') || 'localhost';
+  return `${proto}://${host}`;
+}
+
 function parseCookie(cookieHeader: string | null, name: string): string | undefined {
   if (!cookieHeader) return undefined;
   const cookies = parseCookies(cookieHeader);
@@ -82,7 +102,7 @@ async function handleRegisterOptions(request: Request) {
 
   const options: GenerateRegistrationOptionsOpts = {
     rpName: getRpName(),
-    rpID: getRpId(),
+    rpID: getRpIdFromRequest(request),
     userID: Buffer.from(String(session.userId)),
     userName: session.displayName,
     timeout: 60000,
@@ -131,8 +151,8 @@ async function handleRegister(request: Request) {
     const verification = await verifyRegistrationResponse({
       response: body,
       expectedChallenge,
-      expectedOrigin: getOrigin(),
-      expectedRPID: getRpId(),
+      expectedOrigin: getOriginFromRequest(request),
+      expectedRPID: getRpIdFromRequest(request),
     });
 
     const { verified, registrationInfo } = verification;
@@ -190,7 +210,7 @@ async function handleLoginOptions(request: Request) {
       type: 'public-key',
     })) : undefined,
     userVerification: 'preferred',
-    rpID: getRpId(),
+    rpID: getRpIdFromRequest(request),
   };
 
   const authOptions = await generateAuthenticationOptions(options);
@@ -210,8 +230,8 @@ async function handleLogin(request: Request) {
     const verification = await verifyAuthenticationResponse({
       response: body,
       expectedChallenge,
-      expectedOrigin: getOrigin(),
-      expectedRPID: getRpId(),
+      expectedOrigin: getOriginFromRequest(request),
+      expectedRPID: getRpIdFromRequest(request),
       requireUserVerification: true,
     });
 
