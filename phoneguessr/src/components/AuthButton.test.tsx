@@ -72,25 +72,15 @@ describe('AuthButton', () => {
   });
 
   describe('signed-out state', () => {
-    it('renders sign-in button', () => {
-      render(<AuthButton />);
-      expect(
-        screen.getByRole('button', { name: 'Sign in with Google' }),
-      ).toBeInTheDocument();
+    it('renders nothing when Google sign-in is hidden', () => {
+      const { container } = render(<AuthButton />);
+      expect(container.innerHTML).toBe('');
     });
 
     it('does not render a passkey login entry point', () => {
       render(<AuthButton />);
       expect(screen.queryByRole('button', { name: /passkey/i })).toBeNull();
-      expect(screen.getAllByRole('button')).toHaveLength(1);
-    });
-
-    it('calls login on sign-in click', () => {
-      render(<AuthButton />);
-      fireEvent.click(
-        screen.getByRole('button', { name: 'Sign in with Google' }),
-      );
-      expect(mockLogin).toHaveBeenCalledOnce();
+      expect(screen.queryAllByRole('button')).toHaveLength(0);
     });
   });
 

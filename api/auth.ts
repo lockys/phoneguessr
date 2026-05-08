@@ -195,7 +195,7 @@ async function handleCallback(request: Request) {
 
     const token = await createSessionToken({
       userId: user.id,
-      googleId: user.googleId,
+      googleId: user.googleId ?? undefined,
       displayName: user.displayName,
       avatarUrl: user.avatarUrl ?? undefined,
       email: user.email ?? undefined,
