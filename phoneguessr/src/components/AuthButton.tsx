@@ -4,14 +4,7 @@ import { useAuth } from '../lib/auth-context';
 
 export function AuthButton() {
   const { t } = useTranslation();
-  const {
-    user,
-    loading,
-    isTelegram,
-    telegramDisplayName,
-    login,
-    logout,
-  } = useAuth();
+  const { user, loading, isTelegram, telegramDisplayName, logout } = useAuth();
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -61,13 +54,6 @@ export function AuthButton() {
     );
   }
 
-  // Web: show sign-in button
-  return (
-    <>
-      {authError && <span className="auth-error">{t('auth.error')}</span>}
-      <button type="button" className="auth-btn auth-btn-login" onClick={login}>
-        {t('auth.signIn')}
-      </button>
-    </>
-  );
+  // Web: Google sign-in is intentionally hidden for now
+  return authError ? <span className="auth-error">{t('auth.error')}</span> : null;
 }

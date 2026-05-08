@@ -220,9 +220,10 @@ describe('ResultModal – layout structure', () => {
     expect(screen.getByText('X/6')).toBeInTheDocument();
   });
 
-  it('shows sign-in prompt for unauthenticated users', () => {
+  it('hides sign-in prompt for unauthenticated web users', () => {
     render(<ResultModal {...baseProps} />);
-    expect(screen.getByText('result.signInPrompt')).toBeInTheDocument();
+    expect(screen.queryByText('result.signInPrompt')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'auth.signIn' })).toBeNull();
   });
 });
 

@@ -74,14 +74,8 @@ function getLocalStats(): Stats {
 
 export function ProfilePanel() {
   const { t } = useTranslation();
-  const {
-    user,
-    login,
-    loginWithTelegram,
-    isTelegram,
-    telegramAuthError,
-    refreshUser,
-  } = useAuth();
+  const { user, loginWithTelegram, isTelegram, telegramAuthError, refreshUser } =
+    useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
   const [displayName, setDisplayName] = useState('');
   const [regionValue, setRegionValue] = useState('');
@@ -377,18 +371,7 @@ export function ProfilePanel() {
                 <p>{t('profile.connectingTelegram')}</p>
               )}
             </>
-          ) : (
-            <>
-              <p>{t('profile.signInPrompt')}</p>
-              <button
-                type="button"
-                className="auth-btn auth-btn-login"
-                onClick={login}
-              >
-                {t('auth.signIn')}
-              </button>
-            </>
-          )}
+          ) : null}
         </div>
       )}
 

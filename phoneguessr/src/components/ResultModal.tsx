@@ -27,7 +27,7 @@ export function ResultModal({
   alreadyPlayed,
 }: ResultModalProps) {
   const { t } = useTranslation();
-  const { user, login, isTelegram } = useAuth();
+  const { user, isTelegram } = useAuth();
   const [copied, setCopied] = useState(false);
 
   const wrongGuesses = guesses.filter(g => g.feedback !== 'correct').length;
@@ -97,18 +97,7 @@ export function ResultModal({
             {copied ? t('result.copied') : t('result.share')}
           </button>
 
-          {!user && !isTelegram && (
-            <div className="auth-prompt">
-              <p>{t('result.signInPrompt')}</p>
-              <button
-                type="button"
-                className="auth-btn auth-btn-login"
-                onClick={login}
-              >
-                {t('auth.signIn')}
-              </button>
-            </div>
-          )}
+          {!user && !isTelegram && null}
         </div>
       </dialog>
     </div>,
