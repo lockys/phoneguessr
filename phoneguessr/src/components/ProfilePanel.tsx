@@ -81,14 +81,7 @@ export function ProfilePanel() {
     isTelegram,
     telegramAuthError,
     refreshUser,
-    webAuthnSupported,
-    hasPasskey,
-    registerPasskey,
   } = useAuth();
-  const [passkeyStatus, setPasskeyStatus] = useState<
-    'idle' | 'loading' | 'success' | 'error'
-  >('idle');
-  const [passkeyError, setPasskeyError] = useState<string | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
   const [displayName, setDisplayName] = useState('');
   const [regionValue, setRegionValue] = useState('');
@@ -152,25 +145,6 @@ export function ProfilePanel() {
     }
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
-  };
-
-  const handleRegisterPasskey = async () => {
-    setPasskeyStatus('loading');
-    setPasskeyError(null);
-    try {
-      await registerPasskey();
-      setPasskeyStatus('success');
-      setTimeout(() => setPasskeyStatus('idle'), 3000);
-    } catch (err) {
-      setPasskeyStatus('error');
-      setPasskeyError(
-        err instanceof Error ? err.message : 'Failed to register passkey',
-      );
-      setTimeout(() => {
-        setPasskeyStatus('idle');
-        setPasskeyError(null);
-      }, 5000);
-    }
   };
 
   return (
@@ -286,45 +260,6 @@ export function ProfilePanel() {
           >
             {saved ? t('profile.saved') : t('profile.save')}
           </button>
-        </div>
-      )}
-
-      {user && webAuthnSupported && (
-        <div className="profile-passkey-section">
-          <h3 className="profile-passkey-title">
-            {t('profile.passkey.title')}
-          </h3>
-          {hasPasskey ? (
-            <div className="profile-passkey-registered">
-              <span className="profile-passkey-icon">✓</span>
-              <span className="profile-passkey-text">
-                {t('profile.passkey.registered')}
-              </span>
-            </div>
-          ) : (
-            <div className="profile-passkey-setup">
-              <p className="profile-passkey-description">
-                {t('profile.passkey.description')}
-              </p>
-              <button
-                type="button"
-                className="profile-passkey-btn"
-                onClick={handleRegisterPasskey}
-                disabled={passkeyStatus === 'loading'}
-              >
-                {passkeyStatus === 'loading'
-                  ? t('profile.passkey.settingUp')
-                  : passkeyStatus === 'success'
-                    ? t('profile.passkey.success')
-                    : passkeyStatus === 'error'
-                      ? t('profile.passkey.failed')
-                      : t('profile.passkey.setup')}
-              </button>
-              {passkeyError && (
-                <p className="profile-passkey-error">{passkeyError}</p>
-              )}
-            </div>
-          )}
         </div>
       )}
 

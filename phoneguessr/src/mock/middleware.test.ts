@@ -311,69 +311,14 @@ describe('mockApiMiddleware', () => {
     });
   });
 
-  describe('GET /api/auth/passkey/register-options', () => {
-    it('returns WebAuthn registration options', async () => {
-      const res = await callMiddleware(
-        'GET',
-        '/api/auth/passkey/register-options',
-      );
-      const data = parseBody(res);
-      expect(res._status).toBe(200);
-      expect(data).toHaveProperty('challenge');
-      expect(data).toHaveProperty('rp');
-      expect(data.rp).toHaveProperty('name');
-      expect(data.rp).toHaveProperty('id');
-      expect(data).toHaveProperty('user');
-      expect(data).toHaveProperty('pubKeyCredParams');
-      expect(Array.isArray(data.pubKeyCredParams)).toBe(true);
-    });
-  });
-
-  describe('POST /api/auth/passkey/register', () => {
-    it('returns success true', async () => {
-      const res = await callMiddleware('POST', '/api/auth/passkey/register', {
-        id: 'mock-credential-id',
-        rawId: 'mock-raw-id',
-        type: 'public-key',
-      });
-      const data = parseBody(res);
-      expect(res._status).toBe(200);
-      expect(data.success).toBe(true);
-    });
-  });
-
-  describe('POST /api/auth/passkey/login-options', () => {
-    it('returns WebAuthn authentication options', async () => {
-      const res = await callMiddleware(
-        'POST',
-        '/api/auth/passkey/login-options',
-        {},
-      );
-      const data = parseBody(res);
-      expect(res._status).toBe(200);
-      expect(data).toHaveProperty('challenge');
-      expect(data).toHaveProperty('rpId');
-      expect(data).toHaveProperty('allowCredentials');
-      expect(Array.isArray(data.allowCredentials)).toBe(true);
-    });
-  });
-
-  describe('POST /api/auth/passkey/login', () => {
-    it('returns verified true with mock user', async () => {
-      const res = await callMiddleware('POST', '/api/auth/passkey/login', {
-        id: 'mock-credential-id',
-        rawId: 'mock-raw-id',
-        type: 'public-key',
-      });
-      const data = parseBody(res);
-      expect(res._status).toBe(200);
-      expect(data.verified).toBe(true);
-      expect(data.user).toHaveProperty('id');
-      expect(data.user).toHaveProperty('displayName');
-    });
-  });
-
   describe('unknown API routes', () => {
+    it('returns 404 for passkey auth paths', async () => {
+      const res = await callMiddleware('POST', '/api/auth/passkey/login', {});
+      const data = parseBody(res);
+      expect(res._status).toBe(404);
+      expect(data.error).toBe('Not found');
+    });
+
     it('returns 404 for unknown path', async () => {
       const req = createReq('GET', '/api/unknown');
       const res = createRes();

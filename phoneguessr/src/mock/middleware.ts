@@ -95,7 +95,7 @@ const routes: Record<
   },
 
   'GET /api/auth/me': (_req, res) => {
-    json(res, { user: MOCK_USER, hasPasskey: false });
+    json(res, { user: MOCK_USER });
   },
 
   'GET /api/auth/login': (_req, res) => {
@@ -148,46 +148,6 @@ const routes: Record<
     json(res, { success: true });
   },
 
-  'GET /api/auth/passkey/register-options': (_req, res) => {
-    json(res, {
-      rp: { name: 'PhoneGuessr', id: 'localhost' },
-      user: {
-        id: 'bW9ja1VzZXJJZA',
-        name: 'mock@example.com',
-        displayName: MOCK_USER.displayName,
-      },
-      challenge: 'bW9ja0NoYWxsZW5nZUZvclJlZ2lzdHJhdGlvbg',
-      pubKeyCredParams: [
-        { alg: -7, type: 'public-key' },
-        { alg: -257, type: 'public-key' },
-      ],
-      timeout: 60000,
-      attestation: 'none',
-      authenticatorSelection: {
-        residentKey: 'required',
-        userVerification: 'required',
-      },
-      excludeCredentials: [],
-    });
-  },
-
-  'POST /api/auth/passkey/register': (_req, res) => {
-    json(res, { success: true });
-  },
-
-  'POST /api/auth/passkey/login-options': (_req, res) => {
-    json(res, {
-      challenge: 'bW9ja0NoYWxsZW5nZUZvckxvZ2lu',
-      timeout: 60000,
-      rpId: 'localhost',
-      allowCredentials: [],
-      userVerification: 'required',
-    });
-  },
-
-  'POST /api/auth/passkey/login': (_req, res) => {
-    json(res, { verified: true, user: MOCK_USER });
-  },
 };
 
 export function mockApiMiddleware(
