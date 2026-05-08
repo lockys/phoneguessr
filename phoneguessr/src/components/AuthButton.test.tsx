@@ -79,6 +79,12 @@ describe('AuthButton', () => {
       ).toBeInTheDocument();
     });
 
+    it('does not render a passkey login entry point', () => {
+      render(<AuthButton />);
+      expect(screen.queryByRole('button', { name: /passkey/i })).toBeNull();
+      expect(screen.getAllByRole('button')).toHaveLength(1);
+    });
+
     it('calls login on sign-in click', () => {
       render(<AuthButton />);
       fireEvent.click(

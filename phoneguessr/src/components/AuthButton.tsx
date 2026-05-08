@@ -11,12 +11,8 @@ export function AuthButton() {
     telegramDisplayName,
     login,
     logout,
-    webAuthnSupported,
-    loginWithPasskey,
   } = useAuth();
   const [authError, setAuthError] = useState<string | null>(null);
-  const [passkeyError, setPasskeyError] = useState<string | null>(null);
-  const [passkeyLoading, setPasskeyLoading] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -28,20 +24,6 @@ export function AuthButton() {
       return () => clearTimeout(timer);
     }
   }, []);
-
-  const handlePasskeyLogin = async () => {
-    setPasskeyLoading(true);
-    setPasskeyError(null);
-    try {
-      await loginWithPasskey();
-    } catch (err) {
-      setPasskeyError(
-        err instanceof Error ? err.message : 'Passkey login failed',
-      );
-    } finally {
-      setPasskeyLoading(false);
-    }
-  };
 
   if (loading) {
     return null;
@@ -83,17 +65,6 @@ export function AuthButton() {
   return (
     <>
       {authError && <span className="auth-error">{t('auth.error')}</span>}
-      {webAuthnSupported && (
-        <button
-          type="button"
-          className="auth-btn auth-btn-passkey"
-          onClick={handlePasskeyLogin}
-          disabled={passkeyLoading}
-        >
-          {passkeyLoading ? 'Signing in...' : 'Sign in with Passkey'}
-        </button>
-      )}
-      {passkeyError && <span className="auth-error">{passkeyError}</span>}
       <button type="button" className="auth-btn auth-btn-login" onClick={login}>
         {t('auth.signIn')}
       </button>

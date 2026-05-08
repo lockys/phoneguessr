@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../phoneguessr/src/db/index.js';
-import { users, passkeyCredentials } from '../phoneguessr/src/db/schema.js';
+import { users } from '../phoneguessr/src/db/schema.js';
 import {
   COOKIE_NAME,
   GOOGLE_CLIENT_ID,
@@ -29,16 +29,22 @@ interface GoogleUserInfo {
   email?: string;
 }
 
-async function handleLogin(request: Request) {
-  // Build redirect URI dynamically from request
-  const url = new URL(request.url);
-  const proto = request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
-  const host = request.headers.get('host') || url.host;
-  const redirectUri = `${proto}://${host}/api/auth/callback`;
+function getGoogleRedirectUri(request: Request) {
+  if (GOOGLE_REDIRECT_URI.trim()) {
+    return GOOGLE_REDIRECT_URI;
+  }
 
+  const url = new URL(request.url);
+  const proto =
+    request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
+  const host = request.headers.get('host') || url.host;
+  return `${proto}://${host}/api/auth/callback`;
+}
+
+async function handleLogin(request: Request) {
   const params = new URLSearchParams({
     client_id: GOOGLE_CLIENT_ID,
-    redirect_uri: redirectUri,
+    redirect_uri: getGoogleRedirectUri(request),
     response_type: 'code',
     scope: 'openid profile email',
     access_type: 'online',
@@ -74,10 +80,10 @@ async function handleLogout(request: Request) {
 
 async function handleMe(request: Request) {
   const token = parseCookies(request.headers.get('cookie'))[COOKIE_NAME];
-  if (!token) return Response.json({ user: null, hasPasskey: false });
+  if (!token) return Response.json({ user: null });
 
   const session = await verifySessionToken(token);
-  if (!session) return Response.json({ user: null, hasPasskey: false });
+  if (!session) return Response.json({ user: null });
 
   const [dbUser] = await db
     .select({
@@ -90,12 +96,6 @@ async function handleMe(request: Request) {
     .where(eq(users.id, session.userId))
     .limit(1);
 
-  // Check if user has any passkey credentials
-  const passkeyCount = await db
-    .select({ count: passkeyCredentials.id })
-    .from(passkeyCredentials)
-    .where(eq(passkeyCredentials.userId, session.userId));
-
   return Response.json({
     user: {
       id: session.userId,
@@ -105,7 +105,6 @@ async function handleMe(request: Request) {
       isAdmin: dbUser?.isAdmin ?? false,
       region: dbUser?.region ?? null,
     },
-    hasPasskey: passkeyCount.length > 0,
   });
 }
 
@@ -120,11 +119,6 @@ async function handleCallback(request: Request) {
     });
   }
 
-  // Build redirect URI dynamically (must match what was used in handleLogin)
-  const proto = request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
-  const host = request.headers.get('host') || url.host;
-  const redirectUri = `${proto}://${host}/api/auth/callback`;
-
   try {
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
@@ -133,7 +127,7 @@ async function handleCallback(request: Request) {
         code,
         client_id: GOOGLE_CLIENT_ID,
         client_secret: GOOGLE_CLIENT_SECRET,
-        redirect_uri: redirectUri,
+        redirect_uri: getGoogleRedirectUri(request),
         grant_type: 'authorization_code',
       }),
     });

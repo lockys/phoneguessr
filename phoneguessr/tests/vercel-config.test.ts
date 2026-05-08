@@ -32,12 +32,17 @@ describe('vercel.json rewrites', () => {
   it.each([
     ['/api/puzzle/:action', '/api/puzzle?action=:action'],
     ['/api/leaderboard/:period', '/api/leaderboard?period=:period'],
-    ['/api/auth/passkey/:action', '/api/auth/passkey?action=:action'],
     ['/api/profile/:path*', '/api/profile'],
   ])('has rewrite %s → %s', (source, destination) => {
     const match = rewrites.find(r => r.source === source);
     expect(match).toBeDefined();
     expect(match!.destination).toBe(destination);
+  });
+
+  it('does not expose passkey auth rewrites', () => {
+    expect(rewrites.some(r => r.source.includes('/api/auth/passkey'))).toBe(
+      false,
+    );
   });
 
   it('API function count stays within Vercel Hobby limit', () => {

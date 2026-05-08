@@ -3,7 +3,7 @@
  * Replaces in-memory Map which doesn't work in serverless environments
  * where each request may hit a different instance.
  */
-import { eq, and, gt } from 'drizzle-orm';
+import { eq, and, gt, lt } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { webauthnChallenges } from '../db/schema.js';
 
@@ -91,11 +91,31 @@ export async function consumeChallenge(key: string): Promise<string | null> {
 }
 
 /**
+ * Delete a challenge by its ID-style key.
+ */
+export async function deleteChallenge(key: string): Promise<void> {
+  const numericId = parseInt(key.split('_')[1]);
+
+  if (!isNaN(numericId)) {
+    await db
+      .delete(webauthnChallenges)
+      .where(eq(webauthnChallenges.id, numericId))
+      .catch(() => {});
+    return;
+  }
+
+  await db
+    .delete(webauthnChallenges)
+    .where(eq(webauthnChallenges.challenge, key.replace('login_', '')))
+    .catch(() => {});
+}
+
+/**
  * Clean up expired challenges (can be called periodically).
  */
 export async function cleanupExpiredChallenges(): Promise<void> {
   await db
     .delete(webauthnChallenges)
-    .where(gt(new Date(), webauthnChallenges.expiresAt))
+    .where(lt(webauthnChallenges.expiresAt, new Date()))
     .catch(() => {});
 }
