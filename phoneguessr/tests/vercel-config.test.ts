@@ -45,6 +45,11 @@ describe('vercel.json rewrites', () => {
     );
   });
 
+  it('does not ship a passkey auth serverless entrypoint', () => {
+    const passkeyHandlerPath = path.resolve(__dirname, '../../api/auth/passkey.ts');
+    expect(fs.existsSync(passkeyHandlerPath)).toBe(false);
+  });
+
   it('API function count stays within Vercel Hobby limit', () => {
     const apiDir = path.resolve(__dirname, '../../api');
     const countTsFiles = (dir: string): number => {
