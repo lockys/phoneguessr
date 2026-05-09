@@ -2,6 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Agent Workflow
+
+Do not use Superpowers plugin skills or Superpowers skill workflows in this
+repository. Follow the repository instructions in this file and the user's
+direct requests instead.
+
+Use the standalone Agent Skills in `.claude/skills` when they apply. Start with
+`using-agent-skills` for skill discovery, then load only the specific skill
+needed for the task:
+
+- `spec-driven-development` for non-trivial features, architecture decisions,
+  ambiguous requirements, or multi-file changes.
+- `test-driven-development` for logic changes, behavior changes, and bug fixes.
+- `code-review-and-quality` before merging or handing off completed changes.
+
+The `/spec`, `/test`, and `/review` slash commands map to those same skills.
+
 ## Commands
 
 Run from the **repository root** for full-stack dev (frontend + API via Vercel):
